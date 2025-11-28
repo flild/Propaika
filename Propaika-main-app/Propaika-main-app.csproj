@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Propaika_main_app</RootNamespace>
+    <UserSecretsId>f550cc15-2bd8-466a-948e-76b139e48015</UserSecretsId>
+  </PropertyGroup>
+
+</Project>

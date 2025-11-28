@@ -1,0 +1,73 @@
+﻿@{
+    var title = ViewData["Title"] as string ?? "PROPAIKA — Ремонт техники Apple";
+}
+
+<!DOCTYPE html>
+<html lang="ru" data-bs-theme="dark">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@title</title>
+
+    <!-- Bootstrap 5.3 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-..." crossorigin="anonymous" />
+
+    <!-- Собственный стиль -->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="bg-body text-body">
+    <header class="border-bottom mb-4 neon-border">
+        <nav class="navbar navbar-expand-lg navbar-dark container">
+            <a class="navbar-brand fw-bold neon-text" asp-page="/Index">PROPAIKA</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-page="/Index">Главная</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-page="/Cases/Index">Кейсы ремонтов</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-page="/Prices/Index">Цены</a>
+                    </li>
+                </ul>
+
+                <div class="d-flex align-items-center gap-3">
+                    <a href="https://www.avito.ru/ВАШ_ПРОФИЛЬ" target="_blank" class="btn btn-outline-info btn-sm">
+                        Отзывы на Авито
+                    </a>
+
+                    <!-- Переключатель темы -->
+                    <div class="btn-group" role="group" aria-label="Theme switcher">
+                        <button type="button" id="theme-light" class="btn btn-sm btn-outline-light">☀</button>
+                        <button type="button" id="theme-dark" class="btn btn-sm btn-outline-light active">🌙</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mb-5">
+        @RenderBody()
+    </main>
+
+    <footer class="border-top py-3">
+        <div class="container d-flex justify-content-between small">
+            <span>© @DateTime.Now.Year PROPAIKA. Ремонт техники Apple.</span>
+            <span>Сделано с любовью к паяльнику 🔧</span>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-..." crossorigin="anonymous"></script>
+
+    <script src="~/js/theme.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

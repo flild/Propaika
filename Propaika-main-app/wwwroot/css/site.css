@@ -1,0 +1,35 @@
+:root {
+    --neon-color: #00f3ff;
+}
+
+html[data-bs-theme="dark"] body {
+    background: radial-gradient(circle at top, #10121a 0, #020308 60%, #000 100%);
+}
+
+.neon-text {
+    color: var(--neon-color) !important;
+    text-shadow: 0 0 8px rgba(0, 243, 255, 0.7);
+}
+
+.neon-border {
+    box-shadow: 0 0 16px rgba(0, 243, 255, 0.4);
+}
+
+/* Карточки кейсов/цен */
+.card.neon-card {
+    background: rgba(10, 12, 20, 0.85);
+    border: 1px solid rgba(0, 243, 255, 0.2);
+    backdrop-filter: blur(12px);
+    transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+
+    .card.neon-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 0 24px rgba(0, 243, 255, 0.6);
+        border-color: rgba(0, 243, 255, 0.8);
+    }
+
+/* Для светлой темы слегка приглушаем неон */
+html[data-bs-theme="light"] .neon-text {
+    text-shadow: none;
+}
