@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public string ClientName { get; set; } = string.Empty;
-        public required string PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; }
         public string? ProblemDescription { get; set; }
         public DeviceModel? DeviceModel { get; set; }
         public ServiceItem? ServiceItem { get; set; }

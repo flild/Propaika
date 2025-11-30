@@ -1,0 +1,132 @@
+﻿@page
+@model Propaika_main_app.Pages.Prices.IndexModel
+@{
+    ViewData["Title"] = "Цены на ремонт";
+
+    // Словарь для красивых названий вкладок
+    var typeNames = new Dictionary<string, string>
+            {
+                ["Phone"] = "iPhone",
+                ["Tablet"] = "iPad",
+                ["Laptop"] = "MacBook",
+                ["Watch"] = "Apple Watch"
+            };
+
+    // Получаем список доступных типов из базы
+    var availableTypes = Model.DevicesByType.Select(x => x.Key).ToList();
+}
+
+<div class="text-center mb-5">
+    <h1 class="display-4 fw-bold neon-text">Прайс-лист</h1>
+    <p class="text-muted lead">Выберите ваше устройство, чтобы узнать стоимость ремонта</p>
+</div>
+
+<!-- Вкладки по типам устройств -->
+<ul class="nav nav-pills justify-content-center mb-5 gap-3" id="pills-tab" role="tablist">
+    @for (int i = 0; i < availableTypes.Count; i++)
+    {
+        var type = availableTypes[i];
+        var isActive = i == 0 ? "active" : "";
+
+        <li class="nav-item" role="presentation">
+            <button class="nav-link @isActive px-4 py-2 fs-5"
+                    id="pills-@type-tab"
+                    data-bs-toggle="pill"
+                    data-bs-target="#pills-@type"
+                    type="button"
+                    role="tab">
+                @typeNames.GetValueOrDefault("button", "button")
+            </button>
+        </li>
+    }
+</ul>
+
+<!-- Контент вкладок -->
+<div class="tab-content" id="pills-tabContent">
+    @for (int i = 0; i < availableTypes.Count; i++)
+    {
+        var type = availableTypes[i];
+        var isActive = i == 0 ? "show active" : "";
+        var devices = Model.DevicesByType[type].ToList();
+
+        <div class="tab-pane fade @isActive" id="pills-@type" role="tabpanel">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+
+                    <!-- Аккордеон моделей -->
+                    <div class="accordion" id="accordion-@type">
+                        @foreach (var device in devices)
+                        {
+                            var collapseId = $"collapse-{device.Id}";
+
+                            <div class="accordion-item neon-accordion-item mb-3">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed fs-5 fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#@collapseId">
+                                        @device.Name
+                                    </button>
+                                </h2>
+                                <div id="@collapseId" class="accordion-collapse collapse" data-bs-parent="#accordion-@type">
+                                    <div class="accordion-body">
+                                        @if (device.ServiceItems.Any())
+                                        {
+                                            <div class="table-responsive">
+                                                <table class="table table-hover align-middle">
+                                                    <thead class="table-dark">
+                                                        <tr>
+                                                            <th>Услуга</th>
+                                                            <th>Описание</th>
+                                                            <th class="text-end">Цена</th>
+                                                            <th class="text-end"></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var price in device.ServiceItems)
+                                                        {
+                                                            <tr>
+                                                                <td class="fw-medium">@price.ServiceName</td>
+                                                                <td class="text-muted small">@price.Description</td>
+                                                                <td class="text-end fs-5 text-nowrap neon-text">
+                                                                    @price.Cost.ToString("N0") ₽
+                                                                </td>
+                                                                <td class="text-end">
+                                                                    <!-- Кнопка сразу открывает модалку заявки с предзаполненным текстом -->
+                                                                    <button class="btn btn-sm btn-outline-info"
+                                                                            onclick="openOrderModal('@device.Name', '@price.ServiceName')">
+                                                                        Заказать
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <p class="text-center text-muted my-3">Цены уточняйте по телефону.</p>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Модальное окно для быстрого заказа (нужно добавить в Layout или сюда) -->
+<partial name="_OrderModalPartial" />
+
+@section Scripts {
+    <script>
+        function openOrderModal(device, service) {
+            // Логика открытия модалки и подстановки "Ремонт iPhone 13: Замена дисплея"
+            const modal = new bootstrap.Modal(document.getElementById('orderModal'));
+            document.getElementById('orderProblem').value = `${device}: ${service}`;
+            modal.show();
+        }
+    </script>
+}

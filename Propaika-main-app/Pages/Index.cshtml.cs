@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Propaika.Web.Data;
-using Propaika.Web.Data.Entities;
 using Propaika_main_app.Data;
 using Propaika_main_app.Models;
 
@@ -17,7 +15,7 @@ public class IndexModel : PageModel
     }
 
     [BindProperty]
-    public RepairRequest Form { get; set; } = new();
+    public RepairRequest Form { get; set; } = new RepairRequest();
 
     public bool Submitted { get; set; }
 

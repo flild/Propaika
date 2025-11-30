@@ -33,3 +33,57 @@ html[data-bs-theme="dark"] body {
 html[data-bs-theme="light"] .neon-text {
     text-shadow: none;
 }
+
+
+/* Nav Pills (Вкладки) */
+.nav-pills .nav-link {
+    color: var(--bs-body-color);
+    border: 1px solid transparent;
+    transition: all 0.3s ease;
+}
+
+    .nav-pills .nav-link.active {
+        background-color: rgba(0, 243, 255, 0.1);
+        color: var(--neon-color);
+        border-color: var(--neon-color);
+        box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+    }
+
+/* Accordion (Аккордеон) */
+.neon-accordion-item {
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px !important;
+    overflow: hidden;
+}
+
+[data-bs-theme="dark"] .neon-accordion-item {
+    background-color: rgba(20, 22, 30, 0.6);
+}
+
+.neon-accordion-item .accordion-button {
+    background-color: transparent;
+    color: var(--bs-body-color);
+    box-shadow: none; /* Убираем синюю обводку фокуса */
+}
+
+    .neon-accordion-item .accordion-button:not(.collapsed) {
+        background-color: rgba(0, 243, 255, 0.05);
+        color: var(--neon-color);
+        border-bottom: 1px solid rgba(0, 243, 255, 0.2);
+    }
+
+/* Иконка стрелочки аккордеона - красим в неон */
+.accordion-button::after {
+    filter: invert(1) grayscale(100%) brightness(200%); /* Белая для темной темы */
+}
+
+.accordion-button:not(.collapsed)::after {
+    filter: drop-shadow(0 0 2px var(--neon-color)); /* Неоновая когда открыта */
+    background-image: url("data:image/svg+xml,..."); /* Можно заменить на свою SVG стрелку */
+}
+
+/* Таблица внутри */
+.table-hover tbody tr:hover {
+    background-color: rgba(0, 243, 255, 0.03);
+}
