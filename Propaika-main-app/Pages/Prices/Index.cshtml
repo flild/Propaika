@@ -116,17 +116,3 @@
         </div>
     }
 </div>
-
-<!-- Модальное окно для быстрого заказа (нужно добавить в Layout или сюда) -->
-<partial name="_OrderModalPartial" />
-
-@section Scripts {
-    <script>
-        function openOrderModal(device, service) {
-            // Логика открытия модалки и подстановки "Ремонт iPhone 13: Замена дисплея"
-            const modal = new bootstrap.Modal(document.getElementById('orderModal'));
-            document.getElementById('orderProblem').value = `${device}: ${service}`;
-            modal.show();
-        }
-    </script>
-}

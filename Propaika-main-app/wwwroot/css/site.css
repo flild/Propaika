@@ -87,3 +87,48 @@ html[data-bs-theme="light"] .neon-text {
 .table-hover tbody tr:hover {
     background-color: rgba(0, 243, 255, 0.03);
 }
+
+/* --- Слайдер До/После --- */
+.ba-slider {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background-color: #000; /* Цвет подложки */
+}
+
+.ba-after,
+.ba-before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Слой "До" лежит сверху и меняет ширину */
+.ba-before {
+    width: 50%; /* Начальное положение */
+    border-right: 2px solid var(--neon-color); /* Разделительная линия */
+    z-index: 1;
+}
+
+/* Ползунок (input range) растянут на весь блок, но невидим */
+.ba-range {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    opacity: 0;
+    cursor: e-resize; /* Курсор стрелочки влево-вправо */
+}
+
+/* Эффект при наведении на карточку кейса */
+.neon-card:hover .ba-before {
+    border-right-color: #fff;
+    box-shadow: 0 0 10px var(--neon-color);
+}
