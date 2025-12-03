@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Propaika_main_app.Data;
 
@@ -9,13 +10,19 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
+builder.Services.AddDefaultIdentity<IdentityUser>(options => {
+    options.SignIn.RequireConfirmedAccount = false; // Не требовать подтверждения email
+    options.Password.RequireDigit = false;          // Упрощаем пароли для себя
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequiredLength = 6;
+})
+.AddEntityFrameworkStores<ApplicationDbContext>();
 
-
-
-
-
-// Add services to the container.
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages(options =>
+{
+    options.Conventions.AuthorizeFolder("/Admin");
+});
 
 var app = builder.Build();
 
@@ -31,10 +38,24 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
 app.MapRazorPages()
    .WithStaticAssets();
+
+/*using (var scope = app.Services.CreateScope())
+{
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+    var email = "flildman@yandex.ru";
+    var password = "Admin123"; // Придумай сложный пароль
+
+    if (await userManager.FindByEmailAsync(email) == null)
+    {
+        var user = new IdentityUser { UserName = email, Email = email, EmailConfirmed = true };
+        await userManager.CreateAsync(user, password);
+    }
+}*/
 
 app.Run();

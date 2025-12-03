@@ -1,0 +1,33 @@
+﻿@page
+@model Propaika_main_app.Pages.Admin.ServiceCases.DeleteModel
+@{
+    ViewData["Title"] = "Удалить кейс";
+}
+<h2 class="text-danger">Удаление кейса</h2>
+
+<div class="alert alert-warning mt-4">
+    <strong>Внимание!</strong> Это действие нельзя отменить. Фотографии будут удалены с сервера.
+</div>
+
+<div class="card mt-3">
+    <div class="card-body">
+        <h5 class="card-title">@Model.ServiceCase.Title</h5>
+        <p class="card-text">@Model.ServiceCase.Description</p>
+
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <img src="@Model.ServiceCase.BeforeImage" class="img-fluid rounded" alt="До">
+                <p class="text-center text-muted mt-2">До</p>
+            </div>
+            <div class="col-md-6">
+                <img src="@Model.ServiceCase.AfterImage" class="img-fluid rounded" alt="После">
+                <p class="text-center text-muted mt-2">После</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form method="post" class="mt-4">
+    <button type="submit" class="btn btn-danger">Да, удалить</button>
+    <a asp-page="./Index" class="btn btn-secondary">Отмена</a>
+</form>
