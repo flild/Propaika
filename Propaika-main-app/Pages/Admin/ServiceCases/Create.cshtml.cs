@@ -31,6 +31,22 @@ namespace Propaika_main_app.Pages.Admin.ServiceCases
             [Range(0, 1000000)]
             public decimal Cost { get; set; }
 
+            // Новый блок
+            [MaxLength(200)]
+            public string? Slug { get; set; }
+
+            [MaxLength(100)]
+            public string? DeviceModel { get; set; }
+
+            [MaxLength(100)]
+            public string? ServiceType { get; set; }
+
+            [MaxLength(200)]
+            public string? MetaTitle { get; set; }
+
+            [MaxLength(300)]
+            public string? MetaDescription { get; set; }
+
             [Required(ErrorMessage = "Загрузите фото ДО")]
             public IFormFile UploadBefore { get; set; } = null!;
 
@@ -44,6 +60,10 @@ namespace Propaika_main_app.Pages.Admin.ServiceCases
         {
             if (!ModelState.IsValid) return Page();
 
+            var slug = string.IsNullOrWhiteSpace(Input.Slug)
+                ? GenerateSlug(Input.Title)
+                : Input.Slug.Trim();
+
             var serviceCase = new ServiceCase
             {
                 Title = Input.Title,
@@ -51,7 +71,12 @@ namespace Propaika_main_app.Pages.Admin.ServiceCases
                 Cost = Input.Cost,
                 BeforeImage = await SaveFileAsync(Input.UploadBefore),
                 AfterImage = await SaveFileAsync(Input.UploadAfter),
-                DateCompleted = DateTime.UtcNow
+                DateCompleted = DateTime.UtcNow,
+                Slug = slug,
+                DeviceModel = Input.DeviceModel,
+                ServiceType = Input.ServiceType,
+                MetaTitle = Input.MetaTitle,
+                MetaDescription = Input.MetaDescription
             };
 
             _db.ServiceCases.Add(serviceCase);
@@ -73,6 +98,16 @@ namespace Propaika_main_app.Pages.Admin.ServiceCases
             await file.CopyToAsync(fileStream);
 
             return "/uploads/cases/" + uniqueName;
+        }
+
+        private string GenerateSlug(string title)
+        {
+            // Простейший slug, можешь заменить на свой
+            var slug = title.ToLowerInvariant();
+            slug = slug.Replace(" ", "-");
+            slug = System.Text.RegularExpressions.Regex
+                .Replace(slug, @"[^a-z0-9\-]", string.Empty);
+            return slug;
         }
     }
 }
