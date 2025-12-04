@@ -1,0 +1,48 @@
+﻿@page
+@model Propaika_main_app.Pages.Admin.Devices.IndexModel
+@{
+    ViewData["Title"] = "Модели устройств";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Модели устройств</h2>
+    <a asp-page="./Create" class="btn btn-primary">+ Добавить модель</a>
+</div>
+
+@if (!Model.Devices.Any())
+{
+    <div class="alert alert-warning">Моделей пока нет. Добавьте iPhone, iPad, Mac и т.д.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Тип</th>
+                    <th>Название</th>
+                    <th>Позиций в прайсе</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var device in Model.Devices)
+                {
+                    <tr>
+                        <td>
+                            <span class="badge bg-secondary">@device.DeviceType</span>
+                        </td>
+                        <td class="fw-bold">@device.Name</td>
+                        <td>@device.ServiceItems.Count</td>
+                        <td class="text-end">
+                            <div class="btn-group">
+                                <a asp-page="./Edit" asp-route-id="@device.Id" class="btn btn-sm btn-outline-warning">Изменить</a>
+                                <a asp-page="./Delete" asp-route-id="@device.Id" class="btn btn-sm btn-outline-danger">Удалить</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

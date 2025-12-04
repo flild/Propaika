@@ -1,0 +1,121 @@
+﻿@page
+@model Propaika_main_app.Pages.Admin.Prices.IndexModel
+@{
+    ViewData["Title"] = "Прайс-лист";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Управление ценами</h2>
+    <a asp-page="./Create" class="btn btn-primary">+ Добавить услугу</a>
+</div>
+
+<!-- Фильтр по модели -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label">Фильтр по модели</label>
+                <select name="FilterDeviceId" class="form-select">
+                    <option value="">Все модели</option>
+                    @foreach (var device in Model.DeviceModels)
+                    {
+                        <option value="@device.Value" selected="@(device.Value == Model.FilterDeviceId?.ToString())">
+                            @device.Text
+                        </option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-secondary">Применить</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Массовое изменение цен -->
+<div class="card mb-4 border-warning">
+    <div class="card-header bg-warning text-dark">
+        <strong>⚡ Массовое изменение цен</strong>
+    </div>
+    <div class="card-body">
+        <form method="post" asp-page-handler="BulkEdit" class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label asp-for="BulkEdit.ChangeType" class="form-label"></label>
+                <select asp-for="BulkEdit.ChangeType" class="form-select">
+                    <option value="percent">Процент (%)</option>
+                    <option value="fixed">Фиксированная сумма (₽)</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label asp-for="BulkEdit.Value" class="form-label"></label>
+                <input asp-for="BulkEdit.Value" type="number" step="0.01" class="form-control" placeholder="10" />
+                <small class="text-muted">Используй минус для уменьшения</small>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="BulkEdit.TargetDeviceId" class="form-label"></label>
+                <select asp-for="BulkEdit.TargetDeviceId" class="form-select" asp-items="Model.DeviceModels">
+                    <option value="">Все модели</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-warning w-100" onclick="return confirm('Применить изменение ко всем выбранным ценам?')">
+                    Применить
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Таблица цен -->
+@if (!Model.Prices.Any())
+{
+    <div class="alert alert-info">Прайс-лист пуст. Добавьте первую услугу!</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Модель устройства</th>
+                    <th>Услуга</th>
+                    <th>Описание</th>
+                    <th class="text-end">Цена</th>
+                    <th>Популярная</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Prices)
+                {
+                    <tr>
+                        <td><span class="badge bg-secondary">@item.DeviceModel?.Name</span></td>
+                        <td class="fw-bold">@item.ServiceName</td>
+                        <td><small class="text-muted">@item.Description</small></td>
+                        <td class="text-end text-success fw-bold">@item.Cost.ToString("N0") ₽</td>
+                        <td>
+                            @if (item.IsPopular)
+                            {
+                                <span class="badge bg-warning text-dark">⭐ ХИТ</span>
+                            }
+                        </td>
+                        <td class="text-end">
+                            <div class="btn-group">
+                                <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning">Изменить</a>
+                                <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Удалить</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}

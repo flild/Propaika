@@ -3,66 +3,73 @@
 @{
 }
 
-<div class="text-center mb-5">
-    <h1 class="display-4 fw-bold neon-text">Кейсы ремонтов</h1>
-    <p class="text-muted lead">Реальные примеры восстановления безнадежной техники</p>
-</div>
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    @foreach (var item in Model.Cases)
+    {
+        <div class="col">
+            <div class="card neon-card h-100 border-0 overflow-hidden">
 
-@if (!Model.Cases.Any())
-{
-    <div class="text-center py-5">
-        <p class="text-muted">Портфолио наполняется...</p>
-    </div>
-}
-else
-{
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-        @foreach (var item in Model.Cases)
-        {
-            <div class="col">
-                <div class="card neon-card h-100 border-0 overflow-hidden">
+                <!-- Слайдер До/После -->
+                <div class="ba-slider">
+                    <!-- Фото ПОСЛЕ (фон, всегда 100%) -->
+                    <div class="ba-img ba-img-after" style="background-image:url('@item.AfterImage');"></div>
 
-                    <!-- Слайдер До/После -->
-                    <div class="ba-slider" style="height: 250px;">
-                        <!-- Фото ПОСЛЕ (Фон) -->
-                        <div class="ba-after" style="background-image: url('@item.AfterImage');"></div>
+                    <!-- Фото ДО (сверху, обрезается clip-path) -->
+                    <div class="ba-img ba-img-before" style="background-image:url('@item.BeforeImage');"></div>
 
-                        <!-- Фото ДО (Сверху, обрезается) -->
-                        <div class="ba-before" style="background-image: url('@item.BeforeImage');"></div>
+                    <!-- Вертикальная линия-разделитель -->
+                    <div class="ba-divider"></div>
 
-                        <!-- Ползунок -->
-                        <input type="range" min="0" max="100" value="50" class="ba-range"
-                               oninput="updateSlider(this)"
-                               aria-label="Сравнение до и после">
+                    <!-- Ручка-ползунок -->
+                    <div class="ba-handle">↔</div>
 
-                        <!-- Лейблы -->
-                        <span class="badge bg-danger position-absolute top-0 start-0 m-2 opacity-75">ДО</span>
-                        <span class="badge bg-success position-absolute top-0 end-0 m-2 opacity-75">ПОСЛЕ</span>
-                    </div>
+                    <!-- Невидимый range -->
+                    <input type="range" min="0" max="100" value="50"
+                           class="ba-range"
+                           oninput="updateSlider(this)"
+                           aria-label="Сравнение до и после" />
 
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title fw-bold text-white">@item.Title</h5>
-                        <p class="card-text text-muted small flex-grow-1">@item.Description</p>
+                    <!-- Лейблы -->
+                    <span class="badge bg-danger ba-label ba-label-before">ДО</span>
+                    <span class="badge bg-success ba-label ba-label-after">ПОСЛЕ</span>
+                </div>
 
-                        <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top border-secondary">
-                            <span class="neon-text fw-bold fs-5">@item.Cost.ToString("N0") ₽</span>
-                            <small class="text-muted">@item.DateCompleted.ToString("dd.MM.yyyy")</small>
-                        </div>
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title fw-bold text-white">@item.Title</h5>
+                    <p class="card-text text-muted small flex-grow-1">@item.Description</p>
+
+                    <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top border-secondary">
+                        <span class="neon-text fw-bold fs-5">@item.Cost.ToString("N0") ₽</span>
+                        <small class="text-muted">@item.DateCompleted.ToString("dd.MM.yyyy")</small>
                     </div>
                 </div>
             </div>
-        }
-    </div>
-}
+        </div>
+    }
+</div>
 
 @section Scripts {
     <script>
-        // JS функция для обновления ширины "Before" картинки при движении ползунка
         function updateSlider(rangeInput) {
-            const sliderContainer = rangeInput.closest('.ba-slider');
-            const beforeImage = sliderContainer.querySelector('.ba-before');
-            const val = rangeInput.value;
-            beforeImage.style.width = val + "%";
+            const slider = rangeInput.closest('.ba-slider');
+            const before = slider.querySelector('.ba-img-before');
+            const divider = slider.querySelector('.ba-divider');
+            const handle = slider.querySelector('.ba-handle');
+
+            const val = rangeInput.value; // 0–100
+
+            // Главная магия: clip-path обрезает справа
+            // val=0  → inset(0 100% 0 0) → ДО не видно
+            // val=50 → inset(0 50% 0 0)  → видна левая половина ДО
+            // val=100→ inset(0 0% 0 0)   → ДО видно полностью
+            before.style.clipPath = `inset(0 ${100 - val}% 0 0)`;
+
+            // Двигаем линию и ручку
+            divider.style.left = val + '%';
+            handle.style.left = val + '%';
         }
+
+        // Инициализация
+        document.querySelectorAll('.ba-slider .ba-range').forEach(r => updateSlider(r));
     </script>
 }

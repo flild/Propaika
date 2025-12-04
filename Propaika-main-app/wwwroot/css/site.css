@@ -1,5 +1,7 @@
-:root {
-    --neon-color: #00f3ff;
+п»ї:root {
+    --neon-main: #00f3ff; /* СЃРёРЅРёР№ РЅРµРѕРЅ РґР»СЏ РїСѓР±Р»РёС‡РЅРѕР№ С‡Р°СЃС‚Рё */
+    --neon-danger: #ff1744; /* РєСЂР°СЃРЅС‹Р№ РЅРµРѕРЅ РґР»СЏ Р°РґРјРёРЅРєРё */
+    --bg-main: #0b0c10;
 }
 
 html[data-bs-theme="dark"] body {
@@ -7,15 +9,15 @@ html[data-bs-theme="dark"] body {
 }
 
 .neon-text {
-    color: var(--neon-color) !important;
-    text-shadow: 0 0 8px rgba(0, 243, 255, 0.7);
+    color: var(--neon-main);
+    text-shadow: 0 0 10px color-mix(in srgb, var(--neon-main) 70%, transparent);
 }
 
 .neon-border {
-    box-shadow: 0 0 16px rgba(0, 243, 255, 0.4);
+    box-shadow: 0 0 16px color-mix(in srgb, var(--neon-main) 40%, transparent);
 }
 
-/* Карточки кейсов/цен */
+/* РљР°СЂС‚РѕС‡РєРё РєРµР№СЃРѕРІ/С†РµРЅ */
 .card.neon-card {
     background: rgba(10, 12, 20, 0.85);
     border: 1px solid rgba(0, 243, 255, 0.2);
@@ -29,13 +31,13 @@ html[data-bs-theme="dark"] body {
         border-color: rgba(0, 243, 255, 0.8);
     }
 
-/* Для светлой темы слегка приглушаем неон */
+/* Р”Р»СЏ СЃРІРµС‚Р»РѕР№ С‚РµРјС‹ СЃР»РµРіРєР° РїСЂРёРіР»СѓС€Р°РµРј РЅРµРѕРЅ */
 html[data-bs-theme="light"] .neon-text {
     text-shadow: none;
 }
 
 
-/* Nav Pills (Вкладки) */
+/* Nav Pills (Р’РєР»Р°РґРєРё) */
 .nav-pills .nav-link {
     color: var(--bs-body-color);
     border: 1px solid transparent;
@@ -44,12 +46,12 @@ html[data-bs-theme="light"] .neon-text {
 
     .nav-pills .nav-link.active {
         background-color: rgba(0, 243, 255, 0.1);
-        color: var(--neon-color);
-        border-color: var(--neon-color);
+        color: var(--neon-main);
+        border-color: var(--neon-main);
         box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
     }
 
-/* Accordion (Аккордеон) */
+/* Accordion (РђРєРєРѕСЂРґРµРѕРЅ) */
 .neon-accordion-item {
     background-color: transparent;
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -64,43 +66,43 @@ html[data-bs-theme="light"] .neon-text {
 .neon-accordion-item .accordion-button {
     background-color: transparent;
     color: var(--bs-body-color);
-    box-shadow: none; /* Убираем синюю обводку фокуса */
+    box-shadow: none; /* РЈР±РёСЂР°РµРј СЃРёРЅСЋСЋ РѕР±РІРѕРґРєСѓ С„РѕРєСѓСЃР° */
 }
 
     .neon-accordion-item .accordion-button:not(.collapsed) {
         background-color: rgba(0, 243, 255, 0.05);
-        color: var(--neon-color);
+        color: var(--neon-main);
         border-bottom: 1px solid rgba(0, 243, 255, 0.2);
     }
 
-/* Иконка стрелочки аккордеона - красим в неон */
+/* РРєРѕРЅРєР° СЃС‚СЂРµР»РѕС‡РєРё Р°РєРєРѕСЂРґРµРѕРЅР° - РєСЂР°СЃРёРј РІ РЅРµРѕРЅ */
 .accordion-button::after {
-    filter: invert(1) grayscale(100%) brightness(200%); /* Белая для темной темы */
+    filter: invert(1) grayscale(100%) brightness(200%); /* Р‘РµР»Р°СЏ РґР»СЏ С‚РµРјРЅРѕР№ С‚РµРјС‹ */
 }
 
 .accordion-button:not(.collapsed)::after {
-    filter: drop-shadow(0 0 2px var(--neon-color)); /* Неоновая когда открыта */
-    background-image: url("data:image/svg+xml,..."); /* Можно заменить на свою SVG стрелку */
+    filter: drop-shadow(0 0 2px var(--neon-main)); /* РќРµРѕРЅРѕРІР°СЏ РєРѕРіРґР° РѕС‚РєСЂС‹С‚Р° */
+    background-image: url("data:image/svg+xml,..."); /* РњРѕР¶РЅРѕ Р·Р°РјРµРЅРёС‚СЊ РЅР° СЃРІРѕСЋ SVG СЃС‚СЂРµР»РєСѓ */
 }
 
-/* Таблица внутри */
+/* РўР°Р±Р»РёС†Р° РІРЅСѓС‚СЂРё */
 .table-hover tbody tr:hover {
     background-color: rgba(0, 243, 255, 0.03);
 }
 
-/* --- Слайдер До/После --- */
+/* --- РЎР»Р°Р№РґРµСЂ Р”Рѕ/РџРѕСЃР»Рµ --- */
 .ba-slider {
     position: relative;
     width: 100%;
+    height: 250px;
     overflow: hidden;
-    background-color: #000; /* Цвет подложки */
+    background-color: #000;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.ba-after,
-.ba-before {
+.ba-img {
     position: absolute;
-    top: 0;
-    left: 0;
+    inset: 0;
     width: 100%;
     height: 100%;
     background-size: cover;
@@ -108,27 +110,117 @@ html[data-bs-theme="light"] .neon-text {
     background-repeat: no-repeat;
 }
 
-/* Слой "До" лежит сверху и меняет ширину */
-.ba-before {
-    width: 50%; /* Начальное положение */
-    border-right: 2px solid var(--neon-color); /* Разделительная линия */
+.ba-img-after {
     z-index: 1;
 }
-
-/* Ползунок (input range) растянут на весь блок, но невидим */
-.ba-range {
+/* СЃР»РѕР№ Р”Рћ вЂ” РїРѕРІРµСЂС…, РѕР±СЂРµР·Р°РµРј РїРѕ width + clip-path */
+.ba-img-before {
+    z-index: 2;
+    /* РћР±СЂРµР·Р°РµРј СЃРїСЂР°РІР°: inset(top right bottom left) */
+    /* РџСЂРё value=50 в†’ clip-path: inset(0 50% 0 0) вЂ” РІРёРґРЅР° Р»РµРІР°СЏ РїРѕР»РѕРІРёРЅР° */
+    clip-path: inset(0 50% 0 0);
+}
+/* Р’РµСЂС‚РёРєР°Р»СЊРЅР°СЏ СЂР°Р·РґРµР»РёС‚РµР»СЊРЅР°СЏ Р»РёРЅРёСЏ */
+.ba-divider {
     position: absolute;
     top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 2;
-    opacity: 0;
-    cursor: e-resize; /* Курсор стрелочки влево-вправо */
+    bottom: 0;
+    width: 2px;
+    background: var(--neon-main);
+    box-shadow: 0 0 10px var(--neon-main);
+    z-index: 3;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
-/* Эффект при наведении на карточку кейса */
+/* РїСЂРѕР·СЂР°С‡РЅС‹Р№ range РЅР° РІСЃСЋ С€РёСЂРёРЅСѓ вЂ” РґР»СЏ Р·Р°С…РІР°С‚Р° РјС‹С€Рё */
+.ba-range {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: ew-resize;
+    z-index: 5;
+    margin: 0;
+}
+
+/* СЂСѓС‡РєР°вЂ‘РїРѕР»Р·СѓРЅРѕРє */
+.ba-handle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid var(--neon-main);
+    box-shadow: 0 0 12px var(--neon-main);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--neon-main);
+    font-size: 16px;
+    z-index: 4;
+    pointer-events: none;
+}
+
+/* Р±РµР№РґР¶Рё, С‡С‚РѕР±С‹ РёС… РЅРµ РѕР±СЂРµР·Р°Р»Рѕ */
+.ba-label {
+    position: absolute;
+    top: .5rem;
+    z-index: 6;
+    pointer-events: none;
+}
+
+.ba-label-before {
+    left: .5rem;
+}
+
+.ba-label-after {
+    right: .5rem;
+}
+
+@media (max-width: 576px) {
+    .ba-slider {
+        height: 200px;
+    }
+}
+
+/* Р­С„С„РµРєС‚ РїСЂРё РЅР°РІРµРґРµРЅРёРё РЅР° РєР°СЂС‚РѕС‡РєСѓ РєРµР№СЃР° */
 .neon-card:hover .ba-before {
     border-right-color: #fff;
-    box-shadow: 0 0 10px var(--neon-color);
+    box-shadow: 0 0 10px var(--neon-main);
 }
+
+.admin-body {
+    --neon-main: var(--neon-danger); 
+    background-color: #050308;
+    background-image: radial-gradient(circle at 10% 20%, rgba(255, 23, 68, 0.15) 0, transparent 40%), radial-gradient(circle at 90% 80%, rgba(255, 82, 82, 0.12) 0, transparent 45%);
+}
+
+.admin-body .navbar {
+    background: rgba(10, 2, 8, 0.95);
+    border-bottom: 1px solid rgba(255, 23, 68, 0.4);
+    box-shadow: 0 0 18px rgba(255, 23, 68, 0.45);
+}
+
+.admin-body .card {
+    background: rgba(15, 10, 15, 0.9);
+    border-color: rgba(255, 23, 68, 0.25);
+}
+
+.admin-body .btn-primary,
+.admin-body .btn-success,
+.admin-body .btn-warning {
+    background-color: var(--neon-danger);
+    border-color: var(--neon-danger);
+    box-shadow: 0 0 12px rgba(255, 23, 68, 0.5);
+}
+
+    .admin-body .btn-primary:hover,
+    .admin-body .btn-success:hover,
+    .admin-body .btn-warning:hover {
+        filter: brightness(1.1);
+    }
