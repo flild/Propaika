@@ -2,120 +2,190 @@
 @model Propaika_main_app.Pages.Admin.Prices.IndexModel
 @{
     ViewData["Title"] = "Прайс-лист";
+    bool isSingleMode = Model.FilterDeviceId.HasValue;
 }
 
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Управление ценами</h2>
-    <a asp-page="./Create" class="btn btn-primary">+ Добавить услугу</a>
+    <h2>
+        @if (isSingleMode)
+        {
+            <span class="text-primary">@Model.DeviceModels.FirstOrDefault(x => x.Value == Model.FilterDeviceId.ToString())?.Text</span>
+        }
+        else
+        {
+            <span>Общий прайс-лист</span>
+        }
+    </h2>
+    <button class="btn btn-success" onclick="openModal()">
+        <i class="bi bi-plus-lg"></i> Добавить услугу
+    </button>
 </div>
 
-<!-- Фильтр по модели -->
-<div class="card mb-4">
-    <div class="card-body">
-        <form method="get" class="row g-3 align-items-end">
-            <div class="col-md-4">
-                <label class="form-label">Фильтр по модели</label>
-                <select name="FilterDeviceId" class="form-select">
-                    <option value="">Все модели</option>
-                    @foreach (var device in Model.DeviceModels)
-                    {
-                        <option value="@device.Value" selected="@(device.Value == Model.FilterDeviceId?.ToString())">
-                            @device.Text
-                        </option>
-                    }
-                </select>
-            </div>
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-secondary">Применить</button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- Массовое изменение цен -->
-<div class="card mb-4 border-warning">
-    <div class="card-header bg-warning text-dark">
-        <strong>⚡ Массовое изменение цен</strong>
-    </div>
-    <div class="card-body">
-        <form method="post" asp-page-handler="BulkEdit" class="row g-3 align-items-end">
-            <div class="col-md-3">
-                <label asp-for="BulkEdit.ChangeType" class="form-label"></label>
-                <select asp-for="BulkEdit.ChangeType" class="form-select">
-                    <option value="percent">Процент (%)</option>
-                    <option value="fixed">Фиксированная сумма (₽)</option>
-                </select>
-            </div>
-            <div class="col-md-2">
-                <label asp-for="BulkEdit.Value" class="form-label"></label>
-                <input asp-for="BulkEdit.Value" type="number" step="0.01" class="form-control" placeholder="10" />
-                <small class="text-muted">Используй минус для уменьшения</small>
-            </div>
-            <div class="col-md-4">
-                <label asp-for="BulkEdit.TargetDeviceId" class="form-label"></label>
-                <select asp-for="BulkEdit.TargetDeviceId" class="form-select" asp-items="Model.DeviceModels">
-                    <option value="">Все модели</option>
-                </select>
-            </div>
-            <div class="col-md-3">
-                <button type="submit" class="btn btn-warning w-100" onclick="return confirm('Применить изменение ко всем выбранным ценам?')">
-                    Применить
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- Таблица цен -->
-@if (!Model.Prices.Any())
-{
-    <div class="alert alert-info">Прайс-лист пуст. Добавьте первую услугу!</div>
-}
-else
-{
-    <div class="table-responsive">
-        <table class="table table-hover">
-            <thead class="table-dark">
-                <tr>
-                    <th>Модель устройства</th>
-                    <th>Услуга</th>
-                    <th>Описание</th>
-                    <th class="text-end">Цена</th>
-                    <th>Популярная</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.Prices)
+<!-- Фильтр -->
+<div class="card mb-4 bg-light">
+    <div class="card-body py-2 d-flex align-items-center gap-3">
+        <label class="fw-bold">Выберите устройство:</label>
+        <form method="get" class="flex-grow-1">
+            <select name="FilterDeviceId" class="form-select" onchange="this.form.submit()">
+                <option value="">-- Все устройства (Глобальное управление) --</option>
+                @foreach (var dev in Model.DeviceModels)
                 {
-                    <tr>
-                        <td><span class="badge bg-secondary">@item.DeviceModel?.Name</span></td>
-                        <td class="fw-bold">@item.ServiceName</td>
-                        <td><small class="text-muted">@item.Description</small></td>
-                        <td class="text-end text-success fw-bold">@item.Cost.ToString("N0") ₽</td>
-                        <td>
-                            @if (item.IsPopular)
-                            {
-                                <span class="badge bg-warning text-dark">⭐ ХИТ</span>
-                            }
-                        </td>
-                        <td class="text-end">
-                            <div class="btn-group">
-                                <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning">Изменить</a>
-                                <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Удалить</a>
-                            </div>
-                        </td>
-                    </tr>
+                    <option value="@dev.Value" selected="@(dev.Value == Model.FilterDeviceId?.ToString())">
+                        @dev.Text
+                    </option>
                 }
-            </tbody>
-        </table>
+            </select>
+        </form>
+        @if (isSingleMode)
+        {
+            <a asp-page="./Index" class="btn btn-outline-secondary btn-sm">Сбросить</a>
+        }
     </div>
-}
+</div>
 
-@if (TempData["Success"] != null)
-{
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        @TempData["Success"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+<div class="table-responsive bg-white shadow-sm rounded">
+    <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+            <tr>
+                <th>Услуга</th>
+                <th>Стоимость</th>
+                <th>Описание</th>
+                @if (isSingleMode)
+                {
+                    <th class="text-center">Активна</th>
+                }
+                <th class="text-end">Опции</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.ServiceList)
+            {
+                <tr>
+                    <td class="fw-bold">@item.ServiceName @if(item.IsPopular){
+                    <span class="badge bg-warning text-dark">Хит</span>
+                }
+</td>
+
+                <td>
+                    @if (!isSingleMode && item.IsVaryingPrice)
+                    {
+                        <span class="badge bg-info text-dark" title="Цены отличаются на разных устройствах">Разные цены</span>
+                        <small class="text-muted d-block">от @item.DisplayCost.ToString("N0") ₽</small>
+                    }
+                    else
+                    {
+                        <span class="fw-bold text-success">@item.DisplayCost.ToString("N0") ₽</span>
+                    }
+                </td>
+
+                <td><small class="text-muted">@item.Description</small></td>
+
+                @if (isSingleMode)
+                {
+                    <td class="text-center">
+                        <div class="form-check form-switch d-inline-block">
+                            <input class="form-check-input" type="checkbox"
+                                   @(item.IsEnabled ? "checked" : "")
+                                   onchange="toggleService(@item.Id, @Model.FilterDeviceId, this.checked)">
+                        </div>
+                    </td>
+                }
+
+                <td class="text-end">
+                    <button class="btn btn-sm btn-outline-primary"
+                            onclick="openModal(@item.Id, '@item.ServiceName', @item.DisplayCost.ToString(System.Globalization.CultureInfo.InvariantCulture), '@item.Description', '@item.IsPopular.ToString().ToLower()')">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                </td>
+            </tr>
+                        }
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="editorModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" asp-page-handler="Save">
+                <input type="hidden" name="FilterDeviceId" value="@Model.FilterDeviceId" />
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">Редактирование</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" asp-for="Input.Id" id="inputId" />
+
+                    <div class="mb-3">
+                        <label asp-for="Input.ServiceName" class="form-label">Название</label>
+                        <input asp-for="Input.ServiceName" class="form-control" id="inputName" required />
+                        @if (isSingleMode)
+                        {
+                            <div class="form-text text-warning">Изменение названия изменит его для ВСЕХ моделей!</div>
+                        }
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.BaseCost" class="form-label">
+                            @(isSingleMode ? "Цена для этой модели" : "Базовая цена (для всех моделей)")
+                        </label>
+                        <input asp-for="Input.BaseCost" type="number" class="form-control" id="inputCost" required />
+                        @if (!isSingleMode)
+                        {
+                            <div class="form-text text-danger">Внимание: это перезапишет индивидуальные цены на всех устройствах!</div>
+                        }
+                    </div>
+
+                    <!-- Остальные поля (Description, IsPopular) -->
+                    <div class="mb-3">
+                        <label asp-for="Input.Description" class="form-label">Описание</label>
+                        <textarea asp-for="Input.Description" class="form-control" id="inputDesc" rows="2"></textarea>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input asp-for="Input.IsPopular" class="form-check-input" type="checkbox" id="inputPop" />
+                        <label asp-for="Input.IsPopular" class="form-check-label">Популярное</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </div>
+            </form>
+        </div>
     </div>
-}
+</div>
+
+@section Scripts {
+    <script>
+        function openModal(id, name, cost, desc, isPop) {
+            var modal = new bootstrap.Modal(document.getElementById('editorModal'));
+            
+            if (id) {
+                document.getElementById('modalTitle').innerText = 'Редактирование услуги';
+                document.getElementById('inputId').value = id;
+                document.getElementById('inputName').value = name;
+                document.getElementById('inputCost').value = cost;
+                document.getElementById('inputDesc').value = desc || '';
+                document.getElementById('inputPop').checked = (isPop === 'true');
+            } else {
+                document.getElementById('modalTitle').innerText = 'Новая услуга';
+                document.getElementById('inputId').value = '';
+                document.getElementById('inputName').value = '';
+                document.getElementById('inputCost').value = '';
+                document.getElementById('inputDesc').value = '';
+                document.getElementById('inputPop').checked = false;
+            }
+            modal.show();
+        }
+
+        function toggleService(svcId, devId, state) {
+            fetch(`?handler=ToggleDevice`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                },
+                body: `serviceId=${svcId}&deviceId=${devId}&state=${state}`
+            });
+        }
+    </script>
+    }

@@ -23,7 +23,7 @@ namespace Propaika_main_app.Pages.Prices
         {
             // Жадная загрузка (Include) цен сразу, сортировка моделей по новизне (Id desc или по имени)
             var devices = await _db.DeviceModels
-                .Include(d => d.ServiceItems)
+                .Include(d => d.DeviceModelServices)
                 .OrderByDescending(d => d.Id)
                 .ToListAsync();
 

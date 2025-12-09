@@ -67,7 +67,7 @@
                                 </h2>
                                 <div id="@collapseId" class="accordion-collapse collapse" data-bs-parent="#accordion-@type">
                                     <div class="accordion-body">
-                                        @if (device.ServiceItems.Any())
+                                        @if (true)//device.ServiceItems.Any())
                                         {
                                             <div class="table-responsive">
                                                 <table class="table table-hover align-middle">
@@ -80,18 +80,18 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @foreach (var price in device.ServiceItems)
+                                                        @foreach (var price in device.DeviceModelServices)
                                                         {
                                                             <tr>
-                                                                <td class="fw-medium">@price.ServiceName</td>
-                                                                <td class="text-muted small">@price.Description</td>
+                                                                <td class="fw-medium">@price.ServiceItem.ServiceName</td>
+                                                                <td class="text-muted small">@price.ServiceItem.Description</td>
                                                                 <td class="text-end fs-5 text-nowrap neon-text">
                                                                     @price.Cost.ToString("N0") ₽
                                                                 </td>
                                                                 <td class="text-end">
                                                                     <!-- Кнопка сразу открывает модалку заявки с предзаполненным текстом -->
                                                                     <button class="btn btn-sm btn-outline-info"
-                                                                            onclick="openOrderModal('@device.Name', '@price.ServiceName')">
+                                                                            onclick="openOrderModal('@device.Name', '@price.ServiceItem.ServiceName')">
                                                                         Заказать
                                                                     </button>
                                                                 </td>

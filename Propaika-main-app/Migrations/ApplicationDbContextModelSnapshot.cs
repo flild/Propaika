@@ -242,6 +242,27 @@ namespace Propaika_main_app.Migrations
                     b.ToTable("DeviceModels");
                 });
 
+            modelBuilder.Entity("Propaika_main_app.Models.DeviceModelServiceItem", b =>
+                {
+                    b.Property<int>("DeviceModelId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ServiceItemId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Cost")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("IsEnabled")
+                        .HasColumnType("tinyint(1)");
+
+                    b.HasKey("DeviceModelId", "ServiceItemId");
+
+                    b.HasIndex("ServiceItemId");
+
+                    b.ToTable("DeviceModelServices");
+                });
+
             modelBuilder.Entity("Propaika_main_app.Models.RepairRequest", b =>
                 {
                     b.Property<int>("Id")
@@ -346,9 +367,6 @@ namespace Propaika_main_app.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal>("Cost")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
 
@@ -363,8 +381,6 @@ namespace Propaika_main_app.Migrations
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DeviceModelId");
 
                     b.ToTable("ServiceItems");
                 });
@@ -420,6 +436,25 @@ namespace Propaika_main_app.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Propaika_main_app.Models.DeviceModelServiceItem", b =>
+                {
+                    b.HasOne("Propaika_main_app.Models.DeviceModel", "DeviceModel")
+                        .WithMany("DeviceModelServices")
+                        .HasForeignKey("DeviceModelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Propaika_main_app.Models.ServiceItem", "ServiceItem")
+                        .WithMany("DeviceModelServices")
+                        .HasForeignKey("ServiceItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DeviceModel");
+
+                    b.Navigation("ServiceItem");
+                });
+
             modelBuilder.Entity("Propaika_main_app.Models.RepairRequest", b =>
                 {
                     b.HasOne("Propaika_main_app.Models.DeviceModel", "DeviceModel")
@@ -435,20 +470,14 @@ namespace Propaika_main_app.Migrations
                     b.Navigation("ServiceItem");
                 });
 
-            modelBuilder.Entity("Propaika_main_app.Models.ServiceItem", b =>
-                {
-                    b.HasOne("Propaika_main_app.Models.DeviceModel", "DeviceModel")
-                        .WithMany("ServiceItems")
-                        .HasForeignKey("DeviceModelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("DeviceModel");
-                });
-
             modelBuilder.Entity("Propaika_main_app.Models.DeviceModel", b =>
                 {
-                    b.Navigation("ServiceItems");
+                    b.Navigation("DeviceModelServices");
+                });
+
+            modelBuilder.Entity("Propaika_main_app.Models.ServiceItem", b =>
+                {
+                    b.Navigation("DeviceModelServices");
                 });
 #pragma warning restore 612, 618
         }
