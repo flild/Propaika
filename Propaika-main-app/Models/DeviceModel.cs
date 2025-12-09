@@ -9,6 +9,6 @@ namespace Propaika_main_app.Models
         public DeviceType DeviceType { get; set; }
 
         // Связь с ценами для этого устройства
-        public List<ServiceItem> ServiceItems { get; set; } = new();
+        public List<DeviceModelServiceItem> DeviceModelServices { get; set; } = new();
     }
 }

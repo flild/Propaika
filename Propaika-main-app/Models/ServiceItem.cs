@@ -15,6 +15,6 @@ namespace Propaika_main_app.Models
         public bool IsPopular { get; set; } 
 
         public int DeviceModelId { get; set; }
-        public DeviceModel? DeviceModel { get; set; }
+        public List<DeviceModelServiceItem> DeviceModelServices { get; set; } = new();
     }
 }

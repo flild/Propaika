@@ -16,6 +16,7 @@ namespace Propaika_main_app.Data
         public DbSet<ServiceItem> ServiceItems { get; set; }
         public DbSet<ServiceCase> ServiceCases { get; set; }
         public DbSet<RepairRequest> RepairRequests { get; set; }
+        public DbSet<DeviceModelServiceItem> DeviceModelServices { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -23,6 +24,19 @@ namespace Propaika_main_app.Data
             modelBuilder.Entity<ServiceCase>()
                 .HasIndex(c => c.Slug)
                 .IsUnique();
+
+            modelBuilder.Entity<DeviceModelServiceItem>()
+    .HasKey(dms => new { dms.DeviceModelId, dms.ServiceItemId });
+
+            modelBuilder.Entity<DeviceModelServiceItem>()
+                .HasOne(dms => dms.DeviceModel)
+                .WithMany(dm => dm.DeviceModelServices)
+                .HasForeignKey(dms => dms.DeviceModelId);
+
+            modelBuilder.Entity<DeviceModelServiceItem>()
+                .HasOne(dms => dms.ServiceItem)
+                .WithMany(si => si.DeviceModelServices)
+                .HasForeignKey(dms => dms.ServiceItemId);
         }
     }
 }
