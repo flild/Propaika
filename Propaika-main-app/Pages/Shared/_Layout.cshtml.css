@@ -1,13 +1,12 @@
 ﻿/* Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
-
 .container-custom {
-    max-width: 1600px; 
+    max-width: 1800px;
     width: 100%;
     margin-right: auto;
     margin-left: auto;
-    padding-right: var(--bs-gutter-x, .75rem);
-    padding-left: var(--bs-gutter-x, .75rem);
+    padding-right: var(--bs-gutter-x, .85rem);
+    padding-left: var(--bs-gutter-x, .85rem);
 }
 
 a.navbar-brand {
@@ -55,29 +54,3 @@ button.accept-policy {
   white-space: nowrap;
   line-height: 60px;
 }
-
-/* Кнопка смены темы (Красивая) */
-.theme-icon-btn {
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--bs-body-color);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow: hidden;
-    position: relative;
-}
-
-    /* Ховер эффект для кнопки */
-    .theme-icon-btn:hover {
-        background: rgba(0, 243, 255, 0.1);
-        border-color: var(--neon-main);
-        color: var(--neon-main);
-        box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
-        transform: rotate(15deg);
-    }
-

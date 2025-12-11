@@ -1,23 +1,110 @@
-﻿:root {
+﻿/* =======================================================
+   1. VARIABLES & BASE
+   ======================================================= */
+
+:root {
     --neon-main: #00f3ff; /* синий неон для публичной части */
     --neon-danger: #ff1744; /* красный неон для админки */
     --bg-main: #0b0c10;
 }
 
+/* =======================================================
+   2. THEMES (LIGHT / DARK)
+   ======================================================= */
+
+/* Темная тема для публичной части */
 html[data-bs-theme="dark"] body {
     background: radial-gradient(circle at top, #10121a 0, #020308 60%, #000 100%);
     color: #e0e0e0;
 }
 
+/* Светлая тема для публичной части */
+html[data-bs-theme="light"] body {
+    background: #f5f7fa; /* Чуть серый фон, чтобы глазам было приятно */
+    color: #212529;
+}
 
+/* Для светлой темы слегка приглушаем неон */
+html[data-bs-theme="light"] .neon-text {
+    text-shadow: none;
+}
+
+/* =======================================================
+   3. GLOBAL NEON UTILS
+   ======================================================= */
+
+/* Неоновый текст */
 .neon-text {
     color: var(--neon-main);
     text-shadow: 0 0 10px color-mix(in srgb, var(--neon-main) 70%, transparent);
 }
 
+/* Неоновая рамка */
 .neon-border {
     box-shadow: 0 0 16px color-mix(in srgb, var(--neon-main) 40%, transparent);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
+
+.neon-border:hover {
+    box-shadow: 0 0 32px color-mix(in srgb, var(--neon-main) 80%, transparent);
+    transform: translateY(-4px);
+}
+
+/* Кнопка в неоновом стиле */
+.btn-neon {
+    background-color: var(--neon-main);
+    color: #000;
+    border: 1px solid var(--neon-main);
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
+    transition: all 0.3s ease;
+}
+
+    .btn-neon:hover {
+        background-color: transparent;
+        color: var(--neon-main);
+        box-shadow: 0 0 25px rgba(0, 243, 255, 0.6);
+    }
+
+/* Улучшенные поля формы */
+.form-control:focus {
+    background-color: #0b0c10;
+    color: #fff;
+    border-color: var(--neon-main);
+    box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+}
+
+/* Фоновый анимированный неоновый круг */
+.neon-circle-bg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    height: 400px;
+    background: var(--neon-main);
+    opacity: 0.15;
+    filter: blur(100px);
+    border-radius: 50%;
+    z-index: 0;
+    animation: pulse-glow 4s infinite alternate;
+}
+
+/* Пульсация неонового фона */
+@keyframes pulse-glow {
+    0% {
+        opacity: 0.1;
+        transform: translate(-50%, -50%) scale(0.9);
+    }
+
+    100% {
+        opacity: 0.2;
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+}
+
+/* =======================================================
+   4. COMPONENTS: CARDS, NAV, ACCORDION, TABLE
+   ======================================================= */
 
 /* Карточки кейсов/цен */
 .card.neon-card {
@@ -32,28 +119,6 @@ html[data-bs-theme="dark"] body {
         box-shadow: 0 0 24px rgba(0, 243, 255, 0.6);
         border-color: rgba(0, 243, 255, 0.8);
     }
-
-/* Адаптация карточек для светлой темы */
-html[data-bs-theme="light"] .card.neon-card {
-    background: #fff;
-    border: 1px solid #e0e0e0;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-}
-
-    html[data-bs-theme="light"] .card.neon-card:hover {
-        box-shadow: 0 15px 40px rgba(0,0,0,0.1);
-        transform: translateY(-4px);
-    }
-
-/* Для светлой темы слегка приглушаем неон */
-html[data-bs-theme="light"] .neon-text {
-    text-shadow: none;
-    background: #f5f7fa;
-    color: #212529;
-}
-
-
-
 
 /* Nav Pills (Вкладки) */
 .nav-pills .nav-link {
@@ -77,44 +142,49 @@ html[data-bs-theme="light"] .neon-text {
     overflow: hidden;
 }
 
-html[data-bs-theme="light"] .neon-accordion-item {
-    border-color: #dee2e6;
-    background: #fff;
-}
+/* В темной теме аккордеон немного подсвечиваем */
 [data-bs-theme="dark"] .neon-accordion-item {
     background-color: rgba(20, 22, 30, 0.6);
 }
 
+/* Кнопка аккордеона */
 .neon-accordion-item .accordion-button {
     background-color: transparent;
     color: var(--bs-body-color);
     box-shadow: none; /* Убираем синюю обводку фокуса */
 }
 
+    /* Открытое состояние кнопки аккордеона */
     .neon-accordion-item .accordion-button:not(.collapsed) {
         background-color: rgba(0, 243, 255, 0.05);
         color: var(--neon-main);
         border-bottom: 1px solid rgba(0, 243, 255, 0.2);
     }
 
-/* Иконка стрелочки аккордеона - красим в неон */
+/* Иконка стрелочки аккордеона - базовый цвет (темная тема) */
 .accordion-button::after {
     filter: invert(1) grayscale(100%) brightness(200%); /* Белая для темной темы */
 }
 
+/* Иконка стрелочки аккордеона - неоновая, когда открыта */
 .accordion-button:not(.collapsed)::after {
     filter: drop-shadow(0 0 2px var(--neon-main)); /* Неоновая когда открыта */
     background-image: url("data:image/svg+xml,..."); /* Можно заменить на свою SVG стрелку */
 }
-html[data-bs-theme="light"] .accordion-button:not(.collapsed) {
-    background-color: #e3f2fd;
-    color: #0c63e4;
-}
 
-/* Таблица внутри */
+/* Таблица внутри аккордеона: hover по строке */
 .table-hover tbody tr:hover {
     background-color: rgba(0, 243, 255, 0.03);
 }
+
+img.neon-border {
+    outline: none !important;
+    border: none !important;
+}
+
+/* =======================================================
+   5. COMPONENT: BEFORE / AFTER SLIDER
+   ======================================================= */
 
 /* --- Слайдер До/После --- */
 .ba-slider {
@@ -126,6 +196,7 @@ html[data-bs-theme="light"] .accordion-button:not(.collapsed) {
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+/* Общий слой фоновой картинки */
 .ba-img {
     position: absolute;
     inset: 0;
@@ -136,16 +207,19 @@ html[data-bs-theme="light"] .accordion-button:not(.collapsed) {
     background-repeat: no-repeat;
 }
 
+/* Слой ПОСЛЕ (под слоем ДО) */
 .ba-img-after {
     z-index: 1;
 }
-/* слой ДО — поверх, обрезаем по width + clip-path */
+
+/* Слой ДО — поверх, обрезаем по width + clip-path */
 .ba-img-before {
     z-index: 2;
     /* Обрезаем справа: inset(top right bottom left) */
     /* При value=50 → clip-path: inset(0 50% 0 0) — видна левая половина */
     clip-path: inset(0 50% 0 0);
 }
+
 /* Вертикальная разделительная линия */
 .ba-divider {
     position: absolute;
@@ -159,7 +233,7 @@ html[data-bs-theme="light"] .accordion-button:not(.collapsed) {
     transform: translateX(-50%);
 }
 
-/* прозрачный range на всю ширину — для захвата мыши */
+/* Прозрачный range на всю ширину — для захвата мыши */
 .ba-range {
     position: absolute;
     inset: 0;
@@ -171,7 +245,7 @@ html[data-bs-theme="light"] .accordion-button:not(.collapsed) {
     margin: 0;
 }
 
-/* ручка‑ползунок */
+/* Ручка‑ползунок */
 .ba-handle {
     position: absolute;
     top: 50%;
@@ -192,7 +266,7 @@ html[data-bs-theme="light"] .accordion-button:not(.collapsed) {
     pointer-events: none;
 }
 
-/* бейджи, чтобы их не обрезало */
+/* Бейджи ДО/ПОСЛЕ, чтобы их не обрезало */
 .ba-label {
     position: absolute;
     top: .5rem;
@@ -208,52 +282,97 @@ html[data-bs-theme="light"] .accordion-button:not(.collapsed) {
     right: .5rem;
 }
 
-@media (max-width: 576px) {
-    .ba-slider {
-        height: 200px;
-    }
-}
-
-/* Эффект при наведении на карточку кейса */
+/* Эффект при наведении на карточку кейса с слайдером */
 .neon-card:hover .ba-before {
     border-right-color: #fff;
     box-shadow: 0 0 10px var(--neon-main);
 }
 
+/* =======================================================
+   6. COMPONENT: MAP
+   ======================================================= */
+
+/* Обертка карты с неоновым стилем */
+.map-wrapper {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    border: 1px solid rgba(0, 243, 255, 0.3);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+    height: 400px;
+    background: #000;
+}
+
+/* В темной теме инвертируем карту */
+html[data-bs-theme="dark"] .map-wrapper iframe {
+    filter: grayscale(100%) invert(100%) contrast(30%) brightness(300%);
+    -webkit-filter: grayscale(100%) invert(100%) contrast(100%) brightness(120%);
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* Накладываем цветной слой поверх карты в темной теме */
+html[data-bs-theme="dark"] .map-wrapper::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2; /* Поверх карты */
+    pointer-events: none;
+    background: linear-gradient(135deg, rgba(0, 243, 255, 0.8) 0%, rgba(0, 149, 255, 0.8));
+    mix-blend-mode: multiply;
+}
+
+/* Неоновое свечение при наведении на карту */
+.map-wrapper:hover {
+    box-shadow: 0 0 25px rgba(0, 243, 255, 0.4);
+    border-color: var(--neon-main);
+}
+
+/* =======================================================
+   7. ADMIN AREA
+   ======================================================= */
+
+/* Общий фон и палитра админки */
 .admin-body {
-    --neon-main: var(--neon-danger); 
+    --neon-main: var(--neon-danger);
     background-color: #050308;
     background-image: radial-gradient(circle at 10% 20%, rgba(255, 23, 68, 0.15) 0, transparent 40%), radial-gradient(circle at 90% 80%, rgba(255, 82, 82, 0.12) 0, transparent 45%);
 }
 
-.admin-body .navbar {
-    background: rgba(10, 2, 8, 0.95);
-    border-bottom: 1px solid rgba(255, 23, 68, 0.4);
-    box-shadow: 0 0 18px rgba(255, 23, 68, 0.45);
-}
-
-.admin-body .card {
-    background: rgba(15, 10, 15, 0.9);
-    border-color: rgba(255, 23, 68, 0.25);
-}
-
-.admin-body .btn-primary,
-.admin-body .btn-success,
-.admin-body .btn-warning {
-    background-color: var(--neon-danger);
-    border-color: var(--neon-danger);
-    box-shadow: 0 0 12px rgba(255, 23, 68, 0.5);
-}
-
-    .admin-body .btn-primary:hover,
-    .admin-body .btn-success:hover,
-    .admin-body .btn-warning:hover {
-        filter: brightness(1.1);
+    /* Навбар админки */
+    .admin-body .navbar {
+        background: rgba(10, 2, 8, 0.95);
+        border-bottom: 1px solid rgba(255, 23, 68, 0.4);
+        box-shadow: 0 0 18px rgba(255, 23, 68, 0.45);
     }
 
-/* Локальные стили для таблицы цен, дополняющие site.css */
+    /* Карточки в админке */
+    .admin-body .card {
+        background: rgba(15, 10, 15, 0.9);
+        border-color: rgba(255, 23, 68, 0.25);
+    }
 
-/* Свечение цены */
+    /* Кнопки в админке (primary/success/warning в одном стиле) */
+    .admin-body .btn-primary,
+    .admin-body .btn-success,
+    .admin-body .btn-warning {
+        background-color: var(--neon-danger);
+        border-color: var(--neon-danger);
+        box-shadow: 0 0 12px rgba(255, 23, 68, 0.5);
+    }
+
+        .admin-body .btn-primary:hover,
+        .admin-body .btn-success:hover,
+        .admin-body .btn-warning:hover {
+            filter: brightness(1.1);
+        }
+
+/* =======================================================
+   8. PRICE TABLE EXTRAS
+   ======================================================= */
+
+/* Свечение цены в таблице */
 .neon-price {
     color: var(--neon-main);
     text-shadow: 0 0 8px rgba(0, 243, 255, 0.4);
@@ -261,7 +380,7 @@ html[data-bs-theme="light"] .accordion-button:not(.collapsed) {
     white-space: nowrap;
 }
 
-/* Эффект при наведении на строку таблицы */
+/* Строки таблицы внутри аккордеона */
 .neon-accordion-item tbody tr {
     transition: background-color 0.2s ease;
     border-bottom: 1px solid rgba(255, 255, 255, 0.03);
@@ -288,7 +407,24 @@ html[data-bs-theme="light"] .accordion-button:not(.collapsed) {
         border-color: var(--neon-main);
     }
 
-/* Адаптивность для мобильных */
+/* =======================================================
+   9. RESPONSIVE (MOBILE)
+   ======================================================= */
+
+/* Адаптивность для слайдера и карточки на мобильных */
+@media (max-width: 576px) {
+    .ba-slider {
+        height: 200px;
+    }
+
+    /* Эффект при наведении на карточку кейса на мобильных, если поддерживается hover */
+    .neon-card:hover .ba-before {
+        border-right-color: #fff;
+        box-shadow: 0 0 10px var(--neon-main);
+    }
+}
+
+/* Адаптивность для вкладок и цены на мобильных */
 @media (max-width: 576px) {
     .nav-pills .nav-link {
         padding: 0.5rem 1rem;
@@ -299,65 +435,3 @@ html[data-bs-theme="light"] .accordion-button:not(.collapsed) {
         font-size: 1rem;
     }
 }
-
-
-.neon-circle-bg {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 400px;
-    height: 400px;
-    background: var(--neon-main);
-    opacity: 0.15;
-    filter: blur(100px);
-    border-radius: 50%;
-    z-index: 0;
-    animation: pulse-glow 4s infinite alternate;
-}
-
-@keyframes pulse-glow {
-    0% {
-        opacity: 0.1;
-        transform: translate(-50%, -50%) scale(0.9);
-    }
-
-    100% {
-        opacity: 0.2;
-        transform: translate(-50%, -50%) scale(1.1);
-    }
-}
-
-.btn-neon {
-    background-color: var(--neon-main);
-    color: #000;
-    border: 1px solid var(--neon-main);
-    box-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
-    transition: all 0.3s ease;
-}
-
-    .btn-neon:hover {
-        background-color: transparent;
-        color: var(--neon-main);
-        box-shadow: 0 0 25px rgba(0, 243, 255, 0.6);
-    }
-
-/* Улучшенные поля формы */
-.form-control:focus {
-    background-color: #0b0c10;
-    color: #fff;
-    border-color: var(--neon-main);
-    box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
-}
-
-/* Светлая тема - кнопка темная */
-html[data-bs-theme="light"] .theme-icon-btn {
-    border-color: rgba(0, 0, 0, 0.1);
-    color: #333;
-}
-
-    html[data-bs-theme="light"] .theme-icon-btn:hover {
-        background: rgba(0, 0, 0, 0.05);
-        color: #000;
-        box-shadow: none;
-    }

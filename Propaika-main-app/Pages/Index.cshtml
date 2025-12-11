@@ -11,47 +11,54 @@
     <div class="row align-items-center">
         <div class="col-lg-6">
             <div class="d-inline-block px-3 py-1 mb-3 rounded-pill border border-info text-info small fw-bold tracking-wide">
-                📍 САНКТ-ПЕТЕРБУРГ
+                САНКТ-ПЕТЕРБУРГ • РЕМОНТ ТЕХНИКИ APPLE
             </div>
-            <h1 class="display-3 fw-bold text-white mb-4 lh-sm">
-                Ремонт Apple <br />
-                <span class="neon-text">на уровне чипа</span>
+
+            <h1 class="display-5 fw-bold text-white mb-4 lh-sm">
+                Ремонт техники Apple 
+                <span class="neon-text">на уровне платы</span>
             </h1>
-            <p class="lead text-white-50 mb-5 pe-lg-5">
-                Мы не просто «меняем батарейки». Мы восстанавливаем материнские платы, спасаем «утопленников» и делаем сложную микропайку, за которую не берутся в сервисах у метро.
+
+            <p class="lead text-white-50 mb-3 pe-lg-5">
+                Восстанавливаем материнские платы, контроллеры питания, аудиокодеки и Face ID
+                после воды, ударов и неудачного ремонта в других сервисах.
+                <span class="neon-text">Работаем под микроскопом</span>, а не «на глаз».
             </p>
+
+            <ul class="text-white-50 mb-4 pe-lg-5 list-unstyled">
+                <li class="mb-1">Спасаем «утопленников» и аппараты после сильных ударов.</li>
+                <li class="mb-1">Чиним плату, а не меняем устройство целиком — <span class="neon-text">экономия до 20%</span>.</li>
+                <li class="mb-1"><span class="neon-text">Гарантия до 1 года</span> и фиксированный прайс до начала работ.</li>
+            </ul>
+
             <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center justify-content-lg-start">
                 <a href="#repair-form" class="btn btn-neon btn-lg px-5 fw-bold">
-                    Записаться на ремонт
+                    Записаться на диагностику
                 </a>
                 <a asp-page="/Prices/Index" class="btn btn-outline-light btn-lg px-5">
-                    Смотреть цены
+                    Посмотреть цены на ремонт Apple
                 </a>
             </div>
 
-            <div class="mt-5 d-flex gap-4 justify-content-center justify-content-lg-start text-white-50 small">
+            <div class="mt-5 d-flex flex-wrap gap-4 justify-content-center justify-content-lg-start text-white-50 small">
                 <div class="d-flex align-items-center gap-2">
                     <i class="bi bi-star-fill text-warning"></i>
-                    <span>5.0 на Авито</span>
+                    <span>5.0 ⭐ на Авито</span>
                 </div>
-                <div class="d-flex align-items-center gap-2">
-                    <i class="bi bi-shield-check text-success"></i>
-                    <span>Гарантия до 1 года</span>
-                </div>
+
             </div>
         </div>
 
         <div class="col-lg-6 mt-5 mt-lg-0 text-center position-relative">
-            <!-- Декоративный круг (можно анимировать в CSS) -->
-            <div class="neon-circle-bg"></div>
             <!-- Иконка или изображение платы -->
             <img src="~/data/Main.png"
                  class="img-fluid rounded-4 shadow-lg position-relative neon-border"
-                 alt="Микропайка iPhone"
+                 alt="Микропайка iPhone в сервисе по ремонту Apple в Санкт‑Петербурге"
                  style="z-index: 1;">
         </div>
     </div>
 </section>
+
 
 <!-- FEATURES GRID -->
 <section class="py-5 mb-5">
@@ -103,40 +110,40 @@
 </section>
 
 <!-- MASTER & WORKSHOP (Личный бренд + Оборудование) -->
-<section class="py-5 mb-5">
+<section class="py-5 mb-5 master-section">
     <div class="row align-items-center g-5">
         <div class="col-lg-5 order-lg-2">
             <!-- Здесь должно быть реальное фото мастера -->
             <div class="position-relative">
                 <div class="neon-circle-bg" style="width: 300px; height: 300px; right: -50px; top: -50px;"></div>
-                <img src="/img/master-photo.jpg" onerror="this.src='https://placehold.co/500x600/10121a/00f3ff?text=Master+Photo'"
+                <img src="~/data/Master.png" onerror="this.src='https://placehold.co/500x600/10121a/00f3ff?text=Master+Photo'"
                      class="img-fluid rounded-4 shadow-lg position-relative neon-border"
                      alt="Мастер сервиса PROPAIKA">
 
                 <div class="position-absolute bottom-0 start-0 bg-dark p-3 rounded-top-4 border-top border-end border-info ms-4 mb-n3 shadow-lg">
-                    <p class="mb-0 fw-bold text-white">Алексей</p>
-                    <small class="text-info">Основатель, инженер</small>
+                    <p class="mb-0 fw-bold neon-text">Андрей</p>
+                    <small class="text-white">Основатель, инженер</small>
                 </div>
             </div>
         </div>
         <div class="col-lg-7 order-lg-1">
             <h2 class="fw-bold text-white mb-4">Сервис с <span class="neon-text">человеческим лицом</span></h2>
-            <p class="lead text-white-50 mb-4">
+            <p class="lead text-white-70 mb-4">
                 Я создал этот сервис, устав от «потоковых» мастерских, где телефоны чинят студенты по YouTube.
             </p>
             <div class="vstack gap-3 mb-4">
-                <div class="d-flex gap-3">
+                <div class="d-flex ">
                     <i class="bi bi-tools text-info fs-4"></i>
                     <div>
-                        <h5 class="text-white h6 mb-1">Профессиональное оборудование</h5>
-                        <p class="text-white-50 small mb-0">Используем паяльные станции JBC, микроскопы Nikon и оригинальные трафареты. Никакого «колхоза» и перегрева плат.</p>
+                        <h5 class="text-white h4 mb-1">Профессиональное оборудование</h5>
+                        <p class="text-white-70 small mb-0">Используем паяльные станции JBC, микроскопы Nikon и оригинальные трафареты. Никакого «колхоза» и перегрева плат.</p>
                     </div>
                 </div>
-                <div class="d-flex gap-3">
+                <div class="d-flex ">
                     <i class="bi bi-camera-video text-info fs-4"></i>
                     <div>
-                        <h5 class="text-white h6 mb-1">Фотоотчет процесса</h5>
-                        <p class="text-white-50 small mb-0">Показываем, что внутри вашего устройства до и после ремонта. Вы видите, за что платите.</p>
+                        <h5 class="text-white h4 mb-1">Фотоотчет процесса</h5>
+                        <p class="text-white-70 small mb-0">Показываем, что внутри вашего устройства до и после ремонта. Вы видите, за что платите.</p>
                     </div>
                 </div>
             </div>
@@ -371,14 +378,16 @@
         </div>
 
         <div class="col-lg-7">
-            <!-- Вставка Яндекс.Карты или Google Maps -->
-            <div style="position:relative;overflow:hidden;">
-                <a href="https://yandex.ru/maps/2/saint-petersburg/?utm_medium=mapframe&utm_source=maps" style="color:#eee;font-size:12px;position:absolute;top:0px;">Санкт‑Петербург</a>
-                <a href="https://yandex.ru/maps/2/saint-petersburg/?indoorLevel=1&ll=30.318331%2C59.925619&mode=routes&rtext=59.925675%2C30.318109&rtt=pd&ruri=&utm_medium=mapframe&utm_source=maps&z=18.8" style="color:#eee;font-size:12px;position:absolute;top:14px;">Яндекс Карты</a>
-                <iframe src="https://yandex.ru/map-widget/v1/?indoorLevel=1&ll=30.318331%2C59.925619&mode=routes&rtext=59.925675%2C30.318109&rtt=pd&ruri=&z=18.8"
-                width="560" height="400" frameborder="1" allowfullscreen="true" style="position:relative;">
+            <!-- Обертка для стилизации -->
+            <div class="map-wrapper">
+                <iframe src="https://yandex.ru/map-widget/v1/?indoorLevel=1&ll=30.318835%2C59.925683&mode=poi&poi%5Bpoint%5D=30.318108%2C59.925673&z=17.64"
+                        width="100%"
+                        height="100%"
+                        frameborder="0"
+                        allowfullscreen="true"
+                        style="position:relative;">
                 </iframe>
-                </div>
+            </div>
         </div>
     </div>
 </section>
