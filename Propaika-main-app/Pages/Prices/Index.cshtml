@@ -1,99 +1,118 @@
 ﻿@page
+@using Propaika_main_app.Extra
 @model Propaika_main_app.Pages.Prices.IndexModel
 @{
     ViewData["Title"] = "Цены на ремонт";
 
-    // Словарь для красивых названий вкладок
-    var typeNames = new Dictionary<string, string>
-            {
-                ["Phone"] = "iPhone",
-                ["Tablet"] = "iPad",
-                ["Laptop"] = "MacBook",
-                ["Watch"] = "Apple Watch"
-            };
 
-    // Получаем список доступных типов из базы
-    var availableTypes = Model.DevicesByType.Select(x => x.Key).ToList();
+    // Словарь для красивых иконок и названий
+    ViewData["Title"] = "Стоимость ремонта";
+
+    // 1. Используем Enum в качестве ключа словаря
+    var typeConfig = new Dictionary<DeviceType, (string Name, string Icon)>
+    {
+        [DeviceType.Phone] = ("iPhone", "bi-phone"),
+        [DeviceType.Tablet] = ("iPad", "bi-tablet"),
+        [DeviceType.Laptop] = ("MacBook", "bi-laptop"),
+        [DeviceType.Watch] = ("Apple Watch", "bi-smartwatch")
+    };
+
+    // 2. Получаем список доступных типов (ключи группировки) и сортируем их по порядку Enum (0, 1, 2...)
+    var availableTypes = Model.DevicesByType.Select(x => x.Key).OrderBy(x => x).ToList();
 }
 
-<div class="text-center mb-5">
-    <h1 class="display-4 fw-bold neon-text">Прайс-лист</h1>
-    <p class="text-muted lead">Выберите ваше устройство, чтобы узнать стоимость ремонта</p>
-</div>
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold neon-text mb-3">Прайс-лист</h1>
+        <p class="text-white-50 lead">Выберите ваше устройство, чтобы узнать стоимость ремонта</p>
+    </div>
 
-<!-- Вкладки по типам устройств -->
-<ul class="nav nav-pills justify-content-center mb-5 gap-3" id="pills-tab" role="tablist">
-    @for (int i = 0; i < availableTypes.Count; i++)
+    @if (availableTypes.Count > 0)
     {
-        var type = availableTypes[i];
-        var isActive = i == 0 ? "active" : "";
+        <!-- Навигация (Табы) -->
+        <ul class="nav nav-pills justify-content-center mb-5 gap-2 gap-md-3" id="pills-tab" role="tablist">
+            @for (int i = 0; i < availableTypes.Count; i++)
+            {
+                var typeEnum = availableTypes[i];
+                // Безопасное получение конфига (на случай если добавите новый тип в Enum, но забудете добавить иконку)
+                var config = typeConfig.ContainsKey(typeEnum) ? typeConfig[typeEnum] : (typeEnum.ToString(), "bi-hdd");
+                var isActive = i == 0 ? "active" : "";
 
-        <li class="nav-item" role="presentation">
-            <button class="nav-link @isActive px-4 py-2 fs-5"
-                    id="pills-@type-tab"
-                    data-bs-toggle="pill"
-                    data-bs-target="#pills-@type"
-                    type="button"
-                    role="tab">
-                @typeNames.GetValueOrDefault("button", "button")
-            </button>
-        </li>
-    }
-</ul>
+                // Используем ToString() для генерации ID (например: pills-Phone-tab)
+                var typeStr = typeEnum.ToString();
 
-<!-- Контент вкладок -->
-<div class="tab-content" id="pills-tabContent">
-    @for (int i = 0; i < availableTypes.Count; i++)
-    {
-        var type = availableTypes[i];
-        var isActive = i == 0 ? "show active" : "";
-        var devices = Model.DevicesByType[type].ToList();
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link @isActive px-4 py-2 rounded-pill d-flex align-items-center gap-2"
+                            id="pills-@typeStr-tab"
+                            data-bs-toggle="pill"
+                            data-bs-target="#pills-@typeStr"
+                            type="button" role="tab">
+                        <i class="bi @config.Item2 fs-5"></i>
+                        <span class="fw-bold">@config.Item1</span>
+                    </button>
+                </li>
+            }
+        </ul>
 
-        <div class="tab-pane fade @isActive" id="pills-@type" role="tabpanel">
-            <div class="row justify-content-center">
-                <div class="col-lg-10">
+        <!-- Контент -->
+        <div class="tab-content" id="pills-tabContent">
+            @for (int i = 0; i < availableTypes.Count; i++)
+            {
+                var typeEnum = availableTypes[i];
+                var typeStr = typeEnum.ToString();
+                var isActive = i == 0 ? "show active" : "";
 
-                    <!-- Аккордеон моделей -->
-                    <div class="accordion" id="accordion-@type">
+                // Получаем список устройств для текущего Enum
+                var devices = Model.DevicesByType[typeEnum].ToList();
+
+                <div class="tab-pane fade @isActive" id="pills-@typeStr" role="tabpanel">
+
+                    <div class="accordion" id="accordion-@typeStr">
                         @foreach (var device in devices)
                         {
+                            var activeServices = device.DeviceModelServices.Where(s => s.IsEnabled).ToList();
                             var collapseId = $"collapse-{device.Id}";
+                            var headingId = $"heading-{device.Id}";
 
                             <div class="accordion-item neon-accordion-item mb-3">
-                                <h2 class="accordion-header">
-                                    <button class="accordion-button collapsed fs-5 fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#@collapseId">
+                                <h2 class="accordion-header" id="@headingId">
+                                    <button class="accordion-button collapsed fw-bold text-white fs-5 py-3" type="button"
+                                            data-bs-toggle="collapse"
+                                            data-bs-target="#@collapseId">
                                         @device.Name
                                     </button>
                                 </h2>
-                                <div id="@collapseId" class="accordion-collapse collapse" data-bs-parent="#accordion-@type">
-                                    <div class="accordion-body">
-                                        @if (true)//device.ServiceItems.Any())
+                                <div id="@collapseId" class="accordion-collapse collapse" data-bs-parent="#accordion-@typeStr">
+                                    <div class="accordion-body p-0">
+                                        @if (activeServices.Any())
                                         {
                                             <div class="table-responsive">
-                                                <table class="table table-hover align-middle">
-                                                    <thead class="table-dark">
+                                                <table class="table table-hover table-borderless align-middle mb-0" style="background: transparent;">
+                                                    <thead class="border-bottom border-secondary text-white-50 small text-uppercase">
                                                         <tr>
-                                                            <th>Услуга</th>
-                                                            <th>Описание</th>
-                                                            <th class="text-end">Цена</th>
-                                                            <th class="text-end"></th>
+                                                            <th class="ps-4 py-3">Услуга</th>
+                                                            <th class="py-3">Цена</th>
+                                                            <th class="text-end pe-4 py-3">Запись</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @foreach (var price in device.DeviceModelServices)
+                                                        @foreach (var price in activeServices)
                                                         {
                                                             <tr>
-                                                                <td class="fw-medium">@price.ServiceItem.ServiceName</td>
-                                                                <td class="text-muted small">@price.ServiceItem.Description</td>
-                                                                <td class="text-end fs-5 text-nowrap neon-text">
-                                                                    @price.Cost.ToString("N0") ₽
+                                                                <td class="ps-4 py-3">
+                                                                    <div class="fw-bold text-white">@price.ServiceItem.ServiceName</div>
+                                                                    @if (!string.IsNullOrEmpty(price.ServiceItem.Description))
+                                                                    {
+                                                                        <small class="text-white-50">@price.ServiceItem.Description</small>
+                                                                    }
                                                                 </td>
-                                                                <td class="text-end">
-                                                                    <!-- Кнопка сразу открывает модалку заявки с предзаполненным текстом -->
-                                                                    <button class="btn btn-sm btn-outline-info"
-                                                                            onclick="openOrderModal('@device.Name', '@price.ServiceItem.ServiceName')">
+                                                                <td class="py-3">
+                                                                    <span class="neon-price fs-5">@price.Cost.ToString("N0") ₽</span>
+                                                                </td>
+                                                                <td class="text-end pe-4 py-3">
+                                                                    <a href="#contact-form" class="btn btn-sm btn-outline-info rounded-pill px-3">
                                                                         Заказать
-                                                                    </button>
+                                                                    </a>
                                                                 </td>
                                                             </tr>
                                                         }
@@ -103,16 +122,25 @@
                                         }
                                         else
                                         {
-                                            <p class="text-center text-muted my-3">Цены уточняйте по телефону.</p>
+                                            <div class="p-4 text-center text-white-50">
+                                                <i class="bi bi-chat-text fs-1 d-block mb-2 opacity-50"></i>
+                                                <p class="mb-0">Цены уточняйте у менеджера.</p>
+                                            </div>
                                         }
                                     </div>
                                 </div>
                             </div>
                         }
                     </div>
-
                 </div>
-            </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5">
+            <div class="spinner-border text-info" role="status"></div>
+            <p class="mt-3 text-white-50">Загрузка прайс-листа...</p>
         </div>
     }
 </div>

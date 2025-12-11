@@ -14,7 +14,14 @@ namespace Propaika_main_app.Models
         [Column(TypeName = "decimal(18,2)")]
         public decimal Cost { get; set; }
 
-        public DateTime DateCompleted { get; set; } = DateTime.UtcNow;
+        public DateTime DateCompleted { get; set; } = new DateTime(
+            DateTime.Now.Year,
+            DateTime.Now.Month,
+            DateTime.Now.Day,
+            DateTime.Now.Hour,
+            DateTime.Now.Minute,
+            0
+        );
 
         [MaxLength(200)]
         public string Slug { get; set; } = string.Empty; // ЧПУ для URL: /cases/remont-iphone-13

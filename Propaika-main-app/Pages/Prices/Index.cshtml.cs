@@ -21,13 +21,14 @@ namespace Propaika_main_app.Pages.Prices
 
         public async Task OnGetAsync()
         {
-            // Жадная загрузка (Include) цен сразу, сортировка моделей по новизне (Id desc или по имени)
+            // Жадная загрузка с цепочкой Include -> ThenInclude
             var devices = await _db.DeviceModels
-                .Include(d => d.DeviceModelServices)
-                .OrderByDescending(d => d.Id)
+                .Include(d => d.DeviceModelServices.Where(dms => dms.IsEnabled)) // Фильтруем отключенные услуги сразу в БД
+                    .ThenInclude(dms => dms.ServiceItem) // Подтягиваем данные самой услуги (название, описание)
+                .OrderBy(d => d.Name) // Сортировка по алфавиту для удобства
                 .ToListAsync();
 
-            // Группируем по типу (Phone, Tablet...)
+            // Группируем по типу устройства (Phone, Tablet, Laptop...)
             DevicesByType = devices.ToLookup(d => d.DeviceType);
         }
     }

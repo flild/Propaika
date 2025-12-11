@@ -2,89 +2,383 @@
 @using Propaika.Web.Pages
 @model IndexModel
 @{
-    ViewData["Title"] = "PROPAIKA — Ремонт Apple в СПб";
+    ViewData["Title"] = "PROPAIKA — Профессиональный ремонт Apple в СПб";
+    ViewData["Description"] = "Сложный ремонт iPhone и MacBook в Санкт-Петербурге. BGA пайка, восстановление после воды, замена стекла. Честные цены и гарантия.";
 }
 
-<section class="row align-items-center mb-5">
-    <div class="col-md-6 mb-4 mb-md-0">
-        <h1 class="display-5 fw-bold neon-text mb-3">
-            Ремонт iPhone и Mac в Санкт‑Петербурге
-        </h1>
-        <p class="lead">
-            Пайка, сложные ремонты, восстановление после влаги. Работаем только с техникой Apple.
-        </p>
-        <ul class="list-unstyled">
-            <li>• Бесплатная диагностика при ремонте</li>
-            <li>• Оригинальные запчасти и проверенные аналоги</li>
-            <li>• Реальные кейсы и отзывы на Авито</li>
-        </ul>
+<!-- HERO SECTION -->
+<section id="about" class="hero-section text-center text-lg-start py-5 mb-5">
+    <div class="row align-items-center">
+        <div class="col-lg-6">
+            <div class="d-inline-block px-3 py-1 mb-3 rounded-pill border border-info text-info small fw-bold tracking-wide">
+                📍 САНКТ-ПЕТЕРБУРГ
+            </div>
+            <h1 class="display-3 fw-bold text-white mb-4 lh-sm">
+                Ремонт Apple <br />
+                <span class="neon-text">на уровне чипа</span>
+            </h1>
+            <p class="lead text-white-50 mb-5 pe-lg-5">
+                Мы не просто «меняем батарейки». Мы восстанавливаем материнские платы, спасаем «утопленников» и делаем сложную микропайку, за которую не берутся в сервисах у метро.
+            </p>
+            <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center justify-content-lg-start">
+                <a href="#repair-form" class="btn btn-neon btn-lg px-5 fw-bold">
+                    Записаться на ремонт
+                </a>
+                <a asp-page="/Prices/Index" class="btn btn-outline-light btn-lg px-5">
+                    Смотреть цены
+                </a>
+            </div>
+
+            <div class="mt-5 d-flex gap-4 justify-content-center justify-content-lg-start text-white-50 small">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="bi bi-star-fill text-warning"></i>
+                    <span>5.0 на Авито</span>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <i class="bi bi-shield-check text-success"></i>
+                    <span>Гарантия до 1 года</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 mt-5 mt-lg-0 text-center position-relative">
+            <!-- Декоративный круг (можно анимировать в CSS) -->
+            <div class="neon-circle-bg"></div>
+            <!-- Иконка или изображение платы -->
+            <img src="~/data/Main.png"
+                 class="img-fluid rounded-4 shadow-lg position-relative neon-border"
+                 alt="Микропайка iPhone"
+                 style="z-index: 1;">
+        </div>
     </div>
-    <div class="col-md-6">
-        <div class="card neon-card">
-            <div class="card-body">
-                <h2 class="h4 mb-3">Оставьте заявку на ремонт</h2>
+</section>
 
-                <form method="post">
-                    <div class="mb-3">
-                        <label asp-for="Form.ClientName" class="form-label">Имя</label>
-                        <input asp-for="Form.ClientName" class="form-control" />
-                        <span asp-validation-for="Form.ClientName" class="text-danger"></span>
+<!-- FEATURES GRID -->
+<section class="py-5 mb-5">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold text-white">Почему <span class="neon-text">PROPAIKA</span>?</h2>
+        <p class="text-white-50">Отличие от модульных сервисов в деталях</p>
+    </div>
+
+    <div class="row g-4">
+        <!-- Feature 1 -->
+        <div class="col-md-4">
+            <div class="card neon-card h-100 p-4 border-0">
+                <div class="mb-3 text-info">
+                    <i class="bi bi-cpu fs-1"></i>
+                </div>
+                <h4 class="fw-bold text-white h5">BGA Пайка и Реболл</h4>
+                <p class="text-white-50 small mb-0">
+                    Восстанавливаем Face ID, аудиокодеки, контроллеры питания. Делаем то, что другие предлагают менять целиком с платой.
+                </p>
+            </div>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="col-md-4">
+            <div class="card neon-card h-100 p-4 border-0">
+                <div class="mb-3 text-info">
+                    <i class="bi bi-droplet-half fs-1"></i>
+                </div>
+                <h4 class="fw-bold text-white h5">После воды и ударов</h4>
+                <p class="text-white-50 small mb-0">
+                    Профессиональная ультразвуковая чистка и восстановление токопроводящих дорожек под микроскопом.
+                </p>
+            </div>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="col-md-4">
+            <div class="card neon-card h-100 p-4 border-0">
+                <div class="mb-3 text-info">
+                    <i class="bi bi-currency-exchange fs-1"></i>
+                </div>
+                <h4 class="fw-bold text-white h5">Без накруток</h4>
+                <p class="text-white-50 small mb-0">
+                    Фиксированный прайс. Если в процессе ремонта всплывет скрытый дефект — мы сначала согласуем цену, потом делаем.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- MASTER & WORKSHOP (Личный бренд + Оборудование) -->
+<section class="py-5 mb-5">
+    <div class="row align-items-center g-5">
+        <div class="col-lg-5 order-lg-2">
+            <!-- Здесь должно быть реальное фото мастера -->
+            <div class="position-relative">
+                <div class="neon-circle-bg" style="width: 300px; height: 300px; right: -50px; top: -50px;"></div>
+                <img src="/img/master-photo.jpg" onerror="this.src='https://placehold.co/500x600/10121a/00f3ff?text=Master+Photo'"
+                     class="img-fluid rounded-4 shadow-lg position-relative neon-border"
+                     alt="Мастер сервиса PROPAIKA">
+
+                <div class="position-absolute bottom-0 start-0 bg-dark p-3 rounded-top-4 border-top border-end border-info ms-4 mb-n3 shadow-lg">
+                    <p class="mb-0 fw-bold text-white">Алексей</p>
+                    <small class="text-info">Основатель, инженер</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-7 order-lg-1">
+            <h2 class="fw-bold text-white mb-4">Сервис с <span class="neon-text">человеческим лицом</span></h2>
+            <p class="lead text-white-50 mb-4">
+                Я создал этот сервис, устав от «потоковых» мастерских, где телефоны чинят студенты по YouTube.
+            </p>
+            <div class="vstack gap-3 mb-4">
+                <div class="d-flex gap-3">
+                    <i class="bi bi-tools text-info fs-4"></i>
+                    <div>
+                        <h5 class="text-white h6 mb-1">Профессиональное оборудование</h5>
+                        <p class="text-white-50 small mb-0">Используем паяльные станции JBC, микроскопы Nikon и оригинальные трафареты. Никакого «колхоза» и перегрева плат.</p>
+                    </div>
+                </div>
+                <div class="d-flex gap-3">
+                    <i class="bi bi-camera-video text-info fs-4"></i>
+                    <div>
+                        <h5 class="text-white h6 mb-1">Фотоотчет процесса</h5>
+                        <p class="text-white-50 small mb-0">Показываем, что внутри вашего устройства до и после ремонта. Вы видите, за что платите.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- PROCESS SECTION (Этапы работы) -->
+<section class="py-5 mb-5">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold text-white">Как мы <span class="neon-text">работаем</span></h2>
+    </div>
+
+    <div class="row g-4 position-relative">
+        <!-- Линия соединения (видна только на десктопе) -->
+        <div class="d-none d-lg-block position-absolute top-50 start-0 w-100 border-top border-secondary opacity-25" style="z-index: 0; transform: translateY(-50%);"></div>
+
+        @{
+            var steps = new[] {
+                (Num: "01", Title: "Заявка", Icon: "bi-chat-dots", Text: "Вы пишете проблему, мы называем предварительную вилку цен."),
+                (Num: "02", Title: "Диагностика", Icon: "bi-search", Text: "Бесплатно разбираем и смотрим под микроскопом. Точно называем цену."),
+                (Num: "03", Title: "Согласование", Icon: "bi-check2-circle", Text: "Без вашего «ОК» ничего не паяем. Цена не изменится в процессе."),
+                (Num: "04", Title: "Ремонт", Icon: "bi-cpu", Text: "Восстанавливаем плату, чистим, собираем с новыми проклейками."),
+                (Num: "05", Title: "Гарантия", Icon: "bi-shield-check", Text: "Выдаем акт выполненных работ. Гарантия на пайку до 1 года.")
+                };
+        }
+
+        @foreach (var step in steps)
+        {
+            <div class="col-lg position-relative" style="z-index: 1;">
+                <div class="card neon-card h-100 text-center p-3 border-0 bg-dark">
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-dark border border-info text-info mb-3 shadow-lg"
+                         style="width: 60px; height: 60px; font-size: 1.5rem;">
+                        <i class="bi @step.Icon"></i>
+                    </div>
+                    <h5 class="fw-bold text-white">@step.Title</h5>
+                    <p class="text-white-50 small mb-0">@step.Text</p>
+                    <span class="position-absolute top-0 end-0 m-3 text-white-50 opacity-25 fw-bold" style="font-size: 2rem;">@step.Num</span>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+
+
+
+
+
+<!-- CASES TEASER -->
+<section class="py-5 mb-5 bg-opacity-10 bg-info rounded-4 px-4 position-relative overflow-hidden">
+    <!-- Фоновый декор -->
+    <div class="position-absolute top-0 start-0 w-100 h-100" style="background: radial-gradient(circle at 0% 0%, rgba(0, 243, 255, 0.05) 0%, transparent 50%); pointer-events: none;"></div>
+
+    <div class="row align-items-center position-relative z-1">
+        <div class="col-md-8 mb-4 mb-md-0">
+            <h2 class="fw-bold text-white mb-3">Мы открыты</h2>
+            <p class="text-white-50 mb-0">
+                Смотрите примеры наших работ «До» и «После» в разделе кейсов.
+                Мы не скрываем процесс и показываем, как выглядит качественная пайка.
+            </p>
+        </div>
+        <div class="col-md-4 text-md-end">
+            <a asp-page="/Cases/Index" class="btn btn-outline-info px-4 rounded-pill">
+                Смотреть портфолио <i class="bi bi-arrow-right ms-2"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- FORM SECTION -->
+<section id="repair-form" class="py-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card neon-card shadow-lg">
+                <div class="card-body p-4 p-md-5">
+                    <div class="text-center mb-4">
+                        <h3 class="fw-bold text-white mb-2">Начать ремонт</h3>
+                        <p class="text-white-50 small">Оставьте заявку, и мастер свяжется с вами для предварительной оценки стоимости</p>
                     </div>
 
-                    <div class="mb-3">
-                        <label asp-for="Form.PhoneNumber" class="form-label">Телефон *</label>
-                        <input asp-for="Form.PhoneNumber" class="form-control" placeholder="+7..." />
-                        <span asp-validation-for="Form.PhoneNumber" class="text-danger"></span>
-                    </div>
+                    <form method="post">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label asp-for="Form.ClientName" class="form-label text-white-50 small">Ваше имя</label>
+                                <input asp-for="Form.ClientName" class="form-control bg-dark text-white border-secondary" placeholder="Иван" />
+                                <span asp-validation-for="Form.ClientName" class="text-danger small"></span>
+                            </div>
 
-                    <div class="mb-3">
-                        <label asp-for="Form.ProblemDescription" class="form-label">Опишите проблему</label>
-                        <textarea asp-for="Form.ProblemDescription" class="form-control" rows="3"></textarea>
-                    </div>
+                            <div class="col-md-6">
+                                <label asp-for="Form.PhoneNumber" class="form-label text-white-50 small">Телефон для связи *</label>
+                                <input asp-for="Form.PhoneNumber" class="form-control bg-dark text-white border-secondary" placeholder="+7 (999) 000-00-00" />
+                                <span asp-validation-for="Form.PhoneNumber" class="text-danger small"></span>
+                            </div>
 
-                    <button type="submit" class="btn btn-primary w-100">
-                        Отправить заявку
-                    </button>
+                            <div class="col-12">
+                                <label asp-for="Form.DeviceModel" class="form-label text-white-50 small">Модель устройства (если знаете)</label>
+                                <input asp-for="Form.DeviceModel" class="form-control bg-dark text-white border-secondary" placeholder="Например: iPhone 13 Pro" />
+                            </div>
 
-                    @if (Model.Submitted)
-                    {
-                        <div class="alert alert-success mt-3">
-                            Заявка отправлена. Мы свяжемся с вами в ближайшее время.
+                            <div class="col-12">
+                                <label asp-for="Form.ProblemDescription" class="form-label text-white-50 small">Что случилось?</label>
+                                <textarea asp-for="Form.ProblemDescription" class="form-control bg-dark text-white border-secondary" rows="3" placeholder="Упал в воду, не включается, разбит экран..."></textarea>
+                            </div>
+
+                            <div class="col-12 mt-4">
+                                <button type="submit" class="btn btn-neon w-100 py-3 fw-bold text-uppercase tracking-wide">
+                                    Отправить заявку
+                                </button>
+                            </div>
                         </div>
-                    }
-                </form>
+
+                        @if (Model.Submitted)
+                        {
+                            <div class="alert alert-success mt-4 d-flex align-items-center bg-success bg-opacity-10 border-success text-success">
+                                <i class="bi bi-check-circle-fill me-2"></i>
+                                <div>
+                                    <strong>Заявка принята!</strong> Мы свяжемся с вами в течение 15 минут.
+                                </div>
+                            </div>
+                        }
+                    </form>
+
+                    <div class="text-center mt-4">
+                        <small class="text-white-50">Или напишите нам напрямую:</small>
+                        <div class="d-flex justify-content-center gap-3 mt-2">
+                            <a href="#" class="text-decoration-none text-white fs-5"><i class="bi bi-telegram"></i></a>
+                            <a href="#" class="text-decoration-none text-white fs-5"><i class="bi bi-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
-<section class="row text-center g-4">
-    <div class="col-md-4">
-        <div class="card neon-card h-100">
-            <div class="card-body">
-                <h3 class="h5">Сложные ремонты</h3>
-                <p class="mb-0">Микропайка, восстановление питания, реболлинг — то, что не делают в ТЦ.</p>
-            </div>
-        </div>
+<!-- FAQ / SEO ACCORDION (Семантическое ядро) -->
+<section class="py-5 mb-5" itemscope itemtype="https://schema.org/FAQPage">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold text-white">Частые <span class="neon-text">вопросы</span></h2>
     </div>
-    <div class="col-md-4">
-        <div class="card neon-card h-100">
-            <div class="card-body">
-                <h3 class="h5">Честный прайс</h3>
-                <p class="mb-0">Прозрачный прайс по моделям iPhone и Mac, без скрытых доплат.</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card neon-card h-100">
-            <div class="card-body">
-                <h3 class="h5">Отзывы на Авито</h3>
-                <p class="mb-0">Десятки реальных отзывов. Ссылка на профиль — в шапке сайта.</p>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="accordion" id="faqAccordion">
+                <!-- Вопрос 1 -->
+                <div class="accordion-item neon-accordion-item mb-3" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                    <h3 class="accordion-header" itemprop="name">
+                        <button class="accordion-button collapsed text-white fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                            Сколько времени занимает сложный ремонт (пайка)?
+                        </button>
+                    </h3>
+                    <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                        <div class="accordion-body text-white-50 small" itemprop="text">
+                            Обычно диагностика занимает от 1 до 3 часов. Ремонт цепей питания или аудиокодека — 1 рабочий день. Восстановление после сильного залития может занять до 3 дней для полной проверки стабильности.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Вопрос 2 -->
+                <div class="accordion-item neon-accordion-item mb-3" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                    <h3 class="accordion-header" itemprop="name">
+                        <button class="accordion-button collapsed text-white fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                            Сохранятся ли мои данные?
+                        </button>
+                    </h3>
+                    <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                        <div class="accordion-body text-white-50 small" itemprop="text">
+                            В 95% случаев данные сохраняются. Мы не делаем сброс настроек без вашего явного согласия. Если проблема с памятью (NAND) — мы предупредим о рисках заранее.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Вопрос 3 -->
+                <div class="accordion-item neon-accordion-item mb-3" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                    <h3 class="accordion-header" itemprop="name">
+                        <button class="accordion-button collapsed text-white fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                            Какая гарантия на работу?
+                        </button>
+                    </h3>
+                    <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                        <div class="accordion-body text-white-50 small" itemprop="text">
+                            На модульный ремонт (экраны, аккумуляторы) — 3 месяца. На сложную пайку материнской платы — от 30 дней до 1 года, в зависимости от типа поломки и состояния устройства.
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
+
+<!-- CONTACTS & MAP (Локальное SEO) -->
+<section id="contacts" class="py-5 mb-5 bg-dark bg-opacity-50 rounded-4 px-3 px-md-5 border border-secondary border-opacity-25">
+    <div class="row g-4">
+        <div class="col-lg-5">
+            <h2 class="fw-bold text-white mb-4">Контакты</h2>
+
+            <div class="vstack gap-4">
+                <div class="d-flex gap-3">
+                    <div class="text-info fs-4"><i class="bi bi-geo-alt"></i></div>
+                    <div>
+                        <h5 class="text-white h6 mb-1">Адрес</h5>
+                        <p class="text-white-50 mb-0">
+                            Санкт-Петербург, Невский проспект, 100, офис 205<br />
+                            <small class="text-muted">(Вход в арку, код домофона 1234, 2 этаж)</small>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-3">
+                    <div class="text-info fs-4"><i class="bi bi-clock"></i></div>
+                    <div>
+                        <h5 class="text-white h6 mb-1">Режим работы</h5>
+                        <p class="text-white-50 mb-0">Пн-Пт: 11:00 — 20:00<br />Сб: 12:00 — 18:00<br />Вс: По записи</p>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-3">
+                    <div class="text-info fs-4"><i class="bi bi-telephone"></i></div>
+                    <div>
+                        <h5 class="text-white h6 mb-1">Связь</h5>
+                        <p class="text-white-50 mb-2"><a href="tel:+79990000000" class="text-white text-decoration-none fw-bold">+7 (999) 000-00-00</a></p>
+                        <div class="d-flex gap-2">
+                            <a href="#" class="btn btn-sm btn-outline-secondary"><i class="bi bi-telegram"></i> Telegram</a>
+                            <a href="#" class="btn btn-sm btn-outline-secondary"><i class="bi bi-whatsapp"></i> WhatsApp</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <!-- Вставка Яндекс.Карты или Google Maps -->
+            <div style="position:relative;overflow:hidden;">
+                <a href="https://yandex.ru/maps/2/saint-petersburg/?utm_medium=mapframe&utm_source=maps" style="color:#eee;font-size:12px;position:absolute;top:0px;">Санкт‑Петербург</a>
+                <a href="https://yandex.ru/maps/2/saint-petersburg/?indoorLevel=1&ll=30.318331%2C59.925619&mode=routes&rtext=59.925675%2C30.318109&rtt=pd&ruri=&utm_medium=mapframe&utm_source=maps&z=18.8" style="color:#eee;font-size:12px;position:absolute;top:14px;">Яндекс Карты</a>
+                <iframe src="https://yandex.ru/map-widget/v1/?indoorLevel=1&ll=30.318331%2C59.925619&mode=routes&rtext=59.925675%2C30.318109&rtt=pd&ruri=&z=18.8"
+                width="560" height="400" frameborder="1" allowfullscreen="true" style="position:relative;">
+                </iframe>
+                </div>
+        </div>
+    </div>
+</section>

@@ -10,72 +10,106 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     @await RenderSectionAsync("Head", required: false)
     <title>@title</title>
-    <!-- Open Graph для соцсетей -->
+
+    <!-- Open Graph -->
     <meta property="og:title" content="@ViewData["Title"]" />
     <meta property="og:description" content="@ViewData["Description"]" />
     @if (ViewData["OgImage"] != null)
     {
         <meta property="og:image" content="@ViewData["OgImage"]" />
     }
+
     <!-- Bootstrap 5.3 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
           rel="stylesheet"
-          integrity="sha384-..." crossorigin="anonymous" />
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
 
     <!-- Собственный стиль -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
-<body class="bg-body text-body">
-    <header class="border-bottom mb-4 neon-border">
-        <nav class="navbar navbar-expand-lg navbar-dark container">
+<!-- FLEXBOX FIX: min-vh-100 и flex-column прижимают футер -->
+<body class="d-flex flex-column min-vh-100 bg-body text-body">
+    <header class="border-bottom mb-4 neon-border sticky-top">
+        <!-- ВАЖНО: Убран класс navbar-dark, добавлен bg-body-tertiary для адаптивности -->
+        <nav class="navbar navbar-expand-lg container-xxl">
             <a class="navbar-brand fw-bold neon-text" asp-page="/Index">PROPAIKA</a>
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="mainNav">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link" asp-page="/Index">Главная</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-page="/Cases/Index">Кейсы ремонтов</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-page="/Prices/Index">Цены</a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" asp-page="/Index">Главная</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/#about">О нас</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/#contacts">Контакты</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-page="/Cases/Index">Кейсы</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-page="/Prices/Index">Цены</a></li>
                 </ul>
 
                 <div class="d-flex align-items-center gap-3">
-                    <a href="https://www.avito.ru/ВАШ_ПРОФИЛЬ" target="_blank" class="btn btn-outline-info btn-sm">
-                        Отзывы на Авито
+                    <a href="https://www.avito.ru/" target="_blank" class="btn btn-outline-info btn-sm rounded-pill px-3">
+                        Отзывы
                     </a>
 
-                    <!-- Переключатель темы -->
-                    <div class="btn-group" role="group" aria-label="Theme switcher">
-                        <button type="button" id="theme-light" class="btn btn-sm btn-outline-light">☀</button>
-                        <button type="button" id="theme-dark" class="btn btn-sm btn-outline-light active">🌙</button>
-                    </div>
+                    <!-- НОВАЯ КНОПКА СМЕНЫ ТЕМЫ -->
+                    <button type="button" id="theme-toggle" class="theme-icon-btn" aria-label="Сменить тему">
+                        <!-- Солнце (для светлой темы) -->
+                        <svg id="theme-icon-sun" class="d-none" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.557a.5.5 0 0 1-.707-.707l1.415-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z" />
+                        </svg>
+                        <!-- Луна (для темной темы) -->
+                        <svg id="theme-icon-moon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z" />
+                        </svg>
+                    </button>
                 </div>
             </div>
         </nav>
     </header>
 
-    <main class="container mb-5">
+    <main class="container-xxl mb-5">
         @RenderBody()
     </main>
 
-    <footer class="border-top py-3">
-        <div class="container d-flex justify-content-between small">
-            <span>© @DateTime.Now.Year PROPAIKA. Ремонт техники Apple.</span>
-            <span>Сделано с любовью к паяльнику 🔧</span>
+    <footer class="border-top py-4 mt-auto">
+        <div class="container-xxl text-center small text-muted">
+            <p class="mb-1">© @DateTime.Now.Year PROPAIKA. Ремонт техники Apple.</p>
+            <p class="mb-0">Сделано с любовью к паяльнику 🔧</p>
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-..." crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script src="~/js/theme.js" asp-append-version="true"></script>
-    @RenderSection("Scripts", required: false)
+    <!-- Скрипт переключения (вставь это в theme.js или оставь тут) -->
+    <script>
+        const btn = document.getElementById('theme-toggle');
+        const sun = document.getElementById('theme-icon-sun');
+        const moon = document.getElementById('theme-icon-moon');
+
+        // Функция обновления иконок
+        function updateIcons(theme) {
+            if (theme === 'dark') {
+                sun.classList.add('d-none');
+                moon.classList.remove('d-none');
+            } else {
+                sun.classList.remove('d-none');
+                moon.classList.add('d-none');
+            }
+        }
+
+        // Инициализация при загрузке
+        const currentTheme = document.documentElement.getAttribute('data-bs-theme');
+        updateIcons(currentTheme);
+
+        btn.addEventListener('click', () => {
+            const theme = document.documentElement.getAttribute('data-bs-theme');
+            const newTheme = theme === 'dark' ? 'light' : 'dark';
+
+            document.documentElement.setAttribute('data-bs-theme', newTheme);
+            localStorage.setItem('theme', newTheme); // Сохраняем выбор
+            updateIcons(newTheme);
+        });
+    </script>
 </body>
 </html>

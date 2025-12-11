@@ -42,7 +42,14 @@ namespace Propaika_main_app.Pages.Admin.ServiceCases
             [Range(0, 1000000)]
             public decimal Cost { get; set; }
 
-            public DateTime DateCompleted { get; set; } = DateTime.UtcNow;
+            public DateTime DateCompleted { get; set; } = new DateTime(
+                    DateTime.Now.Year,
+                    DateTime.Now.Month,
+                    DateTime.Now.Day,
+                    DateTime.Now.Hour,
+                    DateTime.Now.Minute,
+                    0
+                );
 
             // װאיכû
             public IFormFile? UploadBefore { get; set; }
