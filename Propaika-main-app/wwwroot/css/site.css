@@ -29,6 +29,7 @@ html[data-bs-theme="light"] .neon-text {
     text-shadow: none;
 }
 
+
 /* =======================================================
    3. GLOBAL NEON UTILS
    ======================================================= */
@@ -101,6 +102,232 @@ html[data-bs-theme="light"] .neon-text {
         transform: translate(-50%, -50%) scale(1.1);
     }
 }
+
+/* ===== Master section (staff slider) ===== */
+
+.master-copy {
+    position: relative;
+    z-index: 1;
+}
+
+.master-carousel {
+    position: relative;
+    z-index: 1;
+}
+
+/* Card with photo */
+.master-card {
+    position: relative;
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+.master-photo {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    display: block;
+}
+
+.master-glow {
+    width: 420px;
+    height: 420px;
+    left: 60%;
+    top: 30%;
+    opacity: .12;
+    filter: blur(110px);
+}
+
+/* tags/caption positioning */
+.master-tags {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 2;
+}
+
+.master-caption {
+    position: absolute;
+    left: 12px;
+    bottom: 12px;
+    z-index: 2;
+    max-width: calc(100% - 24px);
+}
+
+/* Неоновые стрелки (делаем заметнее стандартных bootstrap) */
+/* Стрелки: только неоновый знак, без фона */
+.master-carousel .master-arrow {
+    width: 56px; /* зона клика */
+    height: 56px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 1;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Гасим стандартные bootstrap span-иконки, если где-то остались */
+.master-carousel .carousel-control-prev-icon,
+.master-carousel .carousel-control-next-icon {
+    display: none !important;
+}
+
+/* Сама иконка-стрелка */
+.master-carousel .master-arrow i {
+    font-size: 34px;
+    line-height: 1;
+    color: var(--neon-main);
+    text-shadow: 0 0 6px color-mix(in srgb, var(--neon-main) 55%, transparent), 0 0 16px color-mix(in srgb, var(--neon-main) 40%, transparent);
+    transition: transform .15s ease, text-shadow .15s ease, opacity .15s ease;
+    opacity: .95;
+}
+
+/* Hover/focus */
+.master-carousel .master-arrow:hover i,
+.master-carousel .master-arrow:focus-visible i {
+    opacity: 1;
+    transform: scale(1.08);
+    text-shadow: 0 0 10px color-mix(in srgb, var(--neon-main) 75%, transparent), 0 0 26px color-mix(in srgb, var(--neon-main) 60%, transparent);
+}
+
+/* На всякий случай: убираем белое затемнение Bootstrap у контролов */
+.master-carousel .carousel-control-prev,
+.master-carousel .carousel-control-next {
+    filter: none !important;
+    opacity: 1 !important;
+}
+@media (max-width: 576px) {
+    .master-carousel .carousel-control-prev-icon,
+    .master-carousel .carousel-control-next-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+    }
+}
+
+
+/* indicators at bottom, inside card */
+.master-indicators {
+    margin: 0;
+    position: absolute;
+    left: 50%;
+    bottom: 12px;
+    transform: translateX(-50%);
+    gap: 8px;
+    z-index: 3;
+}
+
+    .master-indicators [data-bs-target] {
+        width: 24px;
+        height: 6px;
+        border-radius: 999px;
+        background-color: rgba(255,255,255,.30);
+        border: 1px solid rgba(0,243,255,.25);
+    }
+
+    .master-indicators .active {
+        background-color: color-mix(in srgb, var(--neon-main) 75%, transparent);
+        box-shadow: 0 0 10px color-mix(in srgb, var(--neon-main) 60%, transparent);
+    }
+
+/* mobile tweaks */
+@media (max-width: 576px) {
+    .master-card {
+        min-height: 360px;
+    }
+
+    .master-tags {
+        top: 12px;
+        left: 12px;
+    }
+
+    .master-caption {
+        left: 12px;
+        bottom: 12px;
+    }
+}
+
+/* ===== Process (Как мы работаем) ===== */
+.process-section .process-row {
+    --line-y: 44px; /* уровень линии на десктопе, можно подвигать */
+}
+
+/* линия-таймлайн */
+.process-section .process-line {
+    opacity: .55;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,.28) 10%, color-mix(in srgb, var(--neon-main) 45%, transparent) 50%, rgba(255,255,255,.28) 90%, transparent 100%);
+}
+
+/* сами карточки чуть "собраннее" */
+.process-section .process-step {
+    position: relative;
+    z-index: 1;
+    padding-top: 18px;
+    transition: transform .15s ease, box-shadow .15s ease;
+    background: rgba(18, 22, 34, 0.65) !important;
+    border: 1px solid rgba(255,255,255,0.06) !important;
+}
+
+    .process-section .process-step:hover {
+        transform: translateY(-4px);
+    }
+
+/* иконка в круге */
+.process-section .process-icon {
+    width: 58px;
+    height: 58px;
+    margin: 0 auto;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--neon-main);
+    background: rgba(255,255,255,.04);
+    border: 1px solid color-mix(in srgb, var(--neon-main) 55%, transparent);
+    box-shadow: 0 0 20px color-mix(in srgb, var(--neon-main) 35%, transparent);
+}
+
+    .process-section .process-icon i {
+        font-size: 1.5rem;
+    }
+
+/* номер шага (в углу, но аккуратнее) */
+.process-section .process-num {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    font-weight: 700;
+    font-size: 1.4rem;
+    letter-spacing: .06em;
+    color: rgba(255,255,255,.18);
+}
+
+/* точка-узел на линии (только десктоп) */
+.process-section .process-dot {
+    position: absolute;
+    top: calc(var(--line-y) - 18px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 12px;
+    height: 12px;
+    border-radius: 999px;
+    background: var(--bg-main, #0b0c10);
+    border: 2px solid color-mix(in srgb, var(--neon-main) 65%, transparent);
+    box-shadow: 0 0 14px color-mix(in srgb, var(--neon-main) 55%, transparent);
+}
+
+/* текст чуть мягче (если у тебя есть text-white-70 — можно не нужно) */
+.process-section .text-white-70 {
+    color: rgba(255,255,255,.78);
+}
+
 
 /* =======================================================
    4. COMPONENTS: CARDS, NAV, ACCORDION, TABLE
