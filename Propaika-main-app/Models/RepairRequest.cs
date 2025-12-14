@@ -1,14 +1,31 @@
-﻿namespace Propaika_main_app.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Propaika_main_app.Models
 {
     public class RepairRequest
     {
         public int Id { get; set; }
+
+        [Display(Name = "Ваше имя")]
+        [Required(ErrorMessage = "Пожалуйста, представьтесь")]
         public string ClientName { get; set; } = string.Empty;
-        public string PhoneNumber { get; set; }
+
+        [Display(Name = "Телефон")]
+        [Required(ErrorMessage = "Телефон обязателен для связи")]
+        [Phone(ErrorMessage = "Некорректный формат телефона")]
+        public string PhoneNumber { get; set; } = string.Empty;
+
+        [Display(Name = "Описание проблемы")]
         public string? ProblemDescription { get; set; }
-        public DeviceModel? DeviceModel { get; set; }
-        public ServiceItem? ServiceItem { get; set; }
+
+        // Изменили на string для простоты ввода в форме
+        [Display(Name = "Модель устройства")]
+        public string? DeviceModel { get; set; }
+
+        // Можно оставить пустым или использовать скрытое поле, если нужно
+        public string? ServiceItem { get; set; }
+
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public bool IsProcessed { get; set; } 
+        public bool IsProcessed { get; set; }
     }
 }

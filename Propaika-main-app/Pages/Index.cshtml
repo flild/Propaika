@@ -1,5 +1,6 @@
 ﻿@page
 @using Propaika.Web.Pages
+@using System.Globalization
 @model IndexModel
 @{
     ViewData["Title"] = "PROPAIKA — Профессиональный ремонт Apple в СПб";
@@ -167,9 +168,10 @@
 <!-- MASTER & WORKSHOP (Личный бренд + Оборудование) -->
 <section class="py-5 mb-5 master-section">
     <div class="container">
-        <div class="row align-items-center g-5">
+        <!-- align-items-start важен, чтобы колонки не центрировались по вертикали, а позволили тексту "уехать" вверх -->
+        <div class="row align-items-start g-5">
 
-            <!-- Слайдер мастеров -->
+            <!-- Слайдер мастеров (справа на десктопе) -->
             <div class="col-lg-5 order-lg-2">
                 <div id="staffCarousel" class="carousel slide master-carousel" data-bs-ride="carousel" data-bs-interval="7000">
                     <div class="carousel-inner">
@@ -207,10 +209,10 @@
 
                                 <div class="master-tags">
                                     <span class="badge rounded-pill text-bg-dark border border-info text-white-70 px-3 py-2">
-                                     Модульный ремонт
+                                        Модульный ремонт
                                     </span>
                                     <span class="badge rounded-pill text-bg-dark border border-info text-white-70 px-3 py-2">
-                                     Лёгкая пайка
+                                        Лёгкая пайка
                                     </span>
                                 </div>
 
@@ -231,7 +233,7 @@
                         <i class="bi bi-chevron-left" aria-hidden="true"></i>
                     </button>
 
-                    <button class="carousel-control-next master-arrow" type="button" 
+                    <button class="carousel-control-next master-arrow" type="button"
                             data-bs-target="#staffCarousel" data-bs-slide="next" aria-label="Вперёд">
                         <i class="bi bi-chevron-right" aria-hidden="true"></i>
                     </button>
@@ -244,8 +246,9 @@
                 </div>
             </div>
 
-            <!-- Текст + история -->
-            <div class="col-lg-7 order-lg-1">
+            <!-- Текст + история (слева) -->
+            <!-- mt-lg-n5 поднимает блок вверх на десктопе, pe-lg-5 дает отступ справа -->
+            <div class="col-lg-7 order-lg-1 pt-lg-0 mt-lg-n4 pe-lg-5">
                 <h2 class="fw-bold text-white mb-3">
                     Сервис с <span class="neon-text">человеческим лицом</span>
                 </h2>
@@ -259,7 +262,7 @@
                     точная пайка и опыт. Сейчас он берётся даже за очень сложные случаи — вплоть до полной пересадки платы или восстановление процессора.
                 </p>
 
-                <div class="d-flex flex-wrap gap-2">
+                <div class="d-flex flex-wrap gap-2 mb-5">
                     <span class="badge rounded-pill text-bg-dark border border-secondary text-white-70 px-3 py-2">
                         <i class="bi bi-search text-info me-1"></i> Диагностика перед ремонтом
                     </span>
@@ -270,11 +273,63 @@
                         <i class="bi bi-check2-circle text-info me-1"></i> Контроль качества
                     </span>
                 </div>
+
+                <!-- ДОПОЛНИТЕЛЬНЫЙ КОНТЕНТ (заполняет пустоту снизу) -->
+                <div class="row g-4 border-top border-secondary border-opacity-25 pt-4">
+
+                    <!-- Центр СПб -->
+                    <div class="col-md-4">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0">
+                                <i class="bi bi-geo-alt fs-4 text-info"></i>
+                            </div>
+                            <div class="ms-3">
+                                <h6 class="fw-bold text-white mb-1">Центр Петербурга</h6>
+                                <p class="text-white-70 small mb-0">
+                                    Удобная локация в сердце города. К нам легко добраться из любого района.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Опыт -->
+                    <div class="col-md-4">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0">
+                                <i class="bi bi-calendar-check fs-4 text-info"></i>
+                            </div>
+                            <div class="ms-3">
+                                <h6 class="fw-bold text-white mb-1">Опыт > 10 лет</h6>
+                                <p class="text-white-70 small mb-0">
+                                    Знаем все нюансы устройств. Ремонтируем технику профессионально с 2014 года.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Сложные ремонты -->
+                    <div class="col-md-4">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0">
+                                <i class="bi bi-cpu fs-4 text-info"></i>
+                            </div>
+                            <div class="ms-3">
+                                <h6 class="fw-bold text-white mb-1">Сложная пайка</h6>
+                                <p class="text-white-70 small mb-0">
+                                    Беремся за тяжелые случаи: восстановление плат, цепей питания и BGA-компонентов.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
 
         </div>
     </div>
 </section>
+
 
 
 
@@ -324,84 +379,172 @@
 
 
 <!-- CASES TEASER -->
-<section class="py-5 mb-5 bg-opacity-10 bg-info rounded-4 px-4 position-relative overflow-hidden">
-    <!-- Фоновый декор -->
-    <div class="position-absolute top-0 start-0 w-100 h-100" style="background: radial-gradient(circle at 0% 0%, rgba(0, 243, 255, 0.05) 0%, transparent 50%); pointer-events: none;"></div>
+<section class="py-5 mb-5 cases-teaser">
+    <div class="container">
+        <div class="row align-items-start g-4">
 
-    <div class="row align-items-center position-relative z-1">
-        <div class="col-md-8 mb-4 mb-md-0">
-            <h2 class="fw-bold text-white mb-3">Мы открыты</h2>
-            <p class="text-white-50 mb-0">
-                Смотрите примеры наших работ «До» и «После» в разделе кейсов.
-                Мы не скрываем процесс и показываем, как выглядит качественная пайка.
-            </p>
-        </div>
-        <div class="col-md-4 text-md-end">
-            <a asp-page="/Cases/Index" class="btn btn-outline-info px-4 rounded-pill">
-                Смотреть портфолио <i class="bi bi-arrow-right ms-2"></i>
-            </a>
+            <!-- Текст -->
+            <div class="col-lg-4">
+                <h2 class="fw-bold text-white mb-3">
+                    Примеры работ <span class="neon-text">до/после</span>
+                </h2>
+                <p class="text-white-70 mb-3">
+                    Мы показываем реальные ремонты: что было до, что сделали и какой получился результат.
+                </p>
+
+                <a asp-page="/Cases/Index" class="btn btn-outline-info px-4 rounded-pill">
+                    Смотреть все кейсы <i class="bi bi-arrow-right ms-2"></i>
+                </a>
+            </div>
+
+            <!-- Превью кейсов -->
+            <div class="col-lg-8">
+                <div class="row g-3">
+                    @foreach (var c in Model.CasesTeaser)
+                    {
+                        <div class="col-md-6 col-xl-4">
+                            <a class="text-decoration-none" href="/cases/Details/@c.Slug">
+                                <div class="card neon-card cases-teaser-card h-100">
+                                    <div class="ba-slider rounded-top">
+                                        <div class="ba-img ba-img-after" style="background-image:url('@(string.IsNullOrWhiteSpace(c.AfterImage) ? "https://placehold.co/900x600/10121a/00f3ff?text=After" : c.AfterImage)')"></div>
+                                        <div class="ba-img ba-img-before" style="background-image:url('@(string.IsNullOrWhiteSpace(c.BeforeImage) ? "https://placehold.co/900x600/10121a/00f3ff?text=Before" : c.BeforeImage)')"></div>
+
+                                        <div class="ba-divider"></div>
+                                        <div class="ba-handle"><i class="bi bi-arrows"></i></div>
+
+                                        <span class="ba-label ba-label-before badge text-bg-dark border border-secondary text-white-70">До</span>
+                                        <span class="ba-label ba-label-after badge text-bg-dark border border-secondary text-white-70">После</span>
+
+                                        <input class="ba-range" type="range" min="0" max="100" value="50" aria-label="Сравнение до и после">
+                                    </div>
+
+                                    <div class="card-body p-3">
+                                        <div class="cases-meta text-white-50 small mb-1">
+                                            @(string.IsNullOrWhiteSpace(c.DeviceModel) ? "Устройство" : c.DeviceModel)
+                                        </div>
+
+                                        <div class="fw-semibold text-white cases-title">@c.Title</div>
+
+                                        @if (!string.IsNullOrWhiteSpace(c.Description))
+                                        {
+                                            <div class="text-white-70 small mt-2 cases-desc">
+                                                @(c.Description.Length > 90 ? c.Description.Substring(0, 90) + "…" : c.Description)
+                                            </div>
+                                        }
+
+                                        @if (c.Cost > 0)
+                                        {
+                                            <div class="mt-3 neon-price">
+                                                @string.Format(CultureInfo.GetCultureInfo("ru-RU"), "{0:N0} ₽", c.Cost)
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+
         </div>
     </div>
 </section>
+
 
 <!-- FORM SECTION -->
 <section id="repair-form" class="py-5 mb-5">
     <div class="row justify-content-center">
         <div class="col-lg-8">
-            <div class="card neon-card shadow-lg">
+            <div class="card neon-card shadow-lg overflow-hidden">
+                <div class="position-absolute top-0 start-0 w-100 bg-info opacity-25" style="height: 1px; box-shadow: 0 0 20px 2px #00f3ff;"></div>
+
                 <div class="card-body p-4 p-md-5">
-                    <div class="text-center mb-4">
-                        <h3 class="fw-bold text-white mb-2">Начать ремонт</h3>
-                        <p class="text-white-50 small">Оставьте заявку, и мастер свяжется с вами для предварительной оценки стоимости</p>
+
+                    <!-- БЛОК УСПЕХА (Скрыт по умолчанию d-none) -->
+                    <div id="success-message" class="text-center py-5 d-none fade-in-up">
+                        <div class="mb-4 d-inline-flex align-items-center justify-content-center rounded-circle border border-success border-opacity-50 text-success bg-success bg-opacity-10" style="width: 80px; height: 80px; box-shadow: 0 0 30px rgba(25, 135, 84, 0.3);">
+                            <i class="bi bi-check-lg fs-1"></i>
+                        </div>
+                        <h3 class="fw-bold text-white mb-3">Заявка принята!</h3>
+                        <p class="text-white-50 mb-4">
+                            Мы свяжемся с вами по указанному номеру в течение 15 минут.
+                        </p>
+                        <!-- Кнопка "Отправить еще", если нужно -->
+                        <button type="button" class="btn btn-outline-light px-4 rounded-pill" onclick="resetForm()">Отправить ещё заявку</button>
                     </div>
 
-                    <form method="post">
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label asp-for="Form.ClientName" class="form-label text-white-50 small">Ваше имя</label>
-                                <input asp-for="Form.ClientName" class="form-control bg-dark text-white border-secondary" placeholder="Иван" />
-                                <span asp-validation-for="Form.ClientName" class="text-danger small"></span>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label asp-for="Form.PhoneNumber" class="form-label text-white-50 small">Телефон для связи *</label>
-                                <input asp-for="Form.PhoneNumber" class="form-control bg-dark text-white border-secondary" placeholder="+7 (999) 000-00-00" />
-                                <span asp-validation-for="Form.PhoneNumber" class="text-danger small"></span>
-                            </div>
-
-                            <div class="col-12">
-                                <label asp-for="Form.DeviceModel" class="form-label text-white-50 small">Модель устройства (если знаете)</label>
-                                <input asp-for="Form.DeviceModel" class="form-control bg-dark text-white border-secondary" placeholder="Например: iPhone 13 Pro" />
-                            </div>
-
-                            <div class="col-12">
-                                <label asp-for="Form.ProblemDescription" class="form-label text-white-50 small">Что случилось?</label>
-                                <textarea asp-for="Form.ProblemDescription" class="form-control bg-dark text-white border-secondary" rows="3" placeholder="Упал в воду, не включается, разбит экран..."></textarea>
-                            </div>
-
-                            <div class="col-12 mt-4">
-                                <button type="submit" class="btn btn-neon w-100 py-3 fw-bold text-uppercase tracking-wide">
-                                    Отправить заявку
-                                </button>
-                            </div>
+                    <!-- ФОРМА ЗАЯВКИ (Есть ID repair-form-element) -->
+                    <div id="form-container">
+                        <div class="text-center mb-4">
+                            <h3 class="fw-bold text-white mb-2">Начать ремонт</h3>
+                            <p class="text-white-50 small">
+                                Заполните форму, и мастер предварительно оценит стоимость и сроки ремонта.
+                            </p>
                         </div>
 
-                        @if (Model.Submitted)
-                        {
-                            <div class="alert alert-success mt-4 d-flex align-items-center bg-success bg-opacity-10 border-success text-success">
-                                <i class="bi bi-check-circle-fill me-2"></i>
-                                <div>
-                                    <strong>Заявка принята!</strong> Мы свяжемся с вами в течение 15 минут.
+                        <!-- Добавили id="ajax-repair-form" -->
+                        <form method="post" id="ajax-repair-form">
+                            <div class="row g-4">
+                                <div class="col-md-6">
+                                    <label asp-for="Form.ClientName" class="form-label text-white-50 small mb-1 ms-1">Как к вам обращаться?</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-dark border-secondary text-white-50"><i class="bi bi-person"></i></span>
+                                        <input asp-for="Form.ClientName" class="form-control bg-dark text-white border-secondary" placeholder="Иван" required />
+                                    </div>
+                                    <span asp-validation-for="Form.ClientName" class="text-danger small mt-1 d-block"></span>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label asp-for="Form.PhoneNumber" class="form-label text-white-50 small mb-1 ms-1">Телефон для связи *</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-dark border-secondary text-white-50"><i class="bi bi-telephone"></i></span>
+                                        <input asp-for="Form.PhoneNumber" class="form-control bg-dark text-white border-secondary" placeholder="+7 (999) 000-00-00" required />
+                                    </div>
+                                    <span asp-validation-for="Form.PhoneNumber" class="text-danger small mt-1 d-block"></span>
+                                </div>
+
+                                <div class="col-12">
+                                    <label asp-for="Form.DeviceModel" class="form-label text-white-50 small mb-1 ms-1">Модель устройства</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-dark border-secondary text-white-50"><i class="bi bi-phone"></i></span>
+                                        <input asp-for="Form.DeviceModel" class="form-control bg-dark text-white border-secondary" placeholder="Например: iPhone 13 Pro Max" />
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <label asp-for="Form.ProblemDescription" class="form-label text-white-50 small mb-1 ms-1">Что случилось?</label>
+                                    <textarea asp-for="Form.ProblemDescription" class="form-control bg-dark text-white border-secondary" rows="3" placeholder="Упал в воду, разбился экран..."></textarea>
+                                </div>
+
+                                <div class="col-12 mt-4 text-center">
+                                    <button type="submit" id="submit-btn" class="btn btn-neon px-5 py-2 fw-bold text-uppercase tracking-wide shadow-lg position-relative overflow-hidden group">
+                                        <!-- Текст кнопки -->
+                                        <span class="btn-text position-relative z-1">Отправить заявку <i class="bi bi-send-fill ms-2"></i></span>
+                                        <!-- Спиннер загрузки (скрыт) -->
+                                        <span class="btn-loader d-none spinner-border spinner-border-sm ms-2" role="status" aria-hidden="true"></span>
+                                    </button>
                                 </div>
                             </div>
-                        }
-                    </form>
 
-                    <div class="text-center mt-4">
-                        <small class="text-white-50">Или напишите нам напрямую:</small>
-                        <div class="d-flex justify-content-center gap-3 mt-2">
-                            <a href="#" class="text-decoration-none text-white fs-5"><i class="bi bi-telegram"></i></a>
-                            <a href="#" class="text-decoration-none text-white fs-5"><i class="bi bi-whatsapp"></i></a>
+                            <!-- Блок для вывода ошибок сервера -->
+                            <div id="server-error" class="text-danger text-center mt-3 small d-none"></div>
+                        </form>
+
+                        <div class="text-center mt-4 pt-3 border-top border-secondary border-opacity-25">
+                            <small class="text-white-50">Или напишите нам напрямую:</small>
+                            <div class="d-flex justify-content-center gap-3 mt-3">
+                                <!-- Telegram -->
+                                <!-- Замените ссылку на ваш реальный канал или личку -->
+                                <a href="https://t.me/ВАШ_НИК" target="_blank" class="btn btn-outline-info btn-sm rounded-pill px-3 border-opacity-25 text-white">
+                                    <i class="bi bi-telegram me-1"></i> Telegram
+                                </a>
+
+                                <!-- Телефон -->
+                                <!-- В href пишем номер без пробелов для звонка, внутри тега - красивый для глаз -->
+                                <a href="tel:+79990000000" class="btn btn-outline-light btn-sm rounded-pill px-3 border-opacity-25 text-white">
+                                    <i class="bi bi-telephone-fill me-1"></i> +7 (999) 000-00-00
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -520,3 +663,12 @@
         </div>
     </div>
 </section>
+
+
+@section Scripts {
+    <!-- Подключаем стандартные скрипты валидации (если нужны) -->
+    <partial name="_ValidationScriptsPartial" />
+
+    <!-- Подключаем наш скрипт формы -->
+    <script src="~/js/MainIndex.js" asp-append-version="true"></script>
+}

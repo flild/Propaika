@@ -21,11 +21,16 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
+    <PackageReference Include="Telegram.Bot" Version="22.7.6" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="wwwroot\uploads\" />
 	<Folder Include="wwwroot\data\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\js\MainIndex.js" />
   </ItemGroup>
 
 </Project>

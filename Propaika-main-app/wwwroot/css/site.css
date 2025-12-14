@@ -104,6 +104,10 @@ html[data-bs-theme="light"] .neon-text {
 }
 
 /* ===== Master section (staff slider) ===== */
+.master-section {
+    position: relative;
+    overflow: hidden;
+}
 
 .master-copy {
     position: relative;
@@ -328,6 +332,109 @@ html[data-bs-theme="light"] .neon-text {
     color: rgba(255,255,255,.78);
 }
 
+
+
+
+.cases-teaser {
+
+}
+
+.cases-teaser-card {
+    overflow: hidden;
+    border-radius: 18px;
+    overflow: hidden;
+    transform: translateZ(0);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.cases-teaser .ba-slider {
+    height: 200px;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    cursor: ew-resize;
+    flex: 0 0 auto;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+@media (min-width: 1200px) {
+    .cases-teaser .ba-slider {
+        height: 190px;
+    }
+}
+@media (min-width: 768px) and (max-width: 1199.98px) {
+    .cases-teaser .col-md-6 {
+        flex: 0 0 auto;
+        width: 50%;
+    }
+}
+
+.cases-teaser .cases-teaser-card .card-body {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    gap: .35rem;
+    padding: 1rem !important;
+}
+
+.cases-teaser .cases-title {
+    font-size: 1.02rem;
+    line-height: 1.25;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.cases-teaser .cases-desc {
+    margin-top: .35rem !important;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.cases-teaser .ba-img {
+    pointer-events: none;
+}
+
+.cases-teaser-card:hover {
+    transform: translateY(-4px);
+}
+.cases-teaser .ba-handle {
+    width: 40px;
+    height: 40px;
+    border-width: 2px;
+    background: rgba(10,12,20,.70);
+    back .cases-teaser .ba-handle:active {
+    cursor: grabbing;   
+}
+.cases-teaser .cases-meta {
+    letter-spacing: .02em;
+    line-height: 1.2;
+}
+.cases-teaser .neon-price {
+    margin-top: auto !important;
+    padding-top: .5rem;
+    font-size: 1.05rem;
+}
+.cases-teaser a.text-decoration-none:focus-visible {
+    outline: none;
+}
+.cases-teaser .cases-teaser-card {
+    box-shadow: 0 0 0 1px rgba(0,243,255,.16), 0 18px 55px rgba(0,0,0,.45);
+}
+
+.cases-teaser a:hover .cases-teaser-card,
+.cases-teaser a:focus-visible .cases-teaser-card {
+    transform: translateY(-4px);
+    box-shadow: 0 0 0 1px rgba(0,243,255,.28), 0 26px 70px rgba(0,0,0,.55), 0 0 26px rgba(0,243,255,.20);
+}
+
+drop-filter: blur(8px);
+}
 
 /* =======================================================
    4. COMPONENTS: CARDS, NAV, ACCORDION, TABLE
