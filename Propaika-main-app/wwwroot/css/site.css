@@ -436,6 +436,137 @@ html[data-bs-theme="light"] .neon-text {
 drop-filter: blur(8px);
 }
 
+
+.neon-accordion .accordion-item {
+    background: rgba(10, 12, 20, 0.6); /* Полупрозрачный фон */
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px !important;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+    /* Эффект при наведении на весь блок */
+    .neon-accordion .accordion-item:hover {
+        border-color: rgba(0, 243, 255, 0.3);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Активный (раскрытый) блок */
+    .neon-accordion .accordion-item:has(.accordion-collapse.show) {
+        background: rgba(10, 12, 20, 0.9);
+        border-color: var(--neon-main);
+        box-shadow: 0 0 15px rgba(0, 243, 255, 0.15);
+    }
+
+/* Кнопка аккордеона */
+.neon-accordion .accordion-button {
+    background: transparent;
+    color: #fff;
+    font-weight: 600;
+    padding: 1.25rem 1.5rem;
+    box-shadow: none !important; /* Убираем стандартную тень фокуса */
+}
+
+    .neon-accordion .accordion-button:focus {
+        border: none;
+        box-shadow: none;
+    }
+
+    /* Иконка вопроса (слева) */
+    .neon-accordion .accordion-button i {
+        transition: color 0.3s ease;
+        opacity: 0.8;
+    }
+
+    /* Цвет текста и иконки при открытии */
+    .neon-accordion .accordion-button:not(.collapsed) {
+        color: var(--neon-main);
+        background: transparent; /* Убираем синий фон бутстрапа */
+    }
+
+        .neon-accordion .accordion-button:not(.collapsed) i {
+            color: var(--neon-main) !important;
+            opacity: 1;
+            text-shadow: 0 0 8px rgba(0, 243, 255, 0.6);
+        }
+
+    /* Кастомная стрелка (плюс/минус) */
+    .neon-accordion .accordion-button::after {
+        background-image: none !important;
+        content: "\F282";
+        font-family: "bootstrap-icons";
+        font-size: 1.2rem;
+        color: rgba(0, 0, 255, 0.5);
+        transition: transform 0.3s ease, color 0.3s ease;
+        transform: rotate(0deg);
+    }
+
+    .neon-accordion .accordion-button:not(.collapsed)::after {
+        content: "\F309"; /* Bootstrap Icon: dash-lg */
+        color: var(--neon-main);
+        transform: rotate(180deg);
+        text-shadow: 0 0 8px var(--neon-main);
+    }
+
+/* Тело ответа */
+.neon-accordion .accordion-body {
+    padding: 0 1.5rem 1.5rem 4rem; /* Отступ слева под текст заголовка */
+    line-height: 1.6;
+}
+
+/* Адаптив для мобильных */
+@media (max-width: 768px) {
+    .neon-accordion .accordion-body {
+        padding: 0 1.25rem 1.25rem 1.25rem;
+    }
+
+    /* Скрываем иконку слева на очень узких экранах, если мешает, или уменьшаем */
+    .neon-accordion .accordion-button i {
+        font-size: 1.1rem !important;
+    }
+}
+/* =======================================================
+   CONTACTS SECTION STYLES
+======================================================= */
+
+/* Квадратные иконки с подсветкой */
+.contact-icon-box {
+    width: 42px;
+    height: 42px;
+    background: rgba(0, 243, 255, 0.05);
+    border: 1px solid rgba(0, 243, 255, 0.2);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--neon-main);
+    font-size: 1.1rem;
+    box-shadow: 0 0 10px rgba(0, 243, 255, 0.1);
+}
+
+/* Эффект наведения на телефон */
+.group-phone:hover .transition-text {
+    color: var(--neon-main) !important;
+    text-shadow: 0 0 15px rgba(0, 243, 255, 0.5);
+    transition: all 0.3s ease;
+}
+
+/* Кнопка WhatsApp - специфичный ховер (так как там inline стили для цвета) */
+.btn-outline-success:hover {
+    background-color: #25D366 !important;
+    color: #000 !important;
+    box-shadow: 0 0 15px rgba(37, 211, 102, 0.4);
+}
+
+/* Убираем скругление у карты слева, чтобы она стыковалась с контактами */
+@media (min-width: 992px) {
+    .map-wrapper iframe {
+        border-radius: 0 !important;
+    }
+}
+
 /* =======================================================
    4. COMPONENTS: CARDS, NAV, ACCORDION, TABLE
    ======================================================= */

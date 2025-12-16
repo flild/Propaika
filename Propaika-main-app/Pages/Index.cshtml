@@ -9,6 +9,7 @@
 
 <!-- HERO SECTION -->
 <section id="about" class="hero-section text-center text-lg-start py-5 mb-5">
+
     <div class="row align-items-center">
         <div class="col-lg-6">
             <div class="d-inline-block px-3 py-1 mb-3 rounded-pill border border-info text-info small fw-bold tracking-wide">
@@ -63,6 +64,7 @@
 
 <!-- FEATURES GRID -->
 <section class="py-5 mb-5">
+    <div class="neon-circle-bg" style="top: 95%; right:-10%; width: 600px; height: 600px; opacity: 0.08;"></div>
     <div class="text-center mb-5">
         <h2 class="fw-bold text-white">
             Почему выбирают <span class="neon-text">PROPAIKA</span>
@@ -453,6 +455,7 @@
 
 <!-- FORM SECTION -->
 <section id="repair-form" class="py-5 mb-5">
+    <div class="neon-circle-bg" style="top: 380%; right:-10%; width: 600px; height: 600px; opacity: 0.08;"></div>
     <div class="row justify-content-center">
         <div class="col-lg-8">
             <div class="card neon-card shadow-lg overflow-hidden">
@@ -541,8 +544,8 @@
 
                                 <!-- Телефон -->
                                 <!-- В href пишем номер без пробелов для звонка, внутри тега - красивый для глаз -->
-                                <a href="tel:+79990000000" class="btn btn-outline-light btn-sm rounded-pill px-3 border-opacity-25 text-white">
-                                    <i class="bi bi-telephone-fill me-1"></i> +7 (999) 000-00-00
+                                <a href="tel:+79219890269" class="btn btn-outline-light btn-sm rounded-pill px-3 border-opacity-25 text-white">
+                                    <i class="bi bi-telephone-fill me-1"></i> +7 (921) 989-02-69
                                 </a>
                             </div>
                         </div>
@@ -554,54 +557,123 @@
 </section>
 
 <!-- FAQ / SEO ACCORDION (Семантическое ядро) -->
-<section class="py-5 mb-5" itemscope itemtype="https://schema.org/FAQPage">
-    <div class="text-center mb-5">
-        <h2 class="fw-bold text-white">Частые <span class="neon-text">вопросы</span></h2>
-    </div>
+<section class="py-5 mb-5 position-relative" itemscope itemtype="https://schema.org/FAQPage">
 
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="accordion" id="faqAccordion">
-                <!-- Вопрос 1 -->
-                <div class="accordion-item neon-accordion-item mb-3" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-                    <h3 class="accordion-header" itemprop="name">
-                        <button class="accordion-button collapsed text-white fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
-                            Сколько времени занимает сложный ремонт (пайка)?
-                        </button>
-                    </h3>
-                    <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-                        <div class="accordion-body text-white-50 small" itemprop="text">
-                            Обычно диагностика занимает от 1 до 3 часов. Ремонт цепей питания или аудиокодека — 1 рабочий день. Восстановление после сильного залития может занять до 3 дней для полной проверки стабильности.
+    <div class="container position-relative z-1">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold text-white">Частые <span class="neon-text">вопросы</span></h2>
+            <p class="text-white-50">Отвечаем на то, что волнует вас перед ремонтом</p>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-9">
+                <div class="accordion neon-accordion" id="faqAccordion">
+
+                    <!-- Вопрос 1: Сроки (Ключи: сроки ремонта, диагностика) -->
+                    <div class="accordion-item mb-3" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                        <h3 class="accordion-header" itemprop="name">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                <div class="d-flex align-items-center gap-3 w-100">
+                                    <i class="bi bi-clock-history text-info fs-5"></i>
+                                    <span>Сколько времени занимает ремонт и диагностика?</span>
+                                </div>
+                            </button>
+                        </h3>
+                        <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                            <div class="accordion-body text-white-70" itemprop="text">
+                                <p class="mb-0">
+                                    <strong>Экспресс-диагностика</strong> проводится при вас за 15–30 минут.
+                                    Сложный ремонт (пайка цепей питания, аудиокодеков) обычно занимает <strong>1 рабочий день</strong>.
+                                    Восстановление после сильного попадания влаги может потребовать до 3 дней для полной проверки стабильности работы всех узлов.
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Вопрос 2 -->
-                <div class="accordion-item neon-accordion-item mb-3" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-                    <h3 class="accordion-header" itemprop="name">
-                        <button class="accordion-button collapsed text-white fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
-                            Сохранятся ли мои данные?
-                        </button>
-                    </h3>
-                    <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-                        <div class="accordion-body text-white-50 small" itemprop="text">
-                            В 95% случаев данные сохраняются. Мы не делаем сброс настроек без вашего явного согласия. Если проблема с памятью (NAND) — мы предупредим о рисках заранее.
+                    <!-- Вопрос 2: Запчасти (Ключи: оригинальные запчасти, копии, качество) -->
+                    <div class="accordion-item mb-3" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                        <h3 class="accordion-header" itemprop="name">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                <div class="d-flex align-items-center gap-3 w-100">
+                                    <i class="bi bi-cpu text-info fs-5"></i>
+                                    <span>Вы ставите оригинальные запчасти или копии?</span>
+                                </div>
+                            </button>
+                        </h3>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                            <div class="accordion-body text-white-70" itemprop="text">
+                                <p class="mb-0">
+                                    Мы работаем честно: там, где возможна установка <strong>оригинала</strong> (снятого с донора или нового сервисного), мы ставим его.
+                                    Если оригинал не производится (например, новые аккумуляторы Apple не продает), мы предлагаем <strong>качественные копии Premium-класса</strong>,
+                                    которые не уступают по характеристикам. Вы всегда знаете заранее, какую деталь мы установим.
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Вопрос 3 -->
-                <div class="accordion-item neon-accordion-item mb-3" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-                    <h3 class="accordion-header" itemprop="name">
-                        <button class="accordion-button collapsed text-white fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
-                            Какая гарантия на работу?
-                        </button>
-                    </h3>
-                    <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-                        <div class="accordion-body text-white-50 small" itemprop="text">
-                            На модульный ремонт (экраны, аккумуляторы) — 3 месяца. На сложную пайку материнской платы — от 30 дней до 1 года, в зависимости от типа поломки и состояния устройства.
+                    <!-- Вопрос 3: Данные (Ключи: сохранение данных, конфиденциальность) -->
+                    <div class="accordion-item mb-3" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                        <h3 class="accordion-header" itemprop="name">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                <div class="d-flex align-items-center gap-3 w-100">
+                                    <i class="bi bi-shield-lock text-info fs-5"></i>
+                                    <span>Сохранятся ли мои данные в телефоне?</span>
+                                </div>
+                            </button>
+                        </h3>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                            <div class="accordion-body text-white-70" itemprop="text">
+                                <p class="mb-0">
+                                    Да, в <strong>95% случаев данные сохраняются</strong>. Мы никогда не делаем сброс настроек без вашего явного письменного согласия.
+                                    Риск потери данных есть только при серьезных повреждениях микросхемы памяти (NAND) или процессора, о чем мастер предупредит вас <strong>до начала работ</strong>.
+                                </p>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- Вопрос 4: Гарантия (Ключи: гарантия на ремонт, условия) -->
+                    <div class="accordion-item mb-3" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                        <h3 class="accordion-header" itemprop="name">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                                <div class="d-flex align-items-center gap-3 w-100">
+                                    <i class="bi bi-patch-check text-info fs-5"></i>
+                                    <span>Какую гарантию вы даете?</span>
+                                </div>
+                            </button>
+                        </h3>
+                        <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                            <div class="accordion-body text-white-70" itemprop="text">
+                                <p class="mb-0">
+                                    Мы даем реальную гарантию на работу и запчасти:
+                                </p>
+                                <ul class="mt-2 mb-0 ps-3">
+                                    <li><strong>до 1 года</strong> на модульный ремонт (экраны, шлейфы, АКБ).</li>
+                                    <li><strong>3–6 месяцев</strong> на сложную пайку материнской платы.</li>
+                                </ul>
+                                <p class="mt-2 mb-0 text-white-50 small">Если проблема вернется по нашей вине — исправим бесплатно и без очередей.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Вопрос 5: Оплата (Ключи: оплата картой, безнал, терминал) -->
+                    <div class="accordion-item mb-3" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                        <h3 class="accordion-header" itemprop="name">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                                <div class="d-flex align-items-center gap-3 w-100">
+                                    <i class="bi bi-credit-card text-info fs-5"></i>
+                                    <span>Можно ли оплатить картой?</span>
+                                </div>
+                            </button>
+                        </h3>
+                        <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                            <div class="accordion-body text-white-70" itemprop="text">
+                                <p class="mb-0">
+                                    Мы принимаем оплату наличнымии или переводом.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -610,54 +682,90 @@
 
 
 <!-- CONTACTS & MAP (Локальное SEO) -->
-<section id="contacts" class="py-5 mb-5 bg-dark bg-opacity-50 rounded-4 px-3 px-md-5 border border-secondary border-opacity-25">
-    <div class="row g-4">
-        <div class="col-lg-5">
-            <h2 class="fw-bold text-white mb-4">Контакты</h2>
+<section id="contacts" class="py-5 mb-5">
+    <!-- Обертка "стекло" только для контента, чтобы уравновесить карту -->
+    <div class="row g-0 rounded-4 overflow-hidden border border-secondary border-opacity-25 shadow-lg" style="background: rgba(10, 12, 20, 0.6); backdrop-filter: blur(10px);">
+
+        <!-- КОНТАКТЫ (Левая часть) -->
+        <div class="col-lg-5 p-4 p-md-5 d-flex flex-column justify-content-center position-relative">
+            <!-- Декоративная подсветка слева -->
+            <div class="position-absolute start-0 top-0 bottom-0 bg-info opacity-25" style="width: 2px; box-shadow: 0 0 15px 1px var(--neon-main);"></div>
+
+            <h2 class="fw-bold text-white mb-4">Наши <span class="neon-text">контакты</span></h2>
 
             <div class="vstack gap-4">
-                <div class="d-flex gap-3">
-                    <div class="text-info fs-4"><i class="bi bi-geo-alt"></i></div>
+
+                <!-- Адрес -->
+                <div class="d-flex gap-3 align-items-start">
+                    <div class="contact-icon-box flex-shrink-0">
+                        <i class="bi bi-geo-alt"></i>
+                    </div>
                     <div>
-                        <h5 class="text-white h6 mb-1">Адрес</h5>
-                        <p class="text-white-50 mb-0">
-                            Санкт-Петербург, Невский проспект, 100, офис 205<br />
-                            <small class="text-muted">(Вход в арку, код домофона 1234, 2 этаж)</small>
+                        <h5 class="text-white h6 mb-1 fw-bold">Локация</h5>
+                        <p class="text-white-70 mb-0 small">
+                            Санкт-Петербург, Московский проспект, 2/6, офис 205
                         </p>
-                    </div>
-                </div>
-
-                <div class="d-flex gap-3">
-                    <div class="text-info fs-4"><i class="bi bi-clock"></i></div>
-                    <div>
-                        <h5 class="text-white h6 mb-1">Режим работы</h5>
-                        <p class="text-white-50 mb-0">Пн-Пт: 11:00 — 20:00<br />Сб: 12:00 — 18:00<br />Вс: По записи</p>
-                    </div>
-                </div>
-
-                <div class="d-flex gap-3">
-                    <div class="text-info fs-4"><i class="bi bi-telephone"></i></div>
-                    <div>
-                        <h5 class="text-white h6 mb-1">Связь</h5>
-                        <p class="text-white-50 mb-2"><a href="tel:+79990000000" class="text-white text-decoration-none fw-bold">+7 (999) 000-00-00</a></p>
-                        <div class="d-flex gap-2">
-                            <a href="#" class="btn btn-sm btn-outline-secondary"><i class="bi bi-telegram"></i> Telegram</a>
-                            <a href="#" class="btn btn-sm btn-outline-secondary"><i class="bi bi-whatsapp"></i> WhatsApp</a>
+                        <div class="d-inline-block mt-2 px-2 py-1 rounded border border-secondary border-opacity-25 bg-black bg-opacity-25 text-white-50" style="font-size: 0.75rem;">
+                            <i class="bi bi-arrow-return-right me-1"></i>Вход в арку • Угловая парадная справа от арки • Домофон 16 • 2 этаж • В конце коридора
                         </div>
                     </div>
                 </div>
+
+                <!-- Режим работы -->
+                <div class="d-flex gap-3 align-items-start">
+                    <div class="contact-icon-box flex-shrink-0">
+                        <i class="bi bi-clock"></i>
+                    </div>
+                    <div>
+                        <h5 class="text-white h6 mb-1 fw-bold">График работы</h5>
+                        <ul class="list-unstyled text-white-70 mb-0 small" style="line-height: 1.6;">
+                            <li class="d-flex justify-content-between" style="max-width: 200px;">
+                                <span>Пн — Пт</span>
+                                <span class="text-white fw-semibold">12:00 — 20:00</span>
+                            </li>
+                            <li class="d-flex justify-content-between" style="max-width: 200px;">
+                                <span>Суббота</span>
+                                <span class="text-white fw-semibold">12:00 — 18:00</span>
+                            </li>
+                            <li class="d-flex justify-content-between" style="max-width: 200px;">
+                                <span>Воскресенье:&nbsp</span>
+                                <span class="text-white-50">По записи</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Связь (Акцент) -->
+                <div class="mt-2 pt-3 border-top border-secondary border-opacity-25">
+                    <p class="text-white-50 small mb-2">Звоните или пишите в мессенджеры:</p>
+
+                    <a href="tel:+79219890269" class="d-block text-decoration-none mb-3 group-phone">
+                        <span class="display-6 fw-bold text-white transition-text">+7 (921) 989-02-69</span>
+                    </a>
+
+                    <div class="d-flex gap-2">
+                        <a href="https://t.me/propaika" target="_blank" class="btn btn-outline-info flex-grow-1 rounded-3 py-2">
+                            <i class="bi bi-telegram me-2"></i>Telegram
+                        </a>
+                    </div>
+                </div>
+
             </div>
         </div>
 
-        <div class="col-lg-7">
-            <!-- Обертка для стилизации -->
-            <div class="map-wrapper">
-                <iframe src="https://yandex.ru/map-widget/v1/?indoorLevel=1&ll=30.318835%2C59.925683&mode=poi&poi%5Bpoint%5D=30.318108%2C59.925673&z=17.64"
+        <!-- КАРТА (Правая часть) -->
+        <div class="col-lg-7 position-relative" style="min-height: 340px;">
+            <div class="map-wrapper h-100 w-100">
+                <!--
+                   ll=30.318108%2C59.925673 — центр карты (совпадает с меткой)
+                   pt=30.318108,59.925673,pm2blm — координаты метки
+                -->
+                <iframe src="https://yandex.ru/map-widget/v1/?ll=30.318108%2C59.925673&z=17&pt=30.318108,59.925673,pm2blm"
                         width="100%"
                         height="100%"
                         frameborder="0"
                         allowfullscreen="true"
-                        style="position:relative;">
+                        style="position:absolute; top:0; left:0; width:100%; height:100%;">
                 </iframe>
             </div>
         </div>
