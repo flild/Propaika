@@ -3,16 +3,19 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Propaika_main_app.Data;
 using Propaika_main_app.Models;
+using Propaika_main_app.Services;
 
 namespace Propaika.Web.Pages;
 
 public class IndexModel : PageModel
 {
     private readonly ApplicationDbContext _db;
+    private readonly TelegramQueue _telegramQueue;
 
-    public IndexModel(ApplicationDbContext db)
+    public IndexModel(ApplicationDbContext db, TelegramQueue telegramQueue)
     {
         _db = db;
+        _telegramQueue = telegramQueue;
     }
 
     [BindProperty]
@@ -61,12 +64,7 @@ public class IndexModel : PageModel
     }
     private async Task SendToTelegramAsync(RepairRequest request)
     {
-        // TODO: Реализовать отправку уведомления в Telegram канал или боту
-        // Пример:
-        // var message = $"Новая заявка #{request.Id}\n{request.ClientName}\n{request.PhoneNumber}";
-        // await _telegramBot.SendTextMessageAsync(chatId, message);
-
-        await Task.CompletedTask; // Имитация асинхронной работы
+        await _telegramQueue.QueueBackgroundWorkItemAsync(request);
     }
     private Task<List<ServiceCase>> GetCasesTeaserAsync()
     {
