@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Propaika_main_app.Extra;
+using System.ComponentModel.DataAnnotations;
 
 namespace Propaika_main_app.Models
 {
@@ -26,6 +27,8 @@ namespace Propaika_main_app.Models
         public string? ServiceItem { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public bool IsProcessed { get; set; }
+
+        [Display(Name = "Статус заявки")]
+        public RequestStatus Status { get; set; } = RequestStatus.New;
     }
 }

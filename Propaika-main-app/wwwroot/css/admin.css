@@ -1,107 +1,143 @@
-﻿/* Переопределяем главную переменную темы на красный */
+﻿/* =======================================================
+   ADMIN VARIABLES & BASE
+======================================================= */
 :root {
-    --neon-admin: #ff003c; /* Cyberpunk Red */
-    --neon-admin-dim: rgba(255, 0, 60, 0.1);
+    /* Основной цвет админки - Неоновый Зеленый (Toxic Green) */
+    --neon-admin: #39ff14;
+    /* Оставляем на случай совместимости */
+    --neon-main: #00f3ff;
 }
 
-.admin-scope {
-    --neon-main: var(--neon-admin); /* Подменяем синий на красный */
+/* =======================================================
+   ADMIN AREA STYLES
+======================================================= */
+
+/* Общий фон и палитра админки */
+.admin-body {
+    --neon-main: var(--neon-admin); /* Переназначаем глобальную переменную на зеленый */
+    /* Фон: глубокий черный с едва заметным темно-зеленым отливом */
+    background-color: #020502;
+    /* Фоновые пятна света (зеленые вместо красных) */
+    background-image: radial-gradient(circle at 10% 20%, rgba(57, 255, 20, 0.08) 0, transparent 40%), radial-gradient(circle at 90% 80%, rgba(57, 255, 20, 0.06) 0, transparent 45%);
 }
 
-/* Фон страницы админки (чуть темнее/краснее) */
-body {
-    background-color: #050001;
-    background-image: radial-gradient(circle at 50% 0%, #1a0005 0%, #050001 60%);
-}
-/* Карточка админки */
-.admin-card {
-    background: rgba(20, 0, 5, 0.85);
-    border: 1px solid rgba(255, 0, 60, 0.2);
-    box-shadow: 0 0 20px rgba(255, 0, 60, 0.05);
-    backdrop-filter: blur(12px);
-}
-
-/* Таблица */
-.table-admin {
-    color: #e0e0e0;
-}
-
-    .table-admin thead th {
-        border-bottom: 2px solid var(--neon-admin);
-        color: var(--neon-admin);
-        font-weight: 700;
-        text-transform: uppercase;
-        font-size: 0.8rem;
-        letter-spacing: 0.05em;
-        background: transparent;
+    /* Навбар админки */
+    .admin-body .navbar {
+        background: rgba(2, 12, 4, 0.95); /* Очень темный зеленый, почти черный */
+        border-bottom: 1px solid rgba(57, 255, 20, 0.3);
+        box-shadow: 0 0 18px rgba(57, 255, 20, 0.25);
     }
 
-    .table-admin tbody tr {
-        border-bottom: 1px solid rgba(255, 0, 60, 0.1);
-        transition: background 0.2s;
+    /* Карточки в админке */
+    .admin-body .card {
+        background: rgba(5, 18, 8, 0.85); /* Полупрозрачный темно-зеленый фон */
+        border-color: rgba(57, 255, 20, 0.2);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); /* Тень для объема */
     }
 
-        .table-admin tbody tr:hover {
-            background: rgba(255, 0, 60, 0.05); /* Красная подсветка строки */
+    /* Кнопки в админке (все основные действия теперь зеленые) */
+    .admin-body .btn-primary,
+    .admin-body .btn-success,
+    .admin-body .btn-warning {
+        background-color: rgba(57, 255, 20, 0.1); /* Прозрачный фон */
+        color: var(--neon-admin); /* Зеленый текст */
+        border: 1px solid var(--neon-admin);
+        box-shadow: 0 0 12px rgba(57, 255, 20, 0.2);
+        transition: all 0.3s ease;
+    }
+
+        /* Ховер эффект для кнопок - заливка цветом */
+        .admin-body .btn-primary:hover,
+        .admin-body .btn-success:hover,
+        .admin-body .btn-warning:hover {
+            background-color: var(--neon-admin);
+            color: #000; /* Черный текст на зеленом фоне читается лучше всего */
+            box-shadow: 0 0 20px rgba(57, 255, 20, 0.6);
+            transform: translateY(-2px);
         }
 
-    .table-admin td {
-        vertical-align: middle;
-        background: transparent;
-        color: rgba(255,255,255,0.8);
+    /* Ссылки и иконки в таблицах */
+    .admin-body a {
+        color: var(--neon-admin);
+        transition: text-shadow 0.3s ease;
     }
 
-/* Пагинация */
-.page-link-admin {
-    background: transparent;
-    border: 1px solid rgba(255, 0, 60, 0.3);
-    color: var(--neon-admin);
-}
+        .admin-body a:hover {
+            color: #8aff70; /* Чуть светлее при наведении */
+            text-shadow: 0 0 8px rgba(57, 255, 20, 0.6);
+        }
 
-    .page-link-admin:hover, .page-link-admin.active {
-        background: var(--neon-admin);
-        color: #000;
-        box-shadow: 0 0 10px var(--neon-admin);
+    /* Формы (input) в админке */
+    .admin-body .form-control {
+        background-color: rgba(0, 0, 0, 0.3);
+        border-color: rgba(57, 255, 20, 0.2);
+        color: #e0ffd9;
     }
 
-/* Статусы */
+        .admin-body .form-control:focus {
+            background-color: rgba(0, 0, 0, 0.6);
+            border-color: var(--neon-admin);
+            box-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
+            color: #fff;
+        }
+
+    /* Таблицы */
+    .admin-body .table {
+        --bs-table-color: #e0ffd9;
+        --bs-table-bg: transparent;
+        --bs-table-border-color: rgba(57, 255, 20, 0.15);
+    }
+
+    .admin-body .table-hover tbody tr:hover {
+        background-color: rgba(57, 255, 20, 0.05); /* Легкая зеленая подсветка строки */
+    }
+
+
+/* Статусы заявок */
 .status-badge {
     font-size: 0.75rem;
-    padding: 0.25em 0.6em;
+    padding: 0.35em 0.8em;
     border-radius: 4px;
-    border: 1px solid transparent;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    display: inline-block;
 }
 
 .status-new {
-    border-color: var(--neon-admin);
+    border: 1px solid var(--neon-admin);
     color: var(--neon-admin);
-    background: rgba(255,0,60,0.1);
-    box-shadow: 0 0 5px rgba(255,0,60,0.2);
+    background: rgba(57, 255, 20, 0.1);
+    box-shadow: 0 0 8px rgba(57, 255, 20, 0.2);
 }
 
 .status-work {
-    border-color: #ffcc00;
+    border: 1px solid #ffcc00;
     color: #ffcc00;
-    background: rgba(255,204,0,0.1);
+    background: rgba(255, 204, 0, 0.1);
+    box-shadow: 0 0 8px rgba(255, 204, 0, 0.2);
 }
 
 .status-done {
-    border-color: #00ff9d;
-    color: #00ff9d;
-    background: rgba(0,255,157,0.1);
+    border: 1px solid #6c757d;
+    color: #adb5bd;
+    background: rgba(108, 117, 125, 0.1);
 }
 
-/* Кнопки действий */
-.btn-icon {
-    color: rgba(255,255,255,0.5);
-    transition: color 0.2s;
+/* Стилизация модального окна под админку */
+.admin-modal {
+    background: rgba(10, 20, 12, 0.95);
+    border: 1px solid var(--neon-admin);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    color: #e0ffd9;
 }
 
-    .btn-icon:hover {
-        color: #fff;
+    .admin-modal .modal-header .modal-title {
+        color: var(--neon-admin);
+        text-shadow: 0 0 10px rgba(57, 255, 20, 0.4);
     }
 
-    .btn-icon.delete:hover {
-        color: var(--neon-admin);
-        text-shadow: 0 0 8px var(--neon-admin);
+    .admin-modal .text-white-70 {
+        color: rgba(224, 255, 217, 0.8);
     }

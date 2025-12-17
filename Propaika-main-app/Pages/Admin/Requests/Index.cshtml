@@ -1,152 +1,172 @@
 ﻿@page
+@using Propaika_main_app.Extra
 @model Propaika_main_app.Pages.Admin.Requests.IndexModel
 @{
 }
-<div class="container-fluid py-5">
-    <div class="row justify-content-center">
-        <div class="col-xxl-10">
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 text-white">Входящие заявки</h1>
+    <div class="d-flex gap-3">
+        <span class="badge border border-success text-success bg-transparent px-3 py-2">
+            Новых: @Model.NewCount
+        </span>
+        <span class="badge border border-warning text-warning bg-transparent px-3 py-2">
+            В работе: @Model.InProgressCount
+        </span>
+    </div>
+</div>
 
-            <!-- Заголовок -->
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <div>
-                    <h2 class="fw-bold text-white mb-0">
-                        <i class="bi bi-shield-lock-fill me-2" style="color: var(--neon-admin)"></i>
-                        Admin<span style="color: var(--neon-admin)">Control</span>
-                    </h2>
-                    <p class="text-white-50 small mb-0">Управление заявками</p>
-                </div>
-
-                <div class="d-flex gap-3">
-                    <div class="px-3 py-2 rounded border border-danger border-opacity-25 bg-danger bg-opacity-10 text-white small">
-                        Новых: <span class="fw-bold" style="color: var(--neon-admin)">@Model.NewCount</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Основная панель -->
-            <div class="card admin-card rounded-4 overflow-hidden">
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-admin mb-0 align-middle">
-                            <thead>
-                                <tr>
-                                    <th class="ps-4">#</th>
-                                    <th>Дата</th>
-                                    <th>Клиент</th>
-                                    <th>Устройство</th>
-                                    <th width="30%">Проблема</th>
-                                    <th>Статус</th>
-                                    <th class="text-end pe-4">Действия</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if (Model.Requests.Any())
-                                {
-                                    @foreach (var item in Model.Requests)
+<div class="card admin-card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-admin table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Дата</th>
+                        <th>Клиент</th>
+                        <th>Описание</th>
+                        <th>Статус</th>
+                        <th class="text-end">Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Requests)
+                    {
+                        <tr>
+                            <td>#@item.Id</td>
+                            <td>@item.CreatedAt.ToString("dd.MM HH:mm")</td>
+                            <td>
+                                <div class="fw-bold">@item.ClientName</div>
+                                <small class="text-muted">@item.PhoneNumber</small>
+                            </td>
+                            <td>
+                                <!-- Обрезаем текст и добавляем кнопку просмотра -->
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="text-truncate" style="max-width: 200px;">
+                                        @item.ProblemDescription
+                                    </span>
+                                    @if (!string.IsNullOrEmpty(item.ProblemDescription) && item.ProblemDescription.Length > 20)
                                     {
-                                        <tr class="@(item.IsProcessed ? "opacity-50" : "")">
-                                            <td class="ps-4 text-white-50 small">@item.Id</td>
-                                            <td>
-                                                <div class="d-flex flex-column">
-                                                    <span class="fw-bold">@item.CreatedAt.ToString("dd.MM.yyyy")</span>
-                                                    <small class="text-white-50">@item.CreatedAt.ToString("HH:mm")</small>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="d-flex flex-column">
-                                                    <span class="text-white">@item.ClientName</span>
-                                                    <a href="tel:@item.PhoneNumber" class="text-decoration-none small" style="color: var(--neon-admin)">@item.PhoneNumber</a>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <span class="badge bg-dark border border-secondary text-secondary">
-                                                    @(string.IsNullOrEmpty(item.DeviceModel) ? "—" : item.DeviceModel)
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <small class="text-white-70 d-block text-truncate" style="max-width: 300px;" title="@item.ProblemDescription">
-                                                    @item.ProblemDescription
-                                                </small>
-                                            </td>
-                                            <td>
-                                                @if (!item.IsProcessed)
-                                                {
-                                                    <span class="status-badge status-new">НОВАЯ</span>
-                                                }
-                                                else
-                                                {
-                                                    <span class="status-badge status-done">ОБРАБОТАНА</span>
-                                                }
-                                            </td>
-                                            <td class="text-end pe-4">
-                                                <!-- Кнопка "Обработать" (только для новых) -->
-                                                @if (!item.IsProcessed)
-                                                {
-                                                    <form method="post" asp-page-handler="ToggleStatus" asp-route-id="@item.Id" class="d-inline">
-                                                        <button type="submit" class="btn btn-link btn-icon check p-0 border-0 me-2" title="Пометить как обработанную">
-                                                            <i class="bi bi-check-circle"></i>
-                                                        </button>
-                                                    </form>
-                                                }
-
-                                                <!-- Кнопка Удалить -->
-                                                <form method="post" asp-page-handler="Delete" asp-route-id="@item.Id" class="d-inline" onsubmit="return confirm('Удалить заявку?');">
-                                                    <button type="submit" class="btn btn-link btn-icon delete p-0 border-0" title="Удалить">
-                                                        <i class="bi bi-trash3"></i>
-                                                    </button>
-                                                </form>
-                                            </td>
-                                        </tr>
+                                        <button type="button"
+                                                class="btn btn-sm btn-icon"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#descModal"
+                                                data-desc="@item.ProblemDescription"
+                                                data-client="@item.ClientName">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
                                     }
+                                </div>
+                            </td>
+                            <td>
+                                @if (item.Status == RequestStatus.New)
+                                {
+                                    <span class="status-badge status-new">Новая</span>
+                                }
+                                else if (item.Status == RequestStatus.InProgress)
+                                {
+                                    <span class="status-badge status-work">В работе</span>
                                 }
                                 else
                                 {
-                                    <tr>
-                                        <td colspan="7" class="text-center py-5 text-white-50">
-                                            <i class="bi bi-inbox fs-1 d-block mb-3 opacity-25"></i>
-                                            Заявок пока нет
-                                        </td>
-                                    </tr>
+                                    <span class="status-badge status-done">Готово</span>
                                 }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                            </td>
+                            <td class="text-end">
+                                <div class="d-flex justify-content-end gap-2">
 
-                <!-- Футер с пагинацией -->
-                <div class="card-footer bg-transparent border-top border-danger border-opacity-25 p-3 d-flex justify-content-between align-items-center">
-                    <div class="text-white-50 small">
-                        Страница @Model.CurrentPage из @Model.TotalPages
-                    </div>
+                                    @* --- ДЕЙСТВИЯ ДЛЯ НОВОЙ ЗАЯВКИ --- *@
+                                    @if (item.Status == RequestStatus.New)
+                                    {
+                                        <!-- 1. Взять в работу (Желтая кнопка) -->
+                                        <form method="post" asp-page-handler="SetStatus">
+                                            <input type="hidden" name="id" value="@item.Id" />
+                                            <input type="hidden" name="status" value="@RequestStatus.InProgress" />
+                                            <button class="btn btn-sm btn-outline-warning" title="Взять в работу">
+                                                <i class="bi bi-play-fill"></i>
+                                            </button>
+                                        </form>
 
-                    @if (Model.TotalPages > 1)
-                    {
-                        <nav>
-                            <ul class="pagination pagination-sm mb-0 gap-1">
-                                <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
-                                    <a class="page-link page-link-admin rounded" asp-route-p="@(Model.CurrentPage - 1)">
-                                        <i class="bi bi-chevron-left"></i>
-                                    </a>
-                                </li>
+                                        <!-- 2. Сразу завершить (Зеленая кнопка с двойной галочкой) -->
+                                        <form method="post" asp-page-handler="SetStatus">
+                                            <input type="hidden" name="id" value="@item.Id" />
+                                            <input type="hidden" name="status" value="@RequestStatus.Done" />
+                                            <button class="btn btn-sm btn-outline-success" title="Сразу завершить">
+                                                <i class="bi bi-check-all"></i>
+                                            </button>
+                                        </form>
+                                    }
 
-                                @for (int i = 1; i <= Model.TotalPages; i++)
-                                {
-                                    <li class="page-item">
-                                        <a class="page-link page-link-admin rounded @(i == Model.CurrentPage ? "active" : "")" asp-route-p="@i">@i</a>
-                                    </li>
-                                }
+                                    @* --- ДЕЙСТВИЯ ДЛЯ ЗАЯВКИ В РАБОТЕ --- *@
+                                    @if (item.Status == RequestStatus.InProgress)
+                                    {
+                                        <form method="post" asp-page-handler="SetStatus">
+                                            <input type="hidden" name="id" value="@item.Id" />
+                                            <input type="hidden" name="status" value="@RequestStatus.Done" />
+                                            <button class="btn btn-sm btn-outline-success" title="Завершить">
+                                                <i class="bi bi-check-lg"></i>
+                                            </button>
+                                        </form>
+                                    }
 
-                                <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
-                                    <a class="page-link page-link-admin rounded" asp-route-p="@(Model.CurrentPage + 1)">
-                                        <i class="bi bi-chevron-right"></i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
+                                    @* --- ДЕЙСТВИЯ ДЛЯ ГОТОВОЙ ЗАЯВКИ --- *@
+                                    @if (item.Status == RequestStatus.Done)
+                                    {
+                                        <form method="post" asp-page-handler="SetStatus">
+                                            <input type="hidden" name="id" value="@item.Id" />
+                                            <input type="hidden" name="status" value="@RequestStatus.InProgress" />
+                                            <button class="btn btn-sm btn-outline-secondary" title="Вернуть в работу">
+                                                <i class="bi bi-arrow-counterclockwise"></i>
+                                            </button>
+                                        </form>
+                                    }
+
+                                    <!-- Кнопка удаления (общая для всех статусов) -->
+                                    <form method="post" asp-page-handler="Delete" onsubmit="return confirm('Удалить заявку?');">
+                                        <input type="hidden" name="id" value="@item.Id" />
+                                        <button class="btn btn-sm btn-icon delete" title="Удалить">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
                     }
-                </div>
-            </div>
-
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
+
+<!-- Модальное окно для полного описания -->
+<div class="modal fade" id="descModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content admin-modal">
+            <div class="modal-header border-bottom-0">
+                <h5 class="modal-title" id="modalClientName">Описание проблемы</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-break pt-0">
+                <p id="modalDescText" class="mb-0 fs-6 text-white-70"></p>
+            </div>
+            <div class="modal-footer border-top-0">
+                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Скрипт для передачи данных в модалку
+        const descModal = document.getElementById('descModal')
+        descModal.addEventListener('show.bs.modal', event => {
+            const button = event.relatedTarget
+            const desc = button.getAttribute('data-desc')
+            const client = button.getAttribute('data-client')
+
+            descModal.querySelector('#modalDescText').textContent = desc
+            descModal.querySelector('#modalClientName').textContent = 'Заявка от ' + client
+        })
+    </script>
+}
