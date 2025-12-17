@@ -1,0 +1,152 @@
+﻿@page
+@model Propaika_main_app.Pages.Admin.Requests.IndexModel
+@{
+}
+<div class="container-fluid py-5">
+    <div class="row justify-content-center">
+        <div class="col-xxl-10">
+
+            <!-- Заголовок -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="fw-bold text-white mb-0">
+                        <i class="bi bi-shield-lock-fill me-2" style="color: var(--neon-admin)"></i>
+                        Admin<span style="color: var(--neon-admin)">Control</span>
+                    </h2>
+                    <p class="text-white-50 small mb-0">Управление заявками</p>
+                </div>
+
+                <div class="d-flex gap-3">
+                    <div class="px-3 py-2 rounded border border-danger border-opacity-25 bg-danger bg-opacity-10 text-white small">
+                        Новых: <span class="fw-bold" style="color: var(--neon-admin)">@Model.NewCount</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Основная панель -->
+            <div class="card admin-card rounded-4 overflow-hidden">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-admin mb-0 align-middle">
+                            <thead>
+                                <tr>
+                                    <th class="ps-4">#</th>
+                                    <th>Дата</th>
+                                    <th>Клиент</th>
+                                    <th>Устройство</th>
+                                    <th width="30%">Проблема</th>
+                                    <th>Статус</th>
+                                    <th class="text-end pe-4">Действия</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.Requests.Any())
+                                {
+                                    @foreach (var item in Model.Requests)
+                                    {
+                                        <tr class="@(item.IsProcessed ? "opacity-50" : "")">
+                                            <td class="ps-4 text-white-50 small">@item.Id</td>
+                                            <td>
+                                                <div class="d-flex flex-column">
+                                                    <span class="fw-bold">@item.CreatedAt.ToString("dd.MM.yyyy")</span>
+                                                    <small class="text-white-50">@item.CreatedAt.ToString("HH:mm")</small>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex flex-column">
+                                                    <span class="text-white">@item.ClientName</span>
+                                                    <a href="tel:@item.PhoneNumber" class="text-decoration-none small" style="color: var(--neon-admin)">@item.PhoneNumber</a>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-dark border border-secondary text-secondary">
+                                                    @(string.IsNullOrEmpty(item.DeviceModel) ? "—" : item.DeviceModel)
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <small class="text-white-70 d-block text-truncate" style="max-width: 300px;" title="@item.ProblemDescription">
+                                                    @item.ProblemDescription
+                                                </small>
+                                            </td>
+                                            <td>
+                                                @if (!item.IsProcessed)
+                                                {
+                                                    <span class="status-badge status-new">НОВАЯ</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="status-badge status-done">ОБРАБОТАНА</span>
+                                                }
+                                            </td>
+                                            <td class="text-end pe-4">
+                                                <!-- Кнопка "Обработать" (только для новых) -->
+                                                @if (!item.IsProcessed)
+                                                {
+                                                    <form method="post" asp-page-handler="ToggleStatus" asp-route-id="@item.Id" class="d-inline">
+                                                        <button type="submit" class="btn btn-link btn-icon check p-0 border-0 me-2" title="Пометить как обработанную">
+                                                            <i class="bi bi-check-circle"></i>
+                                                        </button>
+                                                    </form>
+                                                }
+
+                                                <!-- Кнопка Удалить -->
+                                                <form method="post" asp-page-handler="Delete" asp-route-id="@item.Id" class="d-inline" onsubmit="return confirm('Удалить заявку?');">
+                                                    <button type="submit" class="btn btn-link btn-icon delete p-0 border-0" title="Удалить">
+                                                        <i class="bi bi-trash3"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="7" class="text-center py-5 text-white-50">
+                                            <i class="bi bi-inbox fs-1 d-block mb-3 opacity-25"></i>
+                                            Заявок пока нет
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Футер с пагинацией -->
+                <div class="card-footer bg-transparent border-top border-danger border-opacity-25 p-3 d-flex justify-content-between align-items-center">
+                    <div class="text-white-50 small">
+                        Страница @Model.CurrentPage из @Model.TotalPages
+                    </div>
+
+                    @if (Model.TotalPages > 1)
+                    {
+                        <nav>
+                            <ul class="pagination pagination-sm mb-0 gap-1">
+                                <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+                                    <a class="page-link page-link-admin rounded" asp-route-p="@(Model.CurrentPage - 1)">
+                                        <i class="bi bi-chevron-left"></i>
+                                    </a>
+                                </li>
+
+                                @for (int i = 1; i <= Model.TotalPages; i++)
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link page-link-admin rounded @(i == Model.CurrentPage ? "active" : "")" asp-route-p="@i">@i</a>
+                                    </li>
+                                }
+
+                                <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+                                    <a class="page-link page-link-admin rounded" asp-route-p="@(Model.CurrentPage + 1)">
+                                        <i class="bi bi-chevron-right"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
