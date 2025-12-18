@@ -5,33 +5,101 @@
                               new { slug = Model.Case.Slug }, Request.Scheme)" />
 }
 
-<article itemscope itemtype="https://schema.org/Article">
-    <h1 itemprop="headline">@Model.Case.Title</h1>
-
-    <div class="case-meta text-muted mb-3">
-        <span> @Model.Case.DeviceModel</span> |
-        <span> @Model.Case.ServiceType</span> |
-        <time datetime="@Model.Case.DateCompleted.ToString("yyyy-MM-dd")">
-            @Model.Case.DateCompleted.ToString("d MMMM yyyy")
-        </time>
+<div class="container py-5">
+    <!-- Хлебные крошки -->
+    <div class="mb-4">
+        <a asp-page="./Index" class="btn btn-sm btn-outline-light border-0 text-white-50 hover-white">
+            <i class="bi bi-arrow-left me-2"></i>Назад к работам
+        </a>
     </div>
 
-    <div class="row">
-        <div class="col-md-6">
-            <h5>До ремонта</h5>
-            <img src="@Model.Case.BeforeImage" class="img-fluid" loading="lazy"
-                 alt="До ремонта - @Model.Case.Title">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <article itemscope itemtype="https://schema.org/Article">
+
+                <!-- Заголовок -->
+                <header class="text-center mb-5">
+                    <h1 class="display-5 fw-bold text-white mb-3" itemprop="headline">
+                        @Model.Case.Title
+                    </h1>
+
+                    <div class="d-flex justify-content-center gap-3 text-white-50 flex-wrap">
+                        <span class="d-flex align-items-center gap-2">
+                            <i class="bi bi-cpu text-info"></i> @Model.Case.DeviceModel
+                        </span>
+                        <span class="text-white-25">|</span>
+                        <span class="d-flex align-items-center gap-2">
+                            <i class="bi bi-tools text-info"></i> @Model.Case.ServiceType
+                        </span>
+                        <span class="text-white-25">|</span>
+                        <time datetime="@Model.Case.DateCompleted.ToString("yyyy-MM-dd")" class="d-flex align-items-center gap-2">
+                            <i class="bi bi-calendar3 text-info"></i> @Model.Case.DateCompleted.ToString("d MMMM yyyy")
+                        </time>
+                    </div>
+                </header>
+
+                <!-- ФОТОГАЛЕРЕЯ (Вместо слайдера) -->
+                <div class="row g-4 mb-5">
+                    <div class="col-md-6">
+                        <div class="card neon-card border-0 h-100">
+                            <div class="card-header bg-transparent border-0 pt-3 pb-0">
+                                <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 w-100 py-2">
+                                    ДО РЕМОНТА
+                                </span>
+                            </div>
+                            <div class="card-body p-2">
+                                <div class="ratio ratio-4x3 rounded overflow-hidden border border-white border-opacity-10">
+                                    <img src="@Model.Case.BeforeImage" class="object-fit-cover" alt="До ремонта - @Model.Case.Title" loading="lazy">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card neon-card border-0 h-100">
+                            <div class="card-header bg-transparent border-0 pt-3 pb-0">
+                                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 w-100 py-2">
+                                    ПОСЛЕ РЕМОНТА
+                                </span>
+                            </div>
+                            <div class="card-body p-2">
+                                <div class="ratio ratio-4x3 rounded overflow-hidden border border-white border-opacity-10">
+                                    <img src="@Model.Case.AfterImage" class="object-fit-cover" alt="После ремонта - @Model.Case.Title" loading="lazy">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Контент и Сайдбар -->
+                <div class="row g-5">
+                    <div class="col-lg-8">
+                        <h3 class="text-white mb-4">Детали работы</h3>
+                        <div class="case-description text-white-70 fs-5 lh-lg" itemprop="articleBody">
+                            @Html.Raw(Model.Case.Description)
+                        </div>
+                    </div>
+
+                    <!-- Сайдбар -->
+                    <div class="col-lg-4">
+                        <div class="card neon-card p-4 sticky-lg-top" style="top: 2rem; z-index: 1;">
+                            <h5 class="text-white-50 mb-3">Стоимость ремонта</h5>
+                            <div class="neon-price display-6 fw-bold mb-4">
+                                @Model.Case.Cost.ToString("N0") ₽
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <a href="/Contacts" class="btn btn-neon fw-bold py-3">
+                                    Оставить заявку
+                                </a>
+                                <button class="btn btn-outline-light border-opacity-25 py-2 text-white-50" onclick="navigator.share({title: '@Model.Case.Title', url: window.location.href})">
+                                    <i class="bi bi-share me-2"></i>Поделиться
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </article>
         </div>
-        <div class="col-md-6">
-            <h5>После ремонта</h5>
-            <img src="@Model.Case.AfterImage" class="img-fluid" loading="lazy"
-                 alt="После ремонта - @Model.Case.Title">
-        </div>
     </div>
-
-    <div class="case-description mt-4" itemprop="articleBody">
-        @Html.Raw(Model.Case.Description)
-    </div>
-
-    <p class="lead mt-4">Стоимость работы: <strong>@Model.Case.Cost ₽</strong></p>
-</article>
+</div>
