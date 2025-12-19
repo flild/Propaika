@@ -82,8 +82,13 @@ html[data-bs-theme="light"] .neon-text {
     opacity: 0.15;
     filter: blur(100px);
     border-radius: 50%;
-    z-index: 0;
+    z-index: -1;
     animation: pulse-glow 4s infinite alternate;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 /* Пульсация неонового фона */

@@ -38,13 +38,13 @@
                                 <div class="btn-group">
                                     <button class="btn btn-sm btn-outline-primary"
                                             onclick="openModal(@item.Id, '@item.Name', '@item.DeviceType')">
-                                        <i class="bi bi-pencil">✏️</i>
+                                        <i class="bi bi-pencil"></i>
                                     </button>
 
                                     <form method="post" asp-page-handler="Delete" asp-route-id="@item.Id" class="d-inline"
                                           onsubmit="return confirm('Удалить модель @item.Name? Все цены для неё также удалятся.');">
                                         <button type="submit" class="btn btn-sm btn-outline-danger">
-                                            <i class="bi bi-trash">❌</i>
+                                            <i class="bi bi-trash"></i>
                                         </button>
                                     </form>
                                 </div>
