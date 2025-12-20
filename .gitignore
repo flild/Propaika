@@ -371,3 +371,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /ServerPropaika/.env
 /Propaika-main-app/wwwroot/uploads/cases/
+/Propaika-main-app/wwwroot/lib/bootstrap/dist/css/bootstrap.min.css
