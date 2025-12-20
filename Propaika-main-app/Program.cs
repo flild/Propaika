@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Propaika_main_app.Data;
 using Propaika_main_app.Services;
 
@@ -13,11 +14,14 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => {
-    options.SignIn.RequireConfirmedAccount = false; // Не требовать подтверждения email
-    options.Password.RequireDigit = false;          // Упрощаем пароли для себя
+    options.SignIn.RequireConfirmedAccount = false;
+    options.User.RequireUniqueEmail = false;
+    options.Password.RequireDigit = false;          
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequireUppercase = false;
     options.Password.RequiredLength = 6;
+    options.User.AllowedUserNameCharacters =
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+"; //
 })
 .AddEntityFrameworkStores<ApplicationDbContext>();
 
@@ -43,7 +47,14 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+var staticPath = Path.Combine(builder.Environment.ContentRootPath, "wwwroot");
+Console.WriteLine($"Static files path: {staticPath}"); // Для отладки в логах
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(staticPath),
+    RequestPath = ""
+});
 app.UseRouting();
 
 app.UseAuthentication();
@@ -55,12 +66,17 @@ app.MapRazorPages();
 /*using (var scope = app.Services.CreateScope())
 {
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
-    var email = "flildman@yandex.ru";
-    var password = "Admin123"; // Придумай сложный пароль
+    var login = "admin"; // Используем как логин
+    var password = "pass";
 
-    if (await userManager.FindByEmailAsync(email) == null)
+    if (await userManager.FindByNameAsync(login) == null) // Ищем по UserName
     {
-        var user = new IdentityUser { UserName = email, Email = email, EmailConfirmed = true };
+        var user = new IdentityUser
+        {
+            UserName = login, 
+            Email = login + "@example.com", 
+            EmailConfirmed = true
+        };
         await userManager.CreateAsync(user, password);
     }
 }*/
