@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+Disallow: /search
+Disallow: /?q=
+
+Disallow: /api/
+Disallow: /bin/
+
+Sitemap: https://propaika.ru/sitemap.xml

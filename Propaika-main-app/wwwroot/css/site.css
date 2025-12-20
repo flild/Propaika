@@ -785,3 +785,52 @@ html[data-bs-theme="dark"] .map-wrapper::after {
         font-size: 1rem;
     }
 }
+
+
+/* =======================================================
+   FOOTER STYLES
+   ======================================================= */
+
+/* Ссылки в футере */
+.footer-link {
+    color: #a0a0a0;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+    .footer-link:hover {
+        color: var(--neon-main);
+        text-shadow: 0 0 8px rgba(0, 243, 255, 0.4);
+        padding-left: 4px; /* Легкий сдвиг вправо при наведении */
+    }
+
+/* Иконки соцсетей */
+.social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+    .social-link:hover {
+        background: rgba(0, 243, 255, 0.1);
+        color: var(--neon-main);
+        border-color: var(--neon-main);
+        box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+        transform: translateY(-2px);
+    }
+
+/* Адаптив для футера */
+@media (max-width: 768px) {
+    .footer-link:hover {
+        padding-left: 0; /* На мобилке убираем сдвиг, чтобы пальцем было удобнее */
+    }
+}

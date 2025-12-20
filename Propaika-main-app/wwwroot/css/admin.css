@@ -1,143 +1,221 @@
 ﻿/* =======================================================
-   ADMIN VARIABLES & BASE
-======================================================= */
-:root {
-    /* Основной цвет админки - Неоновый Зеленый (Toxic Green) */
-    --neon-admin: #39ff14;
-    /* Оставляем на случай совместимости */
-    --neon-main: #00f3ff;
+   ADMIN OVERRIDES (Professional Mint Style)
+   ======================================================= */
+
+/* Переопределяем переменные только внутри .admin-body */
+.admin-body {
+    /* 
+       Заменяем "вырвиглазный" неон (#00f3ff) на спокойный Мятный/Изумрудный.
+       Это цвет #00d2d3 (Teal) или #2ecc71 (Emerald).
+       Он контрастный, но матовый.
+    */
+    --neon-main: #2ecc71;
+    --neon-accent: #00d2d3;
+    --bg-admin-dark: #111418; /* Более плотный темный фон, без синевы */
+    --bs-body-bg: var(--bg-admin-dark);
 }
 
 /* =======================================================
-   ADMIN AREA STYLES
-======================================================= */
+   1. GLOBAL LAYOUT & BACKGROUND
+   ======================================================= */
 
-/* Общий фон и палитра админки */
+/* Убираем радиальные градиенты сайта, делаем фон спокойным и ровным */
 .admin-body {
-    --neon-main: var(--neon-admin); /* Переназначаем глобальную переменную на зеленый */
-    /* Фон: глубокий черный с едва заметным темно-зеленым отливом */
-    background-color: #020502;
-    /* Фоновые пятна света (зеленые вместо красных) */
-    background-image: radial-gradient(circle at 10% 20%, rgba(57, 255, 20, 0.08) 0, transparent 40%), radial-gradient(circle at 90% 80%, rgba(57, 255, 20, 0.06) 0, transparent 45%);
+    background: var(--bg-admin-dark);
+    /* Едва заметная сетка вместо пятен света - это дает ощущение "инженерного" интерфейса */
+    background-image: linear-gradient(rgba(46, 204, 113, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(46, 204, 113, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    min-height: 100vh;
 }
 
-    /* Навбар админки */
-    .admin-body .navbar {
-        background: rgba(2, 12, 4, 0.95); /* Очень темный зеленый, почти черный */
-        border-bottom: 1px solid rgba(57, 255, 20, 0.3);
-        box-shadow: 0 0 18px rgba(57, 255, 20, 0.25);
+    /* Убираем размытие текста для читаемости (оставляем только на заголовках) */
+    .admin-body, .admin-body .nav-link, .admin-body .btn {
+        text-shadow: none !important;
     }
 
-    /* Карточки в админке */
-    .admin-body .card {
-        background: rgba(5, 18, 8, 0.85); /* Полупрозрачный темно-зеленый фон */
-        border-color: rgba(57, 255, 20, 0.2);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); /* Тень для объема */
-    }
-
-    /* Кнопки в админке (все основные действия теперь зеленые) */
-    .admin-body .btn-primary,
-    .admin-body .btn-success,
-    .admin-body .btn-warning {
-        background-color: rgba(57, 255, 20, 0.1); /* Прозрачный фон */
-        color: var(--neon-admin); /* Зеленый текст */
-        border: 1px solid var(--neon-admin);
-        box-shadow: 0 0 12px rgba(57, 255, 20, 0.2);
-        transition: all 0.3s ease;
-    }
-
-        /* Ховер эффект для кнопок - заливка цветом */
-        .admin-body .btn-primary:hover,
-        .admin-body .btn-success:hover,
-        .admin-body .btn-warning:hover {
-            background-color: var(--neon-admin);
-            color: #000; /* Черный текст на зеленом фоне читается лучше всего */
-            box-shadow: 0 0 20px rgba(57, 255, 20, 0.6);
-            transform: translateY(-2px);
+        .admin-body h1, .admin-body h2, .admin-body h3, .admin-body .navbar-brand {
+            /* Легкое свечение только у заголовков */
+            text-shadow: 0 0 10px rgba(46, 204, 113, 0.3);
+            color: #e0e6ed;
         }
 
-    /* Ссылки и иконки в таблицах */
-    .admin-body a {
-        color: var(--neon-admin);
-        transition: text-shadow 0.3s ease;
-    }
+        /* =======================================================
+   2. NAVBAR & HEADER
+   ======================================================= */
 
-        .admin-body a:hover {
-            color: #8aff70; /* Чуть светлее при наведении */
-            text-shadow: 0 0 8px rgba(57, 255, 20, 0.6);
+        .admin-body .navbar {
+            background-color: rgba(10, 15, 12, 0.95) !important; /* Почти непрозрачный */
+            border-bottom: 1px solid rgba(46, 204, 113, 0.2) !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
 
-    /* Формы (input) в админке */
-    .admin-body .form-control {
-        background-color: rgba(0, 0, 0, 0.3);
-        border-color: rgba(57, 255, 20, 0.2);
-        color: #e0ffd9;
-    }
+        .admin-body .navbar-brand {
+            color: var(--neon-main) !important;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
 
-        .admin-body .form-control:focus {
-            background-color: rgba(0, 0, 0, 0.6);
-            border-color: var(--neon-admin);
-            box-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
+        /* Активные ссылки в меню */
+        .admin-body .nav-link.active {
+            color: var(--neon-main) !important;
+            background: rgba(46, 204, 113, 0.1);
+            border-radius: 6px;
+        }
+
+        .admin-body .nav-link:hover {
             color: #fff;
         }
 
-    /* Таблицы */
-    .admin-body .table {
-        --bs-table-color: #e0ffd9;
-        --bs-table-bg: transparent;
-        --bs-table-border-color: rgba(57, 255, 20, 0.15);
-    }
+        /* =======================================================
+   3. CARDS & PANELS (Utilitarian Style)
+   ======================================================= */
 
-    .admin-body .table-hover tbody tr:hover {
-        background-color: rgba(57, 255, 20, 0.05); /* Легкая зеленая подсветка строки */
-    }
+        /* Карточки делаем более плотными и менее прозрачными, чем на сайте */
+        .admin-body .card {
+            background-color: #1a1d24; /* Светлее фона, чтобы выделяться */
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Обычная тень, без неона */
+            border-radius: 8px; /* Менее скругленные углы, более строгие */
+        }
 
+        .admin-body .card-header {
+            background-color: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            font-weight: 600;
+            color: var(--neon-main);
+        }
 
-/* Статусы заявок */
+        /* =======================================================
+   4. TABLES (High Readability)
+   ======================================================= */
+
+        .admin-body .table {
+            --bs-table-bg: transparent;
+            --bs-table-color: #ced4da;
+            border-color: rgba(255,255,255,0.08);
+        }
+
+            .admin-body .table thead th {
+                color: var(--neon-main);
+                font-weight: 600;
+                text-transform: uppercase;
+                font-size: 0.85rem;
+                letter-spacing: 0.5px;
+                border-bottom-width: 2px;
+            }
+
+        .admin-body .table-hover tbody tr:hover {
+            /* Подсветка строки при наведении - мягкая, без вспышек */
+            background-color: rgba(46, 204, 113, 0.05) !important;
+        }
+
+        /* =======================================================
+   5. BUTTONS & ACTIONS
+   ======================================================= */
+
+        /* Переопределяем неоновые кнопки сайта на более строгие */
+        .admin-body .btn-primary {
+            background-color: var(--neon-main);
+            border-color: var(--neon-main);
+            color: #000; /* Черный текст на зеленом фоне для контраста */
+            font-weight: 600;
+            box-shadow: none; /* Убираем свечение */
+        }
+
+            .admin-body .btn-primary:hover {
+                background-color: #25a25a; /* Темнее при наведении */
+                border-color: #25a25a;
+                color: #fff;
+                transform: translateY(-1px);
+            }
+
+        .admin-body .btn-outline-primary {
+            color: var(--neon-main);
+            border-color: var(--neon-main);
+            box-shadow: none;
+        }
+
+            .admin-body .btn-outline-primary:hover {
+                background-color: var(--neon-main);
+                color: #000;
+            }
+
+        /* Кнопки действий в таблицах (Edit/Delete) делаем компактными */
+        .admin-body .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        /* =======================================================
+   6. FORMS
+   ======================================================= */
+
+        .admin-body .form-control,
+        .admin-body .form-select {
+            background-color: #0d1117;
+            border: 1px solid #30363d;
+            color: #e6edf3;
+            box-shadow: none !important; /* Убираем лишние тени */
+        }
+
+            .admin-body .form-control:focus,
+            .admin-body .form-select:focus {
+                border-color: var(--neon-main);
+                background-color: #0d1117;
+                /* Легкая обводка вместо мощного свечения */
+                box-shadow: 0 0 0 2px rgba(46, 204, 113, 0.25) !important;
+            }
+
+/* =======================================================
+   7. BADGES & UTILS
+   ======================================================= */
+
+/* Статусы заказов - четкие плашки */
 .status-badge {
-    font-size: 0.75rem;
-    padding: 0.35em 0.8em;
+    padding: 0.35em 0.65em;
+    font-size: 0.75em;
+    font-weight: 700;
     border-radius: 4px;
-    font-weight: 600;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
-    display: inline-block;
+    border: 1px solid transparent;
 }
 
 .status-new {
-    border: 1px solid var(--neon-admin);
-    color: var(--neon-admin);
-    background: rgba(57, 255, 20, 0.1);
-    box-shadow: 0 0 8px rgba(57, 255, 20, 0.2);
+    background-color: rgba(46, 204, 113, 0.15);
+    color: #2ecc71;
+    border-color: rgba(46, 204, 113, 0.3);
 }
 
-.status-work {
-    border: 1px solid #ffcc00;
-    color: #ffcc00;
-    background: rgba(255, 204, 0, 0.1);
-    box-shadow: 0 0 8px rgba(255, 204, 0, 0.2);
+.status-pending {
+    background-color: rgba(255, 193, 7, 0.15);
+    color: #ffc107;
+    border-color: rgba(255, 193, 7, 0.3);
 }
 
-.status-done {
-    border: 1px solid #6c757d;
-    color: #adb5bd;
-    background: rgba(108, 117, 125, 0.1);
+.status-danger {
+    background-color: rgba(255, 23, 68, 0.15);
+    color: #ff1744;
+    border-color: rgba(255, 23, 68, 0.3);
+}
+/* =======================================================
+   7. Devises
+   ======================================================= */
+
+/* Легкий ховер эффект для карточек */
+.hover-shadow:hover {
+    transform: translateY(-2px);
+    background-color: rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 
-/* Стилизация модального окна под админку */
-.admin-modal {
-    background: rgba(10, 20, 12, 0.95);
-    border: 1px solid var(--neon-admin);
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(10px);
-    color: #e0ffd9;
+.transition-all {
+    transition: all 0.2s ease-in-out;
+}
+/* Кнопки действий чуть виднее при наведении на карточку */
+.group-action .btn-icon {
+    opacity: 0.5;
+    transition: opacity 0.2s;
 }
 
-    .admin-modal .modal-header .modal-title {
-        color: var(--neon-admin);
-        text-shadow: 0 0 10px rgba(57, 255, 20, 0.4);
-    }
-
-    .admin-modal .text-white-70 {
-        color: rgba(224, 255, 217, 0.8);
-    }
+.group-action:hover .btn-icon {
+    opacity: 1;
+}

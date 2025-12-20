@@ -1,6 +1,7 @@
-using Microsoft.AspNetCore.Mvc;
+п»їusing Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Slugify;
 using Propaika_main_app.Data;
 using Propaika_main_app.Models;
 using System.ComponentModel.DataAnnotations;
@@ -28,45 +29,40 @@ namespace Propaika_main_app.Pages.Admin.ServiceCases
         {
             public int? Id { get; set; }
 
-            [Required(ErrorMessage = "Заголовок обязателен")]
+            [Required(ErrorMessage = "Р—Р°РіРѕР»РѕРІРѕРє РѕР±СЏР·Р°С‚РµР»РµРЅ")]
+            [Display(Name = "РќР°Р·РІР°РЅРёРµ СЂР°Р±РѕС‚С‹")]
             public string Title { get; set; } = "";
 
+            [Display(Name = "РћРїРёСЃР°РЅРёРµ РїСЂРѕР±Р»РµРјС‹ Рё СЂРµС€РµРЅРёСЏ")]
             public string? Description { get; set; }
 
-            [Display(Name = "Модель устройства")]
+            [Display(Name = "РњРѕРґРµР»СЊ СѓСЃС‚СЂРѕР№СЃС‚РІР°")]
             public string? DeviceModel { get; set; }
 
-            [Display(Name = "Тип услуги")]
+            [Display(Name = "РўРёРї СѓСЃР»СѓРіРё")]
             public string? ServiceType { get; set; }
 
             [Range(0, 1000000)]
+            [Display(Name = "РЎС‚РѕРёРјРѕСЃС‚СЊ (в‚Ѕ)")]
             public decimal Cost { get; set; }
 
-            public DateTime DateCompleted { get; set; } = new DateTime(
-                    DateTime.Now.Year,
-                    DateTime.Now.Month,
-                    DateTime.Now.Day,
-                    DateTime.Now.Hour,
-                    DateTime.Now.Minute,
-                    0
-                );
-
-            // Файлы
+            // Р¤Р°Р№Р»С‹
+            [Display(Name = "Р¤РѕС‚Рѕ Р”Рћ")]
             public IFormFile? UploadBefore { get; set; }
+
+            [Display(Name = "Р¤РѕС‚Рѕ РџРћРЎР›Р•")]
             public IFormFile? UploadAfter { get; set; }
 
-            // Скрытые поля для хранения старых путей при редактировании
+            // РЎРєСЂС‹С‚С‹Рµ РїРѕР»СЏ РґР»СЏ UI (С‡С‚РѕР±С‹ РїРѕРєР°Р·Р°С‚СЊ С‚РµРєСѓС‰РёРµ РєР°СЂС‚РёРЅРєРё РїСЂРё СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёРё)
             public string? ExistingBeforePath { get; set; }
             public string? ExistingAfterPath { get; set; }
 
-            // SEO
-            public string? Slug { get; set; }
-            public string? MetaTitle { get; set; }
-            public string? MetaDescription { get; set; }
+            // SEO РїРѕР»СЏ СѓР±СЂР°Р»Рё РёР· Input, РѕРЅРё РіРµРЅРµСЂРёСЂСѓСЋС‚СЃСЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё
         }
 
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(int? id)
         {
+
             Cases = await _db.ServiceCases
                 .OrderByDescending(c => c.DateCompleted)
                 .ToListAsync();
@@ -76,7 +72,8 @@ namespace Propaika_main_app.Pages.Admin.ServiceCases
         {
             if (!ModelState.IsValid)
             {
-                await OnGetAsync();
+                // Р•СЃР»Рё РѕС€РёР±РєР°, РЅСѓР¶РЅРѕ РїРµСЂРµР·Р°РіСЂСѓР·РёС‚СЊ СЃРїРёСЃРѕРє, С‡С‚РѕР±С‹ СЃС‚СЂР°РЅРёС†Р° РЅРµ СЃР»РѕРјР°Р»Р°СЃСЊ
+                await OnGetAsync(null);
                 return Page();
             }
 
@@ -93,41 +90,59 @@ namespace Propaika_main_app.Pages.Admin.ServiceCases
                 // CREATE
                 serviceCase = new ServiceCase();
                 _db.ServiceCases.Add(serviceCase);
+                // Р”Р°С‚Р° Р·Р°РІРµСЂС€РµРЅРёСЏ СЃС‚Р°РІРёС‚СЃСЏ С‚РµРєСѓС‰Р°СЏ РїСЂРё СЃРѕР·РґР°РЅРёРё
+                serviceCase.DateCompleted = DateTime.UtcNow;
             }
 
-            // Заполняем поля
+            // РћСЃРЅРѕРІРЅС‹Рµ РїРѕР»СЏ
             serviceCase.Title = Input.Title;
             serviceCase.Description = Input.Description;
             serviceCase.DeviceModel = Input.DeviceModel;
             serviceCase.ServiceType = Input.ServiceType;
             serviceCase.Cost = Input.Cost;
-            serviceCase.DateCompleted = DateTime.UtcNow;// Input.DateCompleted; 
-            serviceCase.MetaTitle = Input.MetaTitle;
-            serviceCase.MetaDescription = Input.MetaDescription;
 
-            // Генерация Slug
-            if (string.IsNullOrWhiteSpace(Input.Slug))
+            // РђР’РўРћРњРђРўРР§Р•РЎРљРћР• SEO 
+            // Р¤РѕСЂРјРёСЂСѓРµРј Р·Р°РіРѕР»РѕРІРѕРє РґР»СЏ SEO: "Р РµРјРѕРЅС‚ iPhone 12 Pro - Р—Р°РјРµРЅР° СЃС‚РµРєР»Р°"
+            string baseMeta = $"{Input.ServiceType ?? "Р РµРјРѕРЅС‚"} {Input.DeviceModel ?? ""} {Input.Title}";
+            serviceCase.MetaTitle = baseMeta.Trim();
+
+            // Meta Description Р±РµСЂРµРј РёР· РѕРїРёСЃР°РЅРёСЏ, РѕР±СЂРµР·Р°РµРј РµСЃР»Рё РґР»РёРЅРЅРѕРµ
+            if (!string.IsNullOrEmpty(Input.Description))
             {
-                serviceCase.Slug = GenerateSlug(Input.Title);
-            }
-            else
-            {
-                serviceCase.Slug = Input.Slug;
+                var desc = Input.Description.Length > 150 ? Input.Description.Substring(0, 147) + "..." : Input.Description;
+                serviceCase.MetaDescription = desc;
             }
 
-            // Обработка картинок
-            // 1. До
+            // Slugify РіРµРЅРµСЂР°С†РёСЏ
+            // РЎРѕР·РґР°РµРј РєРѕРЅС„РёРі РґР»СЏ SlugHelper
+            if (string.IsNullOrEmpty(serviceCase.Slug)) 
+            {
+                var config = new SlugHelperConfiguration();
+                foreach (var item in GetRussianTranslitMap())
+                {
+                    if (!config.StringReplacements.ContainsKey(item.Key))
+                    {
+                        config.StringReplacements.Add(item.Key, item.Value);
+                    }
+                }
+
+                var helper = new SlugHelper(config);
+                string slugSource = $"{Input.DeviceModel} {Input.Title}";
+
+                // Р“РµРЅРµСЂРёСЂСѓРµРј СЃР»Р°Рі Рё РґРѕР±Р°РІР»СЏРµРј СЃР»СѓС‡Р°Р№РЅС‹Р№ С…РІРѕСЃС‚ РґР»СЏ СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚Рё (РїРѕ Р¶РµР»Р°РЅРёСЋ)
+                serviceCase.Slug = helper.GenerateSlug(slugSource);
+            }
+
+            // РћР±СЂР°Р±РѕС‚РєР° С„Р°Р№Р»РѕРІ
             if (Input.UploadBefore != null)
             {
-                // Если редактируем, удаляем старую
-                if (Input.Id.HasValue) DeleteFile(serviceCase.BeforeImage);
+                if (!string.IsNullOrEmpty(serviceCase.BeforeImage)) DeleteFile(serviceCase.BeforeImage);
                 serviceCase.BeforeImage = await SaveFileAsync(Input.UploadBefore);
             }
 
-            // 2. После
             if (Input.UploadAfter != null)
             {
-                if (Input.Id.HasValue) DeleteFile(serviceCase.AfterImage);
+                if (!string.IsNullOrEmpty(serviceCase.AfterImage)) DeleteFile(serviceCase.AfterImage);
                 serviceCase.AfterImage = await SaveFileAsync(Input.UploadAfter);
             }
 
@@ -146,18 +161,17 @@ namespace Propaika_main_app.Pages.Admin.ServiceCases
             _db.ServiceCases.Remove(serviceCase);
             await _db.SaveChangesAsync();
 
-            TempData["Success"] = "Кейс удален";
             return RedirectToPage();
         }
-
-        // --- Helpers ---
 
         private async Task<string> SaveFileAsync(IFormFile file)
         {
             var uploadsFolder = Path.Combine(_environment.WebRootPath, "uploads", "cases");
             if (!Directory.Exists(uploadsFolder)) Directory.CreateDirectory(uploadsFolder);
 
-            var uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
+            // РЎРѕС…СЂР°РЅСЏРµРј СЂР°СЃС€РёСЂРµРЅРёРµ С„Р°Р№Р»Р°, РЅРѕ РёРјСЏ РґРµР»Р°РµРј Р±РµР·РѕРїР°СЃРЅС‹Рј
+            var ext = Path.GetExtension(file.FileName);
+            var uniqueFileName = $"{Guid.NewGuid()}{ext}";
             var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
             using (var fileStream = new FileStream(filePath, FileMode.Create))
@@ -178,16 +192,17 @@ namespace Propaika_main_app.Pages.Admin.ServiceCases
             }
         }
 
-        private string GenerateSlug(string title)
+        // РЎР»РѕРІР°СЂСЊ РґР»СЏ С‚СЂР°РЅСЃР»РёС‚РµСЂР°С†РёРё (Slugify.Core РЅРµ СѓРјРµРµС‚ РІ РєРёСЂРёР»Р»РёС†Сѓ РёР· РєРѕСЂРѕР±РєРё)
+        private Dictionary<string, string> GetRussianTranslitMap()
         {
-            string str = title.ToLower();
-            // Транслитерация (упрощенная) или просто замена кириллицы - лучше использовать библиотеку Slugify, 
-            // но для примера простая замена пробелов:
-            str = Regex.Replace(str, @"[^a-z0-9\s-]", ""); // Удалить спецсимволы (для англ)
-            str = Regex.Replace(str, @"\s+", "-").Trim();
-            // Если названия на русском, тут нужен полноценный транслитератор.
-            // Пока добавим рандом, чтобы избежать дублей
-            return str + "-" + DateTime.Now.Ticks.ToString().Substring(10);
+            return new Dictionary<string, string>
+            {
+                {"Р°", "a"}, {"Р±", "b"}, {"РІ", "v"}, {"Рі", "g"}, {"Рґ", "d"}, {"Рµ", "e"}, {"С‘", "yo"},
+                {"Р¶", "zh"}, {"Р·", "z"}, {"Рё", "i"}, {"Р№", "y"}, {"Рє", "k"}, {"Р»", "l"}, {"Рј", "m"},
+                {"РЅ", "n"}, {"Рѕ", "o"}, {"Рї", "p"}, {"СЂ", "r"}, {"СЃ", "s"}, {"С‚", "t"}, {"Сѓ", "u"},
+                {"С„", "f"}, {"С…", "h"}, {"С†", "ts"}, {"С‡", "ch"}, {"С€", "sh"}, {"С‰", "sch"}, {"СЉ", ""},
+                {"С‹", "y"}, {"СЊ", ""}, {"СЌ", "e"}, {"СЋ", "yu"}, {"СЏ", "ya"}
+            };
         }
     }
 }

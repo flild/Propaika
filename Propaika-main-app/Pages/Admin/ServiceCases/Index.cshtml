@@ -3,59 +3,39 @@
 @{
     ViewData["Title"] = "Управление кейсами";
 }
-<div class="container mt-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="neon-header">Кейсы ремонтов</h1>
-        <button class="btn btn-neon px-4" onclick="openModal()">+ Добавить кейс</button>
-    </div>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0 text-white">Портфолио работ</h1>
+    <button type="button" class="btn btn-primary btn-neon" data-bs-toggle="modal" data-bs-target="#caseModal" onclick="clearForm()">
+        <i class="bi bi-plus-lg me-2"></i>Добавить кейс
+    </button>
+</div>
 
-    @if (TempData["Success"] != null)
-    {
-        <div class="alert alert-success bg-dark text-success border-success">@TempData["Success"]</div>
-    }
-
-    <div class="neon-card p-3">
+<!-- Таблица кейсов -->
+<div class="card border-0 shadow-sm" style="background: rgba(20,20,30,0.6);">
+    <div class="card-body p-0">
         <div class="table-responsive">
-            <table class="table table-dark-custom align-middle mb-0">
-                <thead>
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-dark text-white-50">
                     <tr>
-                        <th style="width: 100px;">Фото</th>
-                        <th>Кейс</th>
-                        <th>Инфо</th>
-                        <th>SEO</th>
-                        <th class="text-end">Действия</th>
+                        <th style="width: 120px;" class="ps-4">Фото</th>
+                        <th>Название / Устройство</th>
+                        <th>Услуга / Цена</th>
+                        <th class="text-end pe-4">Действия</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var item in Model.Cases)
                     {
-                        // Сериализуем объект для передачи в JS
-                        var jsonData = System.Text.Json.JsonSerializer.Serialize(new
-                        {
-                            id = item.Id,
-                            title = item.Title,
-                            description = item.Description,
-                            deviceModel = item.DeviceModel,
-                            serviceType = item.ServiceType,
-                            cost = item.Cost,
-                            dateCompleted = item.DateCompleted.ToString("yyyy-MM-ddTHH:mm"),
-                            slug = item.Slug,
-                            metaTitle = item.MetaTitle,
-                            metaDescription = item.MetaDescription,
-                            imgBefore = item.BeforeImage,
-                            imgAfter = item.AfterImage
-                        });
-
                         <tr>
-                            <td>
-                                <div class="d-flex flex-column gap-1">
+                            <td class="ps-4">
+                                <div class="d-flex gap-1">
                                     @if (!string.IsNullOrEmpty(item.BeforeImage))
                                     {
-                                        <img src="@item.BeforeImage" class="rounded" style="width: 50px; height: 50px; object-fit: cover;" alt="До" />
+                                        <img src="@item.BeforeImage" class="rounded border border-secondary" style="width: 40px; height: 40px; object-fit: cover;" title="До" />
                                     }
                                     @if (!string.IsNullOrEmpty(item.AfterImage))
                                     {
-                                        <img src="@item.AfterImage" class="rounded" style="width: 50px; height: 50px; object-fit: cover;" alt="После" />
+                                        <img src="@item.AfterImage" class="rounded border border-success" style="width: 40px; height: 40px; object-fit: cover;" title="После" />
                                     }
                                 </div>
                             </td>
@@ -64,21 +44,16 @@
                                 <div class="small text-muted">@item.DeviceModel</div>
                             </td>
                             <td>
-                                <div class="badge bg-secondary">@item.ServiceType</div>
-                                <div class="mt-1 text-success">@item.Cost.ToString("N0") ₽</div>
+                                <div class="text-info">@item.ServiceType</div>
+                                <div class="small text-white-50">@item.Cost.ToString("N0") ₽</div>
                             </td>
-                            <td>
-                                <div class="small text-muted" style="max-width: 150px; overflow:hidden; text-overflow:ellipsis;">
-                                    /@item.Slug
-                                </div>
-                            </td>
-                            <td class="text-end">
+                            <td class="text-end pe-4">
                                 <button class="btn btn-sm btn-outline-light me-2"
-                                        onclick='openModal(@jsonData)'>
+                                        onclick='editCase(@Html.Raw(Json.Serialize(item)))'
+                                        data-bs-toggle="modal" data-bs-target="#caseModal">
                                     <i class="bi bi-pencil"></i>
                                 </button>
-                                <form method="post" asp-page-handler="Delete" asp-route-id="@item.Id"
-                                      class="d-inline" onsubmit="return confirm('Удалить кейс навсегда?');">
+                                <form method="post" asp-page-handler="Delete" asp-route-id="@item.Id" class="d-inline" onsubmit="return confirm('Удалить этот кейс?');">
                                     <button type="submit" class="btn btn-sm btn-outline-danger">
                                         <i class="bi bi-trash"></i>
                                     </button>
@@ -92,85 +67,92 @@
     </div>
 </div>
 
-<!-- Модальное окно (Create / Edit) -->
-<div class="modal fade" id="caseModal" tabindex="-1">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
-        <div class="modal-content bg-dark text-white border-secondary">
-            <form method="post" asp-page-handler="Save" enctype="multipart/form-data">
+<!-- Модальное окно (Scrollable + Centered) -->
+<div class="modal fade" id="caseModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content admin-modal">
+            <!-- Форма оборачивает весь контент модалки -->
+            <form method="post" asp-page-handler="Save" enctype="multipart/form-data" class="d-flex flex-column h-100">
+
                 <div class="modal-header border-secondary">
                     <h5 class="modal-title" id="modalTitle">Новый кейс</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
+
                 <div class="modal-body">
-                    <input type="hidden" asp-for="Input.Id" id="inputId" />
-                    <input type="hidden" asp-for="Input.ExistingBeforePath" id="inputExistingBefore" />
-                    <input type="hidden" asp-for="Input.ExistingAfterPath" id="inputExistingAfter" />
+                    <input type="hidden" asp-for="Input.Id" id="caseId" />
 
                     <div class="row g-3">
-                        <!-- Основная информация -->
-                        <div class="col-md-12">
-                            <label asp-for="Input.Title" class="form-label">Заголовок кейса</label>
-                            <input asp-for="Input.Title" class="form-control bg-dark text-white" id="inputTitle" required />
+                        <!-- Основная инфо -->
+                        <div class="col-md-6">
+                            <label asp-for="Input.Title" class="form-label text-white-50"></label>
+                            <input asp-for="Input.Title" class="form-control bg-dark text-white border-secondary" id="caseTitle" placeholder="Например: Замена дисплея" />
+                            <span asp-validation-for="Input.Title" class="text-danger small"></span>
                         </div>
 
                         <div class="col-md-6">
-                            <label asp-for="Input.DeviceModel" class="form-label">Модель устройства</label>
-                            <input asp-for="Input.DeviceModel" class="form-control bg-dark text-white" id="inputDevice" placeholder="iPhone 13" />
-                        </div>
-                        <div class="col-md-6">
-                            <label asp-for="Input.ServiceType" class="form-label">Тип услуги</label>
-                            <input asp-for="Input.ServiceType" class="form-control bg-dark text-white" id="inputService" placeholder="Замена стекла" />
+                            <label asp-for="Input.DeviceModel" class="form-label text-white-50"></label>
+                            <input asp-for="Input.DeviceModel" class="form-control bg-dark text-white border-secondary" id="caseDevice" placeholder="Например: iPhone 13 Pro" />
                         </div>
 
                         <div class="col-md-6">
-                            <label asp-for="Input.Cost" class="form-label">Цена выполненной работы</label>
-                            <input asp-for="Input.Cost" type="number" class="form-control bg-dark text-white" id="inputCost" />
+                            <label asp-for="Input.ServiceType" class="form-label text-white-50"></label>
+                            <input asp-for="Input.ServiceType" class="form-control bg-dark text-white border-secondary" id="caseService" placeholder="Ремонт / Моддинг" />
                         </div>
+
                         <div class="col-md-6">
-                            <label asp-for="Input.DateCompleted" class="form-label">Дата выполнения</label>
-                            <input asp-for="Input.DateCompleted" type="datetime-local" class="form-control bg-dark text-white" id="inputDate" />
+                            <label asp-for="Input.Cost" class="form-label text-white-50"></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-dark border-secondary text-white-50">₽</span>
+                                <input asp-for="Input.Cost" class="form-control bg-dark text-white border-secondary" id="caseCost" />
+                            </div>
                         </div>
-
-                        <div class="col-12">
-                            <label asp-for="Input.Description" class="form-label">Описание проблемы и решения</label>
-                            <textarea asp-for="Input.Description" class="form-control bg-dark text-white" id="inputDesc" rows="4"></textarea>
-                        </div>
-
-                        <hr class="border-secondary my-4" />
-                        <h6 class="text-info">Фотоотчет</h6>
-
-                        <!-- Загрузка фото -->
-                        <div class="col-md-6">
-                            <label class="form-label">Фото ДО</label>
-                            <input asp-for="Input.UploadBefore" type="file" class="form-control bg-dark text-white" accept="image/*" />
-                            <div id="previewBefore" class="mt-2 text-muted small"></div>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Фото ПОСЛЕ</label>
-                            <input asp-for="Input.UploadAfter" type="file" class="form-control bg-dark text-white" accept="image/*" />
-                            <div id="previewAfter" class="mt-2 text-muted small"></div>
-                        </div>
-
-                        <hr class="border-secondary my-4" />
-                        <h6 class="text-warning">SEO настройки</h6>
 
                         <div class="col-12">
-                            <label asp-for="Input.Slug" class="form-label">URL (Slug)</label>
-                            <input asp-for="Input.Slug" class="form-control bg-dark text-white" id="inputSlug" placeholder="Оставьте пустым для автогенерации" />
+                            <label asp-for="Input.Description" class="form-label text-white-50"></label>
+                            <textarea asp-for="Input.Description" class="form-control bg-dark text-white border-secondary" id="caseDesc" rows="3"></textarea>
                         </div>
-                        <div class="col-md-6">
-                            <label asp-for="Input.MetaTitle" class="form-label">Meta Title</label>
-                            <input asp-for="Input.MetaTitle" class="form-control bg-dark text-white" id="inputMetaTitle" />
-                        </div>
-                        <div class="col-md-6">
-                            <label asp-for="Input.MetaDescription" class="form-label">Meta Description</label>
-                            <input asp-for="Input.MetaDescription" class="form-control bg-dark text-white" id="inputMetaDesc" />
+
+                        <!-- Секция загрузки фото с превью -->
+                        <div class="col-12 mt-4">
+                            <h6 class="text-white mb-3 border-bottom border-secondary pb-2">Фотоотчет</h6>
+                            <div class="row">
+                                <!-- Фото ДО -->
+                                <div class="col-md-6 text-center">
+                                    <div class="p-3 border border-secondary border-dashed rounded bg-black bg-opacity-25">
+                                        <div class="mb-2 text-white-50 small">Фото ДО</div>
+
+                                        <!-- Область превью -->
+                                        <div class="ratio ratio-4x3 mb-3 bg-dark rounded overflow-hidden position-relative">
+                                            <img id="previewBefore" src="https://placehold.co/400x300/1a1d20/FFF?text=No+Image" class="img-fluid object-fit-cover opacity-50" />
+                                        </div>
+
+                                        <input asp-for="Input.UploadBefore" type="file" class="form-control form-control-sm bg-dark text-white border-secondary" accept="image/*" onchange="previewImage(this, 'previewBefore')" />
+                                    </div>
+                                </div>
+
+                                <!-- Фото ПОСЛЕ -->
+                                <div class="col-md-6 text-center">
+                                    <div class="p-3 border border-secondary border-dashed rounded bg-black bg-opacity-25">
+                                        <div class="mb-2 text-white-50 small">Фото ПОСЛЕ</div>
+
+                                        <!-- Область превью -->
+                                        <div class="ratio ratio-4x3 mb-3 bg-dark rounded overflow-hidden position-relative">
+                                            <img id="previewAfter" src="https://placehold.co/400x300/1a1d20/FFF?text=No+Image" class="img-fluid object-fit-cover opacity-50" />
+                                        </div>
+
+                                        <input asp-for="Input.UploadAfter" type="file" class="form-control form-control-sm bg-dark text-white border-secondary" accept="image/*" onchange="previewImage(this, 'previewAfter')" />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer border-secondary">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-                    <button type="submit" class="btn btn-success">Сохранить</button>
+
+                <!-- Sticky Footer: Всегда виден внизу -->
+                <div class="modal-footer border-secondary bg-dark">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="submit" class="btn btn-success px-4">Сохранить</button>
                 </div>
             </form>
         </div>
@@ -178,51 +160,71 @@
 </div>
 
 @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
     <script>
-        function openModal(data) {
-            var modal = new bootstrap.Modal(document.getElementById('caseModal'));
+        // Функция превью картинок
+        function previewImage(input, imgId) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var img = document.getElementById(imgId);
+                    img.src = e.target.result;
+                    img.classList.remove('opacity-50'); // Делаем ярким
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
 
-            if (data) {
-                // Edit Mode
-                document.getElementById('modalTitle').innerText = 'Редактировать кейс';
-                document.getElementById('inputId').value = data.id;
-                document.getElementById('inputTitle').value = data.title;
-                document.getElementById('inputDesc').value = data.description || '';
-                document.getElementById('inputDevice').value = data.deviceModel || '';
-                document.getElementById('inputService').value = data.serviceType || '';
-                document.getElementById('inputCost').value = data.cost;
-                document.getElementById('inputDate').value = data.dateCompleted;
+        // Заполнение формы данными (Edit)
+        function editCase(data) {
+            document.getElementById('modalTitle').innerText = 'Редактировать кейс #' + data.id;
+            document.getElementById('caseId').value = data.id;
+            document.getElementById('caseTitle').value = data.title;
+            document.getElementById('caseDevice').value = data.deviceModel;
+            document.getElementById('caseService').value = data.serviceType;
+            document.getElementById('caseCost').value = data.cost; // Убедись, что формат числа подходит (например 1000.00)
+            document.getElementById('caseDesc').value = data.description;
 
-                document.getElementById('inputSlug').value = data.slug || '';
-                document.getElementById('inputMetaTitle').value = data.metaTitle || '';
-                document.getElementById('inputMetaDesc').value = data.metaDescription || '';
-
-                // Images logic
-                document.getElementById('inputExistingBefore').value = data.imgBefore || '';
-                document.getElementById('inputExistingAfter').value = data.imgAfter || '';
-
-                document.getElementById('previewBefore').innerHTML = data.imgBefore
-                    ? `Текущее: <a href="${data.imgBefore}" target="_blank" class="text-info">Открыть</a>`
-                    : 'Нет фото';
-                document.getElementById('previewAfter').innerHTML = data.imgAfter
-                    ? `Текущее: <a href="${data.imgAfter}" target="_blank" class="text-info">Открыть</a>`
-                    : 'Нет фото';
-
+            // Устанавливаем превью существующих картинок
+            var imgBefore = document.getElementById('previewBefore');
+            if(data.beforeImage) {
+                imgBefore.src = data.beforeImage;
+                imgBefore.classList.remove('opacity-50');
             } else {
-                // Create Mode
-                document.getElementById('modalTitle').innerText = 'Новый кейс';
-                document.querySelector('form').reset();
-                document.getElementById('inputId').value = '';
-                document.getElementById('previewBefore').innerHTML = '';
-                document.getElementById('previewAfter').innerHTML = '';
-
-                // Set Default Date to Now
-                const now = new Date();
-                now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-                document.getElementById('inputDate').value = now.toISOString().slice(0, 16);
+                imgBefore.src = 'https://placehold.co/400x300/1a1d20/FFF?text=No+Image';
+                imgBefore.classList.add('opacity-50');
             }
 
-            modal.show();
+            var imgAfter = document.getElementById('previewAfter');
+            if(data.afterImage) {
+                imgAfter.src = data.afterImage;
+                imgAfter.classList.remove('opacity-50');
+            } else {
+                imgAfter.src = 'https://placehold.co/400x300/1a1d20/FFF?text=No+Image';
+                imgAfter.classList.add('opacity-50');
+            }
+        }
+
+        // Очистка формы (Create)
+        function clearForm() {
+            document.getElementById('modalTitle').innerText = 'Новый кейс';
+            document.getElementById('caseId').value = '';
+            // Сбрасываем текстовые поля
+            document.getElementById('caseTitle').value = '';
+            document.getElementById('caseDevice').value = '';
+            document.getElementById('caseService').value = '';
+            document.getElementById('caseCost').value = '0';
+            document.getElementById('caseDesc').value = '';
+
+            // Сбрасываем картинки
+            document.getElementById('previewBefore').src = 'https://placehold.co/400x300/1a1d20/FFF?text=No+Image';
+            document.getElementById('previewBefore').classList.add('opacity-50');
+            document.getElementById('previewAfter').src = 'https://placehold.co/400x300/1a1d20/FFF?text=No+Image';
+            document.getElementById('previewAfter').classList.add('opacity-50');
+
+            // Сбрасываем input type=file (важно, чтобы можно было выбрать тот же файл снова если передумал)
+            document.querySelector('input[name="Input.UploadBefore"]').value = '';
+            document.querySelector('input[name="Input.UploadAfter"]').value = '';
         }
     </script>
 }

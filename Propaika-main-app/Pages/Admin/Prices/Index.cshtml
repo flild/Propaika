@@ -3,151 +3,232 @@
 @{
     ViewData["Title"] = "Прайс-лист";
     bool isSingleMode = Model.FilterDeviceId.HasValue;
+    string selectedDeviceName = isSingleMode
+        ? Model.DeviceModels.FirstOrDefault(x => x.Value == Model.FilterDeviceId.ToString())?.Text
+        : "Все устройства";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>
-        @if (isSingleMode)
-        {
-            <span class="text-primary">@Model.DeviceModels.FirstOrDefault(x => x.Value == Model.FilterDeviceId.ToString())?.Text</span>
-        }
-        else
-        {
-            <span>Общий прайс-лист</span>
-        }
-    </h2>
-    <button class="btn btn-success" onclick="openModal()">
-        <i class="bi bi-plus-lg"></i> Добавить услугу
-    </button>
-</div>
+<div class="row g-3 mb-4 align-items-center justify-content-between">
+    <div class="col-md-6">
+        <h1 class="h3 mb-1 text-white">Управление ценами</h1>
+        <p class="text-white-50 mb-0 small">
+            @if (isSingleMode)
+            {
+                <span class="badge bg-success bg-opacity-25 text-success border border-success me-1">Режим модели</span>
+            }
+            Редактирование прайса для: <strong class="text-white">@selectedDeviceName</strong>
+        </p>
+    </div>
 
-<!-- Фильтр -->
-<div class="card mb-4 bg-light">
-    <div class="card-body py-2 d-flex align-items-center gap-3">
-        <label class="fw-bold">Выберите устройство:</label>
-        <form method="get" class="flex-grow-1">
-            <select name="FilterDeviceId" class="form-select" onchange="this.form.submit()">
-                <option value="">-- Все устройства (Глобальное управление) --</option>
-                @foreach (var dev in Model.DeviceModels)
-                {
-                    <option value="@dev.Value" selected="@(dev.Value == Model.FilterDeviceId?.ToString())">
-                        @dev.Text
-                    </option>
-                }
+    <!-- Панель управления -->
+    <div class="col-md-6 d-flex gap-2 justify-content-md-end">
+        <!-- Фильтр по модели -->
+        <form method="get" class="d-flex" id="filterForm">
+            <select name="FilterDeviceId" class="form-select bg-dark text-white border-secondary form-select-sm me-2"
+                    onchange="this.form.submit()" asp-items="Model.DeviceModels" style="min-width: 200px;">
+                <option value="">-- Все устройства --</option>
             </select>
         </form>
-        @if (isSingleMode)
-        {
-            <a asp-page="./Index" class="btn btn-outline-secondary btn-sm">Сбросить</a>
-        }
+
+        <!-- Кнопка массовых операций -->
+        <button class="btn btn-warning btn-sm fw-bold" data-bs-toggle="modal" data-bs-target="#bulkEditModal">
+            <i class="bi bi-lightning-charge me-1"></i> Масс. изм.
+        </button>
+
+        <!-- Кнопка новой услуги -->
+        <button class="btn btn-primary btn-neon btn-sm" onclick="openModal()">
+            <i class="bi bi-plus-lg"></i> Услуга
+        </button>
     </div>
 </div>
 
-<div class="table-responsive bg-white shadow-sm rounded">
-    <table class="table table-hover align-middle mb-0">
-        <thead class="table-light">
-            <tr>
-                <th>Услуга</th>
-                <th>Стоимость</th>
-                <th>Описание</th>
-                @if (isSingleMode)
-                {
-                    <th class="text-center">Активна</th>
-                }
-                <th class="text-end">Опции</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.ServiceList)
-            {
-                <tr>
-                    <td class="fw-bold">@item.ServiceName @if(item.IsPopular){
-                    <span class="badge bg-warning text-dark">Хит</span>
-                }
-</td>
-
-                <td>
-                    @if (!isSingleMode && item.IsVaryingPrice)
-                    {
-                        <span class="badge bg-info text-dark" title="Цены отличаются на разных устройствах">Разные цены</span>
-                        <small class="text-muted d-block">от @item.DisplayCost.ToString("N0") ₽</small>
-                    }
-                    else
-                    {
-                        <span class="fw-bold text-success">@item.DisplayCost.ToString("N0") ₽</span>
-                    }
-                </td>
-
-                <td><small class="text-muted">@item.Description</small></td>
-
-                @if (isSingleMode)
-                {
-                    <td class="text-center">
-                        <div class="form-check form-switch d-inline-block">
-                            <input class="form-check-input" type="checkbox"
-                                   @(item.IsEnabled ? "checked" : "")
-                                   onchange="toggleService(@item.Id, @Model.FilterDeviceId, this.checked)">
-                        </div>
-                    </td>
-                }
-
-                <td class="text-end">
-                    <button class="btn btn-sm btn-outline-primary"
-                            onclick="openModal(@item.Id, '@item.ServiceName', @item.DisplayCost.ToString(System.Globalization.CultureInfo.InvariantCulture), '@item.Description', '@item.IsPopular.ToString().ToLower()')">
-                        <i class="bi bi-pencil"></i>
-                    </button>
-                </td>
-            </tr>
-                        }
-        </tbody>
-    </table>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="editorModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form method="post" asp-page-handler="Save">
-                <input type="hidden" name="FilterDeviceId" value="@Model.FilterDeviceId" />
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalTitle">Редактирование</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" asp-for="Input.Id" id="inputId" />
-
-                    <div class="mb-3">
-                        <label asp-for="Input.ServiceName" class="form-label">Название</label>
-                        <input asp-for="Input.ServiceName" class="form-control" id="inputName" required />
+<!-- Таблица услуг -->
+<div class="card border-0 shadow-sm" style="background: rgba(20,20,30,0.6);">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-dark text-white-50">
+                    <tr>
+                        <th class="ps-4">Услуга</th>
+                        <th style="width: 25%;">Стоимость</th>
+                        <th>Описание</th>
                         @if (isSingleMode)
                         {
-                            <div class="form-text text-warning">Изменение названия изменит его для ВСЕХ моделей!</div>
+                            <th style="width: 100px;">Статус</th>
                         }
+                        <th class="text-end pe-4" style="width: 120px;">Опции</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ServiceList)
+                    {
+                        <tr class="@(!item.IsEnabled ? "opacity-50" : "")">
+                            <td class="ps-4">
+                                <div class="fw-bold text-white">
+                                    @item.ServiceName
+                                    @if (item.IsPopular)
+                                    {
+                                        <i class="bi bi-fire text-warning ms-1" title="Популярная услуга"></i>
+                                    }
+                                </div>
+                            </td>
+                            <td>
+                                @if (!isSingleMode && item.IsVaryingPrice)
+                                {
+                                    <span class="badge bg-secondary bg-opacity-25 text-white-50 border border-secondary fw-normal">
+                                        от @item.DisplayCost.ToString("N0") ₽
+                                    </span>
+                                    <small class="text-muted d-block mt-1" style="font-size: 0.7em;">разные цены</small>
+                                }
+                                else
+                                {
+                                    <span class="fs-6 text-success fw-bold">@item.DisplayCost.ToString("N0") ₽</span>
+                                }
+                            </td>
+                            <td>
+                                <span class="text-white-50 small text-truncate d-inline-block" style="max-width: 250px;">
+                                    @(item.Description ?? "-")
+                                </span>
+                            </td>
+
+                            @if (isSingleMode)
+                            {
+                                <td>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" role="switch"
+                                               id="toggle_@item.Id"
+                                               @(item.IsEnabled ? "checked" : "")
+                                               onchange="toggleService(@item.Id, @Model.FilterDeviceId, this.checked)">
+                                    </div>
+                                </td>
+                            }
+
+                            <td class="text-end pe-4">
+                                <button class="btn btn-sm btn-icon btn-outline-light border-0"
+                                        onclick='editService(@Html.Raw(Json.Serialize(item)))'>
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <form method="post" asp-page-handler="Delete" asp-route-id="@item.Id" class="d-inline" onsubmit="return confirm('Удалить услугу?');">
+                                    <button type="submit" class="btn btn-sm btn-icon btn-outline-danger border-0">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно (Редактирование / Создание) -->
+<div class="modal fade" id="serviceModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content admin-modal">
+            <form method="post" asp-page-handler="Save">
+                <input type="hidden" name="FilterDeviceId" value="@Model.FilterDeviceId" />
+
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title text-white" id="modalTitle">Услуга</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" asp-for="Input.Id" id="serviceId" />
+
+                    <div class="mb-3">
+                        <label asp-for="Input.ServiceName" class="form-label text-white-50">Название услуги</label>
+                        <input asp-for="Input.ServiceName" class="form-control bg-dark text-white border-secondary" id="serviceName" required />
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-7">
+                            <label asp-for="Input.BaseCost" class="form-label text-white-50">
+                                @(isSingleMode ? "Стоимость для этой модели" : "Базовая стоимость (для всех)")
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-dark border-secondary text-white-50">₽</span>
+                                <input asp-for="Input.BaseCost" class="form-control bg-dark text-white border-secondary fw-bold" id="serviceCost" type="number" />
+                            </div>
+                        </div>
+                        <div class="col-md-5 d-flex align-items-end">
+                            <div class="form-check mb-2">
+                                <input asp-for="Input.IsPopular" class="form-check-input" type="checkbox" id="servicePopular">
+                                <label class="form-check-label text-white" for="servicePopular">
+                                    <i class="bi bi-fire text-warning me-1"></i> Хит продаж
+                                </label>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="Input.BaseCost" class="form-label">
-                            @(isSingleMode ? "Цена для этой модели" : "Базовая цена (для всех моделей)")
-                        </label>
-                        <input asp-for="Input.BaseCost" type="number" class="form-control" id="inputCost" required />
-                        @if (!isSingleMode)
-                        {
-                            <div class="form-text text-danger">Внимание: это перезапишет индивидуальные цены на всех устройствах!</div>
-                        }
+                        <label asp-for="Input.Description" class="form-label text-white-50">Описание (опционально)</label>
+                        <textarea asp-for="Input.Description" class="form-control bg-dark text-white border-secondary" id="serviceDesc" rows="2"></textarea>
                     </div>
 
-                    <!-- Остальные поля (Description, IsPopular) -->
+                    @if (!isSingleMode)
+                    {
+                        <div class="alert alert-info bg-opacity-10 border-info text-info small mb-0">
+                            <i class="bi bi-info-circle me-1"></i> Изменение базовой цены применится ко <strong>всем</strong> устройствам, где цена не была переопределена вручную.
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer border-secondary bg-dark">
+                    <button type="submit" class="btn btn-success px-4">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно (BULK EDIT) -->
+<div class="modal fade" id="bulkEditModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content admin-modal border-warning">
+            <form method="post" asp-page-handler="BulkEdit">
+                <input type="hidden" name="FilterDeviceId" value="@Model.FilterDeviceId" />
+
+                <div class="modal-header border-secondary bg-warning bg-opacity-10">
+                    <h5 class="modal-title text-warning" id="modalTitle">
+                        <i class="bi bi-lightning-charge-fill me-2"></i>Массовое изменение цен
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-white-50 small mb-4">
+                        Позволяет изменить цены сразу для множества услуг. Будьте осторожны, это действие нельзя отменить одной кнопкой.
+                    </p>
+
                     <div class="mb-3">
-                        <label asp-for="Input.Description" class="form-label">Описание</label>
-                        <textarea asp-for="Input.Description" class="form-control" id="inputDesc" rows="2"></textarea>
+                        <label class="form-label text-white">1. Где меняем?</label>
+                        <select asp-for="BulkEdit.TargetDeviceId" asp-items="Model.DeviceModels" class="form-select bg-dark text-white border-secondary">
+                            <option value="">-- Во всех устройствах сразу --</option>
+                        </select>
                     </div>
-                    <div class="form-check mb-3">
-                        <input asp-for="Input.IsPopular" class="form-check-input" type="checkbox" id="inputPop" />
-                        <label asp-for="Input.IsPopular" class="form-check-label">Популярное</label>
+
+                    <div class="mb-3">
+                        <label class="form-label text-white">2. Что делаем?</label>
+                        <select asp-for="BulkEdit.ChangeType" class="form-select bg-dark text-white border-secondary mb-2">
+                            <option value="percent">Изменить на процент (%)</option>
+                            <option value="fixed">Прибавить/Отнять сумму (₽)</option>
+                            <option value="set_exact">Установить точную цену (=)</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label text-white">3. Значение</label>
+                        <div class="input-group">
+                            <input asp-for="BulkEdit.Value" type="number" class="form-control bg-dark text-white border-secondary fw-bold" placeholder="Например: 10 или -500" />
+                            <span class="input-group-text bg-dark border-secondary text-white-50">ед.</span>
+                        </div>
+                        <div class="form-text text-white-50">
+                            Для увеличения введите положительное число (например <code>10</code> для +10%). <br />
+                            Для уменьшения введите отрицательное (например <code>-10</code> для -10%).
+                        </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                <div class="modal-footer border-secondary bg-dark">
+                    <button type="submit" class="btn btn-warning text-black px-4 fw-bold">Применить ко всем</button>
                 </div>
             </form>
         </div>
@@ -155,37 +236,46 @@
 </div>
 
 @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
     <script>
-        function openModal(id, name, cost, desc, isPop) {
-            var modal = new bootstrap.Modal(document.getElementById('editorModal'));
-            
-            if (id) {
-                document.getElementById('modalTitle').innerText = 'Редактирование услуги';
-                document.getElementById('inputId').value = id;
-                document.getElementById('inputName').value = name;
-                document.getElementById('inputCost').value = cost;
-                document.getElementById('inputDesc').value = desc || '';
-                document.getElementById('inputPop').checked = (isPop === 'true');
-            } else {
-                document.getElementById('modalTitle').innerText = 'Новая услуга';
-                document.getElementById('inputId').value = '';
-                document.getElementById('inputName').value = '';
-                document.getElementById('inputCost').value = '';
-                document.getElementById('inputDesc').value = '';
-                document.getElementById('inputPop').checked = false;
-            }
-            modal.show();
+        var serviceModal = new bootstrap.Modal(document.getElementById('serviceModal'));
+
+        function openModal() {
+            document.getElementById('modalTitle').innerText = 'Новая услуга';
+            document.getElementById('serviceId').value = '';
+            document.getElementById('serviceName').value = '';
+            document.getElementById('serviceCost').value = '0';
+            document.getElementById('serviceDesc').value = '';
+            document.getElementById('servicePopular').checked = false;
+            serviceModal.show();
         }
 
-        function toggleService(svcId, devId, state) {
-            fetch(`?handler=ToggleDevice`, {
+        function editService(data) {
+            document.getElementById('modalTitle').innerText = 'Редактировать услугу';
+            document.getElementById('serviceId').value = data.id;
+            document.getElementById('serviceName').value = data.serviceName;
+            document.getElementById('serviceCost').value = data.displayCost;
+            document.getElementById('serviceDesc').value = data.description;
+            document.getElementById('servicePopular').checked = data.isPopular;
+            serviceModal.show();
+        }
+
+        // AJAX Toggle (Вкл/Выкл без перезагрузки)
+        function toggleService(serviceId, deviceId, state) {
+            // Добавляем AntiForgeryToken если нужно (для Razor Pages он обычно в заголовке или куки)
+            // Но для простоты используем fetch к handler
+
+            // Формируем URL с параметрами
+            var url = "?handler=ToggleDevice&serviceId=" + serviceId + "&deviceId=" + deviceId + "&state=" + state;
+
+            fetch(url, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
                     'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
-                },
-                body: `serviceId=${svcId}&deviceId=${devId}&state=${state}`
+                }
+            }).then(res => {
+                if(!res.ok) alert('Ошибка обновления статуса');
             });
         }
     </script>
-    }
+}
