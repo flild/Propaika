@@ -89,6 +89,7 @@ html[data-bs-theme="light"] .neon-text {
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
+    max-width: 100vw;
 }
 
 /* Пульсация неонового фона */
@@ -102,6 +103,12 @@ html[data-bs-theme="light"] .neon-text {
         opacity: 0.2;
         transform: translate(-50%, -50%) scale(1.1);
     }
+}
+
+section {
+    position: relative;
+    overflow: hidden; 
+    padding: 4rem 0;
 }
 
 /* ===== Master section (staff slider) ===== */
@@ -204,14 +211,7 @@ html[data-bs-theme="light"] .neon-text {
     opacity: 1 !important;
 }
 
-@media (max-width: 576px) {
-    .master-carousel .carousel-control-prev-icon,
-    .master-carousel .carousel-control-next-icon {
-        width: 40px;
-        height: 40px;
-        border-radius: 12px;
-    }
-}
+
 
 /* indicators at bottom, inside card */
 .master-indicators {
@@ -237,22 +237,7 @@ html[data-bs-theme="light"] .neon-text {
         box-shadow: 0 0 10px color-mix(in srgb, var(--neon-main) 60%, transparent);
     }
 
-/* mobile tweaks */
-@media (max-width: 576px) {
-    .master-card {
-        min-height: 360px;
-    }
 
-    .master-tags {
-        top: 12px;
-        left: 12px;
-    }
-
-    .master-caption {
-        left: 12px;
-        bottom: 12px;
-    }
-}
 
 /* ===== Process (Как мы работаем) ===== */
 .process-section .process-row {
@@ -763,28 +748,6 @@ html[data-bs-theme="dark"] .map-wrapper::after {
         border-color: var(--neon-main);
     }
 
-/* =======================================================
-   9. RESPONSIVE (MOBILE)
-======================================================= */
-@media (max-width: 576px) {
-    .ba-slider {
-        height: 200px;
-    }
-
-    .neon-card:hover .ba-before {
-        border-right-color: #fff;
-        box-shadow: 0 0 10px var(--neon-main);
-    }
-
-    .nav-pills .nav-link {
-        padding: 0.5rem 1rem;
-        font-size: 0.9rem;
-    }
-
-    .neon-price {
-        font-size: 1rem;
-    }
-}
 
 
 /* =======================================================
@@ -828,9 +791,3 @@ html[data-bs-theme="dark"] .map-wrapper::after {
         transform: translateY(-2px);
     }
 
-/* Адаптив для футера */
-@media (max-width: 768px) {
-    .footer-link:hover {
-        padding-left: 0; /* На мобилке убираем сдвиг, чтобы пальцем было удобнее */
-    }
-}

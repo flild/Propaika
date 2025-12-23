@@ -1,0 +1,183 @@
+﻿/* =======================================================
+   MOBILE & RESPONSIVE STYLES
+   ======================================================= */
+
+/* --- TABLETS & MOBILE (max-width: 992px) --- */
+
+@media (max-width: 768px) {
+    .container-custom {
+        padding-left: 20px; /* Чуть больше воздуха от края */
+        padding-right: 20px;
+    }
+
+    section {
+        padding: 3rem 0; /* Уменьшаем вертикальные отступы секций */
+    }
+
+    h1 {
+        font-size: 2.2rem;
+    }
+
+    h2 {
+        font-size: 1.8rem;
+    }
+
+    p {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 992px) {
+    /* Скрываем горизонтальную линию процесса на тач-устройствах,
+       если не хватает места, или перестраиваем лейаут */
+    .process-section .process-line {
+        display: none;
+    }
+
+    /* Убираем точки соединения */
+    .process-section .process-dot {
+        display: none;
+    }
+
+    /* Добавляем вертикальные отступы шагам */
+    .process-section .process-step {
+        margin-bottom: 1.5rem;
+    }
+}
+
+@media (max-width: 992px) {
+    .master-section .row {
+        flex-direction: column-reverse; 
+    }
+
+    .master-card {
+        margin-bottom: 2rem;
+        max-width: 100%;
+    }
+}
+
+/* --- MOBILE (max-width: 768px) --- */
+@media (max-width: 768px) {
+    /* Футер: убираем сдвиг ссылок при наведении (пальцем неудобно) */
+    .footer-link:hover {
+        padding-left: 0;
+    }
+
+    /* Адаптация карты */
+    .map-wrapper {
+        height: 300px;
+    }
+
+    /* Заголовки чуть меньше */
+    h1 {
+        font-size: 2rem;
+    }
+
+    h2 {
+        font-size: 1.75rem;
+    }
+}
+
+/* --- SMALL MOBILE (max-width: 576px) --- */
+@media (max-width: 576px) {
+
+    /* 1. MASTER CAROUSEL & CARDS */
+    .master-carousel .carousel-control-prev-icon,
+    .master-carousel .carousel-control-next-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+    }
+
+    /* Индикаторы слайдера перемещаем внутрь карточки вниз */
+    .master-indicators {
+        margin: 0;
+        position: absolute;
+        left: 50%;
+        bottom: 12px;
+        transform: translateX(-50%);
+        gap: 8px;
+        z-index: 3;
+        display: flex; /* Важно вернуть display, если bootstrap его скрывает */
+        list-style: none;
+        padding: 0;
+    }
+
+        .master-indicators [data-bs-target] {
+            width: 24px;
+            height: 6px;
+            border-radius: 999px;
+            background-color: rgba(255,255,255,.30);
+            border: 1px solid rgba(0,243,255,.25);
+            cursor: pointer;
+        }
+
+        .master-indicators .active {
+            background-color: color-mix(in srgb, var(--neon-main) 75%, transparent);
+            box-shadow: 0 0 10px color-mix(in srgb, var(--neon-main) 60%, transparent);
+        }
+
+    /* Карточка мастера на мобильном */
+    .master-card {
+        min-height: 360px;
+    }
+
+        .master-card .master-tags {
+            top: 12px;
+            left: 12px;
+        }
+
+        .master-card .master-caption {
+            left: 12px;
+            bottom: 12px;
+            /* Убедимся, что текст не наезжает на индикаторы */
+            padding-bottom: 20px;
+        }
+
+    /* 2. BEFORE / AFTER SLIDER */
+    .ba-slider {
+        height: 250px; /* Уменьшаем высоту слайдера */
+    }
+
+    .ba-handle {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+    }
+
+    /* 3. NEON COMPONENTS */
+    .neon-card:hover .ba-before {
+        border-right-color: #fff;
+        box-shadow: 0 0 10px var(--neon-main);
+    }
+
+    /* Навигация (табы) */
+    .nav-pills .nav-link {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    /* Цены */
+    .neon-price {
+        font-size: 1.1rem;
+        white-space: normal; /* Разрешаем перенос цены, если длинная */
+    }
+
+    /* 4. GENERAL SPACING */
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    section {
+        padding-top: 3rem !important;
+        padding-bottom: 3rem !important;
+    }
+
+    /* Убираем лишние отступы у неона на фоне */
+    .neon-circle-bg {
+        width: 200px;
+        height: 200px;
+        filter: blur(60px);
+    }
+}
