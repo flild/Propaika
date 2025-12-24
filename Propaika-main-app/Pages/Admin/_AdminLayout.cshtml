@@ -15,7 +15,6 @@
     <link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body class="admin-body d-flex flex-column min-vh-100">
     <header class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-secondary sticky-top shadow-sm">
@@ -64,8 +63,8 @@
     <footer class="text-center text-muted py-4 mt-5 border-top border-secondary">
         <small>&copy; @DateTime.Now.Year — PROPAIKA Admin Panel</small>
     </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
