@@ -1,0 +1,134 @@
+﻿@page "{id:int?}"
+@model Propaika_main_app.Pages.Admin.ServiceCases.EditModel
+@{
+    var isEdit = Model.Input.Id.HasValue;
+    ViewData["Title"] = isEdit ? "Редактирование кейса" : "Новый кейс";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title mb-0">@(isEdit ? "Редактирование" : "Создание") кейса</h3>
+                </div>
+                <div class="card-body">
+                    <!-- Добавляем id форме для JS -->
+                    <form method="post" enctype="multipart/form-data" id="editForm">
+                        <input type="hidden" asp-for="Input.Id" />
+
+                        <!-- Скрытые поля для сохранения путей к СТАРЫМ картинкам при ошибках валидации -->
+                        <input type="hidden" asp-for="Input.CurrentBeforeImage" />
+                        <input type="hidden" asp-for="Input.CurrentAfterImage" />
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label asp-for="Input.Title" class="form-label"></label>
+                                <input asp-for="Input.Title" class="form-control" placeholder="Например: Замена дисплея" />
+                                <span asp-validation-for="Input.Title" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Input.DeviceModel" class="form-label"></label>
+                                <input asp-for="Input.DeviceModel" class="form-control" placeholder="Например: iPhone 13" />
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.ServiceType" class="form-label"></label>
+                            <input asp-for="Input.ServiceType" class="form-control" placeholder="Категория, например: Ремонт телефонов" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.Cost" class="form-label"></label>
+                            <input asp-for="Input.Cost" class="form-control" type="number" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.Description" class="form-label"></label>
+                            <textarea asp-for="Input.Description" class="form-control" rows="8" placeholder="Опишите проблему и решение..."></textarea>
+                            <div class="form-text">Переносы строк сохраняются автоматически.</div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <!-- Фото ДО -->
+                            <div class="col-md-6">
+                                <label asp-for="Input.UploadBefore" class="form-label"></label>
+                                <!-- Добавлен id и onchange -->
+                                <input asp-for="Input.UploadBefore" type="file" class="form-control" accept="image/*"
+                                       id="inputBefore" onchange="previewImage(this, 'previewBefore')" />
+
+                                <div class="mt-2 text-center">
+                                    <small class="d-block mb-1">Предпросмотр:</small>
+                                    <!-- Логика отображения: если есть текущее фото, показываем его, иначе заглушка -->
+                                    <img id="previewBefore"
+                                         src="@(string.IsNullOrEmpty(Model.Input.CurrentBeforeImage) ? "/images/placeholder.png" : Model.Input.CurrentBeforeImage)"
+                                         class="img-thumbnail"
+                                         style="height: 150px; object-fit: cover; @(string.IsNullOrEmpty(Model.Input.CurrentBeforeImage) ? "display:none;" : "")" />
+                                </div>
+                            </div>
+
+                            <!-- Фото ПОСЛЕ -->
+                            <div class="col-md-6">
+                                <label asp-for="Input.UploadAfter" class="form-label"></label>
+                                <input asp-for="Input.UploadAfter" type="file" class="form-control" accept="image/*"
+                                       id="inputAfter" onchange="previewImage(this, 'previewAfter')" />
+
+                                <div class="mt-2 text-center">
+                                    <small class="d-block mb-1">Предпросмотр:</small>
+                                    <img id="previewAfter"
+                                         src="@(string.IsNullOrEmpty(Model.Input.CurrentAfterImage) ? "/images/placeholder.png" : Model.Input.CurrentAfterImage)"
+                                         class="img-thumbnail"
+                                         style="height: 150px; object-fit: cover; @(string.IsNullOrEmpty(Model.Input.CurrentAfterImage) ? "display:none;" : "")" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a asp-page="./Index" class="btn btn-secondary">Отмена</a>
+                            <!-- Добавлен id кнопке -->
+                            <button type="submit" id="saveButton" class="btn btn-success px-4">
+                                <span id="saveSpinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                <span id="saveText">Сохранить</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // 1. Превью картинок при выборе файла
+        function previewImage(input, imgId) {
+            const preview = document.getElementById(imgId);
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // 2. Блокировка кнопки при отправке формы
+        document.getElementById('editForm').addEventListener('submit', function(e) {
+            // Проверяем валидность формы (стандартная jQuery валидация ASP.NET)
+            if (!$(this).valid()) return;
+
+            const btn = document.getElementById('saveButton');
+            const spinner = document.getElementById('saveSpinner');
+            const text = document.getElementById('saveText');
+
+            // Блокируем кнопку
+            btn.disabled = true;
+            // Показываем спиннер
+            spinner.classList.remove('d-none');
+            // Меняем текст
+            text.textContent = 'Сохранение...';
+        });
+    </script>
+}

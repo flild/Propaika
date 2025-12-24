@@ -62,19 +62,19 @@ app.UseAuthorization();
 
 
 app.MapRazorPages();
-
-/*using (var scope = app.Services.CreateScope())
+/*
+using (var scope = app.Services.CreateScope())
 {
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
-    var login = "admin"; // »спользуем как логин
-    var password = "pass";
+    var login = "flildman@yandex.ru"; // »спользуем как логин
+    var password = "Admin123";
 
     if (await userManager.FindByNameAsync(login) == null) // »щем по UserName
     {
         var user = new IdentityUser
         {
-            UserName = login, 
-            Email = login + "@example.com", 
+            UserName = login,
+            Email = login + "@example.com",
             EmailConfirmed = true
         };
         await userManager.CreateAsync(user, password);
