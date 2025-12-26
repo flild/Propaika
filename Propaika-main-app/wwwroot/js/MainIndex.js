@@ -1,4 +1,6 @@
-﻿//< слайдер кейсов>
+﻿// ==========================================
+// 1. СЛАЙДЕР КЕЙСОВ ("До / После")
+// ==========================================
 document.querySelectorAll('.cases-teaser .ba-slider').forEach(slider => {
     const range = slider.querySelector('.ba-range');
     const before = slider.querySelector('.ba-img-before');
@@ -37,16 +39,16 @@ document.querySelectorAll('.cases-teaser .ba-slider').forEach(slider => {
 
     const endDrag = () => { dragging = false; };
 
-    // мышь
+    // --- События мыши ---
     slider.addEventListener('mousedown', e => {
-        e.preventDefault();
+        // e.preventDefault(); // <-- УБРАЛ, т.к. может блокировать фокус, если нужно
         startDrag(e.clientX);
     });
 
     window.addEventListener('mousemove', e => moveDrag(e.clientX));
     window.addEventListener('mouseup', endDrag);
 
-    // тач
+    // --- События тача ---
     slider.addEventListener('touchstart', e => {
         const t = e.touches[0];
         startDrag(t.clientX);
@@ -61,32 +63,21 @@ document.querySelectorAll('.cases-teaser .ba-slider').forEach(slider => {
     window.addEventListener('touchend', endDrag);
     window.addEventListener('touchcancel', endDrag);
 
-    // клик по слайдеру — прыжок ручки
+    // Клик по слайдеру — прыжок ручки
     slider.addEventListener('click', e => setPos(getXPercent(e.clientX)));
 
-    // синк с range для клавы/доступности
+    // Синхронизация с input range (для доступности)
     range.addEventListener('input', e => setPos(parseFloat(e.target.value)));
 });
 
-document.querySelectorAll('.cases-teaser .ba-slider').forEach(slider => {
-    // Блокируем клики по слайдеру, чтобы не было навигации/фокусов/выделений
-    ['click', 'mousedown', 'touchstart', 'touchend'].forEach(evt =>
-        slider.addEventListener(evt, (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-        }, { passive: false })
-    );
-});
 
-
-//< ОТПРАВКА ФОРМЫ >
-// Находим элементы
+// ==========================================
+// 2. ОТПРАВКА ФОРМЫ С КАПЧЕЙ
+// ==========================================
 document.addEventListener("DOMContentLoaded", function () {
 
-    // 1. Находим форму
     const form = document.getElementById('ajax-repair-form');
-
-    // Если формы нет (например, другая страница), выходим, чтобы не было ошибок в консоли
+    // Если формы нет на странице, выходим
     if (!form) return;
 
     const formContainer = document.getElementById('form-container');
@@ -95,25 +86,35 @@ document.addEventListener("DOMContentLoaded", function () {
     const btnText = submitBtn.querySelector('.btn-text');
     const btnLoader = submitBtn.querySelector('.btn-loader');
     const serverErrorDiv = document.getElementById('server-error');
+    const captchaErrorDiv = document.getElementById('captcha-error');
 
-    // 2. Вешаем обработчик события
+    // --- Обработчик отправки ---
     form.addEventListener('submit', async function (e) {
+        e.preventDefault(); // Останавливаем стандартную отправку
 
-        // ГЛАВНОЕ: Отменяем стандартную перезагрузку страницы
-        e.preventDefault();
+        // 1. Сброс предыдущих ошибок
+        if (serverErrorDiv) serverErrorDiv.classList.add('d-none');
+        if (captchaErrorDiv) captchaErrorDiv.classList.add('d-none');
 
-        // Сброс ошибок
-        serverErrorDiv.classList.add('d-none');
-        serverErrorDiv.textContent = '';
-
-        // Валидация HTML5 (заполнены ли обязательные поля)
+        // 2. Проверка HTML5 валидации (required поля)
         if (!form.checkValidity()) {
             e.stopPropagation();
             form.classList.add('was-validated');
             return;
         }
 
-        // Визуал загрузки
+        // 3. Проверка Google reCAPTCHA
+        // Проверяем, существует ли объект grecaptcha (скрипт загрузился)
+        if (typeof grecaptcha !== 'undefined') {
+            const response = grecaptcha.getResponse();
+            if (response.length === 0) {
+                // Капча не пройдена
+                if (captchaErrorDiv) captchaErrorDiv.classList.remove('d-none');
+                return; // Прерываем отправку
+            }
+        }
+
+        // 4. Визуал загрузки
         submitBtn.disabled = true;
         btnText.classList.add('opacity-50');
         btnLoader.classList.remove('d-none');
@@ -121,9 +122,7 @@ document.addEventListener("DOMContentLoaded", function () {
         try {
             const formData = new FormData(form);
 
-            // Добавляем токен анти-подделки (Razor Pages его скрыто добавляет в форму)
-            // Обычно FormData его захватывает сама, но для надежности можно проверить
-
+            // AJAX запрос
             const response = await fetch(window.location.href, {
                 method: 'POST',
                 body: formData,
@@ -133,18 +132,23 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
             if (response.ok) {
+                // Пытаемся распарсить JSON
+                // ВАЖНО: Убедитесь, что ваш C# контроллер возвращает именно JSON
                 const result = await response.json();
 
                 if (result.success) {
-                    // УСПЕХ
+                    // УСПЕХ: Скрываем форму, показываем галочку
                     formContainer.classList.add('d-none');
                     successMsg.classList.remove('d-none');
-                    form.reset();
+
+                    form.reset(); // Чистим поля
                     form.classList.remove('was-validated');
+                    if (typeof grecaptcha !== 'undefined') grecaptcha.reset(); // Сбрасываем капчу
                 } else {
-                    // ОШИБКА В ДАННЫХ
+                    // ОШИБКА ОТ СЕРВЕРА (например, валидация данных)
                     serverErrorDiv.textContent = result.message || 'Ошибка обработки данных.';
                     serverErrorDiv.classList.remove('d-none');
+                    if (typeof grecaptcha !== 'undefined') grecaptcha.reset(); // При ошибке капчу часто просят пройти заново
                 }
             } else {
                 serverErrorDiv.textContent = 'Ошибка сети: ' + response.status;
@@ -156,17 +160,30 @@ document.addEventListener("DOMContentLoaded", function () {
             serverErrorDiv.textContent = 'Ошибка отправки. Проверьте соединение.';
             serverErrorDiv.classList.remove('d-none');
         } finally {
-            // Возвращаем кнопку в исходное состояние
+            // Возвращаем кнопку "в строй"
             submitBtn.disabled = false;
             btnText.classList.remove('opacity-50');
             btnLoader.classList.add('d-none');
         }
     });
-});
 
-// Функция сброса (должна быть глобальной, чтобы работать из onclick в HTML)
-window.resetForm = function () {
-    document.getElementById('success-message').classList.add('d-none');
-    document.getElementById('form-container').classList.remove('d-none');
-    document.getElementById('ajax-repair-form').classList.remove('was-validated');
-}
+    // --- Логика кнопки "Отправить ещё" (Reset) ---
+    // Ищем кнопку внутри блока успеха
+    if (successMsg) {
+        const resetBtn = successMsg.querySelector('button');
+        if (resetBtn) {
+            resetBtn.addEventListener('click', function () {
+                // Скрываем успех, показываем форму
+                successMsg.classList.add('d-none');
+                formContainer.classList.remove('d-none');
+
+                // Чистим всё начисто
+                form.reset();
+                form.classList.remove('was-validated');
+                if (serverErrorDiv) serverErrorDiv.classList.add('d-none');
+                if (captchaErrorDiv) captchaErrorDiv.classList.add('d-none');
+                if (typeof grecaptcha !== 'undefined') grecaptcha.reset();
+            });
+        }
+    }
+});

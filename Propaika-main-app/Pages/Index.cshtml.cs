@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+п»їusing Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Propaika_main_app.Data;
@@ -23,7 +23,7 @@ public class IndexModel : PageModel
 
     public bool Submitted { get; set; }
 
-    // Для секции "примеры ремонтов"
+    // Р”Р»СЏ СЃРµРєС†РёРё "РїСЂРёРјРµСЂС‹ СЂРµРјРѕРЅС‚РѕРІ"
     public List<ServiceCase> CasesTeaser { get; private set; } = new();
 
     public async Task OnGetAsync()
@@ -33,33 +33,69 @@ public class IndexModel : PageModel
 
     public async Task<IActionResult> OnPostAsync()
     {
-        // 1. Валидация
+        string captchaResponse = Request.Form["g-recaptcha-response"];
+
+        if (string.IsNullOrEmpty(captchaResponse))
+        {
+            return new JsonResult(new { success = false, message = "РџРѕР¶Р°Р»СѓР№СЃС‚Р°, РїРѕРґС‚РІРµСЂРґРёС‚Рµ, С‡С‚Рѕ РІС‹ РЅРµ СЂРѕР±РѕС‚ (РЅР°Р¶РјРёС‚Рµ РіР°Р»РѕС‡РєСѓ)." });
+        }
+        try
+        {
+            using (var client = new HttpClient())
+            {
+
+                var secretKey = "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe";
+
+                var verifyUrl = $"https://www.google.com/recaptcha/api/siteverify?secret={secretKey}&response={captchaResponse}";
+               var response = await client.PostAsync(verifyUrl, null);
+                var jsonString = await response.Content.ReadAsStringAsync();
+
+                var options = new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                var captchaResult = System.Text.Json.JsonSerializer.Deserialize<RecaptchaResponse>(jsonString, options);
+
+                if (captchaResult == null || !captchaResult.Success)
+                {
+                    return new JsonResult(new { success = false, message = "РџСЂРѕРІРµСЂРєР° РєР°РїС‡Рё РЅРµ РїСЂРѕР№РґРµРЅР°. РћР±РЅРѕРІРёС‚Рµ СЃС‚СЂР°РЅРёС†Сѓ." });
+                }
+            }
+        }
+        catch (Exception)
+        {
+            // Р•СЃР»Рё Google РЅРµРґРѕСЃС‚СѓРїРµРЅ, РјРѕР¶РЅРѕ Р»РёР±Рѕ РїСЂРѕРїСѓСЃС‚РёС‚СЊ, Р»РёР±Рѕ РІС‹РґР°С‚СЊ РѕС€РёР±РєСѓ.
+            // Р‘РµР·РѕРїР°СЃРЅРµРµ РІС‹РґР°С‚СЊ РѕС€РёР±РєСѓ.
+            return new JsonResult(new { success = true, message = "РћС€РёР±РєР° РїСЂРѕРІРµСЂРєРё РєР°РїС‡Рё. РџРѕРїСЂРѕР±СѓР№С‚Рµ РїРѕР·Р¶Рµ." });
+        }
+
+        // =========================================================
+
+
+        // 2. Р’Р°Р»РёРґР°С†РёСЏ РјРѕРґРµР»Рё
         if (!ModelState.IsValid)
         {
-            // Собираем ошибки, чтобы показать их на клиенте (опционально)
             var errors = ModelState.Values
                 .SelectMany(v => v.Errors)
                 .Select(e => e.ErrorMessage)
                 .ToList();
 
-            return new JsonResult(new { success = false, message = "Проверьте правильность заполнения полей", errors });
+            return new JsonResult(new { success = false, message = "РџСЂРѕРІРµСЂСЊС‚Рµ РїСЂР°РІРёР»СЊРЅРѕСЃС‚СЊ Р·Р°РїРѕР»РЅРµРЅРёСЏ РїРѕР»РµР№", errors });
         }
 
         try
         {
-            // 2. Сохранение в БД
+            // 3. РЎРѕС…СЂР°РЅРµРЅРёРµ РІ Р‘Р”
             _db.RepairRequests.Add(Form);
             await _db.SaveChangesAsync();
 
-            // 3. Отправка в ТГ (заглушка)
+            // 4. РћС‚РїСЂР°РІРєР° РІ РўР“
             await SendToTelegramAsync(Form);
 
-            // 4. Возвращаем JSON с успехом
+            // 5. Р’РѕР·РІСЂР°С‰Р°РµРј JSON СЃ СѓСЃРїРµС…РѕРј
             return new JsonResult(new { success = true });
         }
         catch (Exception ex)
         {
-            return new JsonResult(new { success = false, message = "Ошибка сервера. Попробуйте позже." });
+            // Р›РѕРіРёСЂРѕРІР°РЅРёРµ ex (Р»СѓС‡С€Рµ РґРѕР±Р°РІРёС‚СЊ _logger.LogError)
+            return new JsonResult(new { success = false, message = "РћС€РёР±РєР° СЃРµСЂРІРµСЂР°. РџРѕРїСЂРѕР±СѓР№С‚Рµ РїРѕР·Р¶Рµ." });
         }
     }
     private async Task SendToTelegramAsync(RepairRequest request)
@@ -74,7 +110,13 @@ public class IndexModel : PageModel
             .Where(x => (x.BeforeImage != null && x.BeforeImage != "") ||
                         (x.AfterImage != null && x.AfterImage != ""))
             .OrderByDescending(x => x.DateCompleted)
-            .Take(3) // можно 3/4/6
+            .Take(3) // РјРѕР¶РЅРѕ 3/4/6
             .ToListAsync();
+    }
+    public class RecaptchaResponse
+    {
+        public bool Success { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("error-codes")]
+        public List<string> ErrorCodes { get; set; }
     }
 }

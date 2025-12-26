@@ -8,16 +8,15 @@
 }
 
 <!-- HERO SECTION -->
-<section id="about" class="hero-section text-center text-lg-start py-5 mb-5">
+<!-- Добавлен класс text-start, чтобы текст был слева всегда -->
+<section id="about" class="hero-section text-start py-5 mb-5">
 
     <div class="row align-items-center">
         <div class="col-lg-6">
-            <div class="d-inline-block px-3 py-1 mb-3 rounded-pill border border-info text-info small fw-bold tracking-wide">
-                САНКТ-ПЕТЕРБУРГ • РЕМОНТ ТЕХНИКИ APPLE
-            </div>
-
+            <!-- 1. ЗАГОЛОВОК ТЕПЕРЬ В САМОМ ВЕРХУ -->
+            <!-- Он будет на уровне верха картинки -->
             <h1 class="display-5 fw-bold text-white mb-4 lh-sm">
-                Ремонт техники Apple 
+                Ремонт техники Apple
                 <span class="neon-text">на уровне платы</span>
             </h1>
 
@@ -33,26 +32,36 @@
                 <li class="mb-1"><span class="neon-text">Гарантия до 1 года</span> и фиксированный прайс до начала работ.</li>
             </ul>
 
-            <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center justify-content-lg-start">
+            <!-- Блок кнопок выровнен по левому краю (justify-content-start) -->
+            <div class="d-flex flex-column flex-sm-row gap-3 justify-content-start mb-5">
                 <a href="#repair-form" class="btn btn-neon btn-lg px-5 fw-bold">
                     Записаться на диагностику
                 </a>
                 <a asp-page="/Prices/Index" class="btn btn-outline-light btn-lg px-5">
-                    Посмотреть цены на ремонт Apple
+                    Посмотреть цены
                 </a>
             </div>
 
-            <div class="mt-5 d-flex flex-wrap gap-4 justify-content-center justify-content-lg-start text-white-50 small">
+            <!-- 2. БЕЙДЖ ГОРОДА ПЕРЕМЕЩЕН СЮДА (К РЕЙТИНГУ) -->
+            <!-- flex-wrap позволяет элементам переноситься, если экран очень узкий -->
+            <div class="d-flex flex-wrap align-items-center gap-3 text-white-50 small">
+                <!-- Рейтинг Авито -->
                 <div class="d-flex align-items-center gap-2">
                     <i class="bi bi-star-fill text-warning"></i>
                     <span>5.0 на Авито</span>
                 </div>
 
+                <!-- Разделитель (точка), виден только на больших экранах, по желанию можно убрать -->
+                <span class="d-none d-sm-inline">•</span>
+
+                <!-- Бейдж города -->
+                <div class="d-inline-block px-3 py-1 rounded-pill border border-info text-info fw-bold tracking-wide" style="font-size: 0.75rem;">
+                    САНКТ-ПЕТЕРБУРГ • РЕМОНТ ТЕХНИКИ APPLE
+                </div>
             </div>
         </div>
 
         <div class="col-lg-6 mt-5 mt-lg-0 text-center position-relative">
-            <!-- Иконка или изображение платы -->
             <img src="~/data/main_pic.png"
                  class="img-fluid rounded-4 shadow-lg position-relative neon-border"
                  alt="Микропайка iPhone в сервисе по ремонту Apple в Санкт‑Петербурге"
@@ -473,7 +482,7 @@
                             Мы свяжемся с вами по указанному номеру в течение 15 минут.
                         </p>
                         <!-- Кнопка "Отправить еще", если нужно -->
-                        <button type="button" class="btn btn-outline-light px-4 rounded-pill" onclick="resetForm()">Отправить ещё заявку</button>
+                        <button type="button" class="btn btn-outline-light px-4 rounded-pill">Отправить ещё заявку</button>
                     </div>
 
                     <!-- ФОРМА ЗАЯВКИ (Есть ID repair-form-element) -->
@@ -517,6 +526,19 @@
                                 <div class="col-12">
                                     <label asp-for="Form.ProblemDescription" class="form-label text-white-50 small mb-1 ms-1">Что случилось?</label>
                                     <textarea asp-for="Form.ProblemDescription" class="form-control bg-dark text-white border-secondary" rows="3" placeholder="Упал в воду, разбился экран..."></textarea>
+                                </div>
+
+                                <div class="col-12 d-flex flex-column align-items-center mt-3">
+                                    <!-- data-theme="dark" включает темную тему -->
+                                    <!-- Замените SITE_KEY на ваш ключ -->
+                                    <div class="g-recaptcha"
+                                         data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+                                         data-theme="dark">
+                                    </div>
+                                    <!-- Сюда JS выведет ошибку, если капча не пройдена -->
+                                    <div id="captcha-error" class="text-danger small mt-2 d-none">
+                                        Пожалуйста, подтвердите, что вы не робот.
+                                    </div>
                                 </div>
 
                                 <div class="col-12 mt-4 text-center">
