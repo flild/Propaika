@@ -107,7 +107,14 @@
                                                                     }
                                                                 </td>
                                                                 <td class="py-3">
-                                                                    <span class="neon-price fs-5">@price.Cost.ToString("N0") ₽</span>
+                                                                    @if (price.Cost <= 0)
+                                                                    {
+                                                                        <span class="small" style="color: gray;">узнавайте у менеджера</span>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <span class="neon-price fs-5">@price.Cost.ToString("N0") ₽</span>
+                                                                    }
                                                                 </td>
                                                                 <td class="text-end pe-4 py-3">
                                                                     <a href="#contact-form" class="btn btn-sm btn-outline-info rounded-pill px-3">

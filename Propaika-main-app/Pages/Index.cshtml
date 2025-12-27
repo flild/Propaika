@@ -414,44 +414,46 @@
                     @foreach (var c in Model.CasesTeaser)
                     {
                         <div class="col-md-6 col-xl-4">
-                            <a class="text-decoration-none" href="/cases/Details/@c.Slug">
-                                <div class="card neon-card cases-teaser-card h-100">
-                                    <div class="ba-slider rounded-top">
-                                        <div class="ba-img ba-img-after" style="background-image:url('@(string.IsNullOrWhiteSpace(c.AfterImage) ? "https://placehold.co/900x600/10121a/00f3ff?text=After" : c.AfterImage)')"></div>
-                                        <div class="ba-img ba-img-before" style="background-image:url('@(string.IsNullOrWhiteSpace(c.BeforeImage) ? "https://placehold.co/900x600/10121a/00f3ff?text=Before" : c.BeforeImage)')"></div>
+                            <!-- 1. Карточка теперь просто div, а не внутри ссылки -->
+                            <div class="card neon-card cases-teaser-card h-100">
 
-                                        <div class="ba-divider"></div>
-                                        <div class="ba-handle"><i class="bi bi-arrows"></i></div>
+                                <!-- 2. Слайдер остался сверху, но он сам по себе (не кликабелен как ссылка) -->
+                                <div class="ba-slider rounded-top user-select-none">
+                                    <div class="ba-img ba-img-after" style="background-image:url('@(string.IsNullOrWhiteSpace(c.AfterImage) ? "https://placehold.co/900x600/10121a/00f3ff?text=After" : c.AfterImage)')"></div>
+                                    <div class="ba-img ba-img-before" style="background-image:url('@(string.IsNullOrWhiteSpace(c.BeforeImage) ? "https://placehold.co/900x600/10121a/00f3ff?text=Before" : c.BeforeImage)')"></div>
 
-                                        <span class="ba-label ba-label-before badge text-bg-dark border border-secondary text-white-70">До</span>
-                                        <span class="ba-label ba-label-after badge text-bg-dark border border-secondary text-white-70">После</span>
+                                    <div class="ba-divider"></div>
+                                    <div class="ba-handle"><i class="bi bi-arrows"></i></div>
 
-                                        <input class="ba-range" type="range" min="0" max="100" value="50" aria-label="Сравнение до и после">
-                                    </div>
+                                    <span class="ba-label ba-label-before badge text-bg-dark border border-secondary text-white-70">До</span>
+                                    <span class="ba-label ba-label-after badge text-bg-dark border border-secondary text-white-70">После</span>
 
-                                    <div class="card-body p-3">
-                                        <div class="cases-meta text-white-50 small mb-1">
-                                            @(string.IsNullOrWhiteSpace(c.DeviceModel) ? "Устройство" : c.DeviceModel)
-                                        </div>
-
-                                        <div class="fw-semibold text-white cases-title">@c.Title</div>
-
-                                        @if (!string.IsNullOrWhiteSpace(c.Description))
-                                        {
-                                            <div class="text-white-70 small mt-2 cases-desc">
-                                                @(c.Description.Length > 90 ? c.Description.Substring(0, 90) + "…" : c.Description)
-                                            </div>
-                                        }
-
-                                        @if (c.Cost > 0)
-                                        {
-                                            <div class="mt-3 neon-price">
-                                                @string.Format(CultureInfo.GetCultureInfo("ru-RU"), "{0:N0} ₽", c.Cost)
-                                            </div>
-                                        }
-                                    </div>
+                                    <input class="ba-range" type="range" min="0" max="100" value="50" aria-label="Сравнение до и после">
                                 </div>
-                            </a>
+
+                                <!-- 3. Ссылкой стала нижняя часть (card-body). Добавили display:block, чтобы работала как блочная ссылка -->
+                                <a href="/cases/Details/@c.Slug" class="card-body p-3 text-decoration-none d-block">
+                                    <div class="cases-meta text-white-50 small mb-1">
+                                        @(string.IsNullOrWhiteSpace(c.DeviceModel) ? "Устройство" : c.DeviceModel)
+                                    </div>
+
+                                    <div class="fw-semibold text-white cases-title">@c.Title</div>
+
+                                    @if (!string.IsNullOrWhiteSpace(c.Description))
+                                    {
+                                        <div class="text-white-70 small mt-2 cases-desc">
+                                            @(c.Description.Length > 90 ? c.Description.Substring(0, 90) + "…" : c.Description)
+                                        </div>
+                                    }
+
+                                    @if (c.Cost > 0)
+                                    {
+                                        <div class="mt-3 neon-price">
+                                            @string.Format(CultureInfo.GetCultureInfo("ru-RU"), "{0:N0} ₽", c.Cost)
+                                        </div>
+                                    }
+                                </a>
+                            </div>
                         </div>
                     }
                 </div>

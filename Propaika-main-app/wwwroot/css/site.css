@@ -339,6 +339,10 @@ section {
     flex-direction: column;
     gap: .35rem;
     padding: 1rem !important;
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE/Edge */
+    user-select: none; /* Standard */
 }
 
 .cases-teaser .cases-title {
@@ -593,6 +597,12 @@ img.neon-border {
     overflow: hidden;
     background-color: #000;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    cursor: grab;
+    /* Добавьте эти строки: */
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE/Edge */
+    user-select: none; /* Standard */
 }
 
 .ba-img {
@@ -603,6 +613,11 @@ img.neon-border {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE/Edge */
+    user-select: none; /* Standard */
 }
 
 .ba-img-after {
@@ -612,6 +627,11 @@ img.neon-border {
 .ba-img-before {
     z-index: 2;
     clip-path: inset(0 50% 0 0);
+    /* Добавьте эти строки: */
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE/Edge */
+    user-select: none; /* Standard */
 }
 
 .ba-divider {
@@ -635,6 +655,11 @@ img.neon-border {
     cursor: ew-resize;
     z-index: 5;
     margin: 0;
+    
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE/Edge */
+    user-select: none; /* Standard */
 }
 
 .ba-handle {
