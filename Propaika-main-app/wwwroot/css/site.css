@@ -737,6 +737,14 @@ html[data-bs-theme="dark"] .map-wrapper::after {
     box-shadow: 0 0 25px rgba(0, 243, 255, 0.4);
     border-color: var(--neon-main);
 }
+.map-wrapper.no-filter iframe {
+    filter: none !important;
+    -webkit-filter: none !important;
+}
+
+.map-wrapper.no-filter::after {
+    display: none !important; /* Убираем синий градиент */
+}
 
 /* =======================================================
    8. PRICE TABLE EXTRAS

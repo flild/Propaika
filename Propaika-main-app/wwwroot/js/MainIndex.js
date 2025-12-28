@@ -70,7 +70,20 @@ document.querySelectorAll('.cases-teaser .ba-slider').forEach(slider => {
     range.addEventListener('input', e => setPos(parseFloat(e.target.value)));
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+    const toggle = document.getElementById('mapToggle');
+    const wrapper = document.getElementById('mapWrapper');
 
+    if (toggle && wrapper) {
+        toggle.addEventListener('change', function () {
+            if (this.checked) {
+                wrapper.classList.add('no-filter');
+            } else {
+                wrapper.classList.remove('no-filter');
+            }
+        });
+    }
+});
 // ==========================================
 // 2. ОТПРАВКА ФОРМЫ С КАПЧЕЙ
 // ==========================================
