@@ -11,11 +11,13 @@ public class IndexModel : PageModel
 {
     private readonly ApplicationDbContext _db;
     private readonly TelegramQueue _telegramQueue;
+    private readonly string _serverKey = "_"; 
 
-    public IndexModel(ApplicationDbContext db, TelegramQueue telegramQueue)
+    public IndexModel(ApplicationDbContext db, TelegramQueue telegramQueue, IConfiguration config)
     {
         _db = db;
         _telegramQueue = telegramQueue;
+        _serverKey = config["Secrets:YandexCaptcha"];
     }
 
     [BindProperty]
@@ -26,6 +28,13 @@ public class IndexModel : PageModel
     // Для секции "примеры ремонтов"
     public List<ServiceCase> CasesTeaser { get; private set; } = new();
 
+    public sealed class SmartCaptchaResponse
+    {
+        public string? Status { get; set; }
+        public string? Message { get; set; }
+        public string? Host { get; set; }
+    }
+
     public async Task OnGetAsync()
     {
         CasesTeaser = await GetCasesTeaserAsync();
@@ -33,37 +42,42 @@ public class IndexModel : PageModel
 
     public async Task<IActionResult> OnPostAsync()
     {
-        string captchaResponse = Request.Form["g-recaptcha-response"];
+        var token = Request.Form["smart-token"].ToString();
 
-        if (string.IsNullOrEmpty(captchaResponse))
-        {
-            return new JsonResult(new { success = false, message = "Пожалуйста, подтвердите, что вы не робот (нажмите галочку)." });
-        }
+        if (string.IsNullOrWhiteSpace(token))
+            return new JsonResult(new { success = false, message = "Пожалуйста, подтвердите, что вы не робот." });
+
         try
         {
-            using (var client = new HttpClient())
+
+
+            // ip желательно передавать (за прокси настрой ForwardedHeaders)
+            var userIp = HttpContext.Connection.RemoteIpAddress?.ToString();
+
+            using var client = new HttpClient { Timeout = TimeSpan.FromSeconds(2) };
+
+            var form = new Dictionary<string, string?>
             {
+                ["secret"] = _serverKey,
+                ["token"] = token,
+                ["ip"] = userIp
+            };
 
-                var secretKey = "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe";
+            using var content = new FormUrlEncodedContent(form.Where(kv => !string.IsNullOrEmpty(kv.Value))
+                                                              .ToDictionary(kv => kv.Key, kv => kv.Value!));
 
-                var verifyUrl = $"https://www.google.com/recaptcha/api/siteverify?secret={secretKey}&response={captchaResponse}";
-               var response = await client.PostAsync(verifyUrl, null);
-                var jsonString = await response.Content.ReadAsStringAsync();
+            var resp = await client.PostAsync("https://smartcaptcha.cloud.yandex.ru/validate", content);
+            var json = await resp.Content.ReadAsStringAsync();
 
-                var options = new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-                var captchaResult = System.Text.Json.JsonSerializer.Deserialize<RecaptchaResponse>(jsonString, options);
+            var options = new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            var result = System.Text.Json.JsonSerializer.Deserialize<SmartCaptchaResponse>(json, options);
 
-                if (captchaResult == null || !captchaResult.Success)
-                {
-                    return new JsonResult(new { success = false, message = "Проверка капчи не пройдена. Обновите страницу." });
-                }
-            }
+            if (!resp.IsSuccessStatusCode || result?.Status != "ok")
+                return new JsonResult(new { success = false, message = "Проверка капчи не пройдена. Обновите страницу и попробуйте снова." });
         }
-        catch (Exception)
+        catch
         {
-            // Если Google недоступен, можно либо пропустить, либо выдать ошибку.
-            // Безопаснее выдать ошибку.
-            return new JsonResult(new { success = true, message = "Ошибка проверки капчи. Попробуйте позже." });
+            return new JsonResult(new { success = false, message = "Ошибка проверки капчи. Попробуйте позже." });
         }
 
         // =========================================================

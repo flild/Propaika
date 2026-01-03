@@ -116,15 +116,14 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        // 3. Проверка Google reCAPTCHA
-        // Проверяем, существует ли объект grecaptcha (скрипт загрузился)
-        if (typeof grecaptcha !== 'undefined') {
-            const response = grecaptcha.getResponse();
-            if (response.length === 0) {
-                // Капча не пройдена
-                if (captchaErrorDiv) captchaErrorDiv.classList.remove('d-none');
-                return; // Прерываем отправку
-            }
+        // 3. Проверка Yandex SmartCaptcha
+        // Яндекс сам создает скрытый input с name="smart-token" внутри div-контейнера капчи
+        const smartTokenInput = form.querySelector('input[name="smart-token"]');
+
+        // Если инпута нет или он пуст — значит капча не решена
+        if (!smartTokenInput || !smartTokenInput.value) {
+            if (captchaErrorDiv) captchaErrorDiv.classList.remove('d-none');
+            return; // Прерываем отправку
         }
 
         // 4. Визуал загрузки
@@ -146,7 +145,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (response.ok) {
                 // Пытаемся распарсить JSON
-                // ВАЖНО: Убедитесь, что ваш C# контроллер возвращает именно JSON
                 const result = await response.json();
 
                 if (result.success) {
@@ -156,12 +154,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     form.reset(); // Чистим поля
                     form.classList.remove('was-validated');
-                    if (typeof grecaptcha !== 'undefined') grecaptcha.reset(); // Сбрасываем капчу
+
+                    // Сбрасываем капчу Яндекс
+                    if (window.smartCaptcha) window.smartCaptcha.reset();
                 } else {
-                    // ОШИБКА ОТ СЕРВЕРА (например, валидация данных)
+                    // ОШИБКА ОТ СЕРВЕРА
                     serverErrorDiv.textContent = result.message || 'Ошибка обработки данных.';
                     serverErrorDiv.classList.remove('d-none');
-                    if (typeof grecaptcha !== 'undefined') grecaptcha.reset(); // При ошибке капчу часто просят пройти заново
+
+                    // При ошибке капчу нужно сбрасывать, так как токен одноразовый
+                    if (window.smartCaptcha) window.smartCaptcha.reset();
                 }
             } else {
                 serverErrorDiv.textContent = 'Ошибка сети: ' + response.status;
@@ -181,7 +183,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // --- Логика кнопки "Отправить ещё" (Reset) ---
-    // Ищем кнопку внутри блока успеха
     if (successMsg) {
         const resetBtn = successMsg.querySelector('button');
         if (resetBtn) {
@@ -195,7 +196,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 form.classList.remove('was-validated');
                 if (serverErrorDiv) serverErrorDiv.classList.add('d-none');
                 if (captchaErrorDiv) captchaErrorDiv.classList.add('d-none');
-                if (typeof grecaptcha !== 'undefined') grecaptcha.reset();
+
+                // Сбрасываем капчу
+                if (window.smartCaptcha) window.smartCaptcha.reset();
             });
         }
     }
