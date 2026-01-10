@@ -7,4 +7,4 @@ Disallow: /?q=
 Disallow: /api/
 Disallow: /bin/
 
-Sitemap: https://propaika.ru/sitemap.xml
+Sitemap: https://propaika.tech/sitemap.xml
